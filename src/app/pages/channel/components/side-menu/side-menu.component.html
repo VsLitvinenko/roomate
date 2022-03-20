@@ -1,0 +1,48 @@
+<ion-header class="custom-header">
+  <span class="title"> ROOMATE </span>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-accordion-group value="public">
+      <ion-accordion value="public" mode="ios">
+
+        <ion-item slot="header" class="acc-header">
+          <ion-icon name="people-outline"></ion-icon>
+          <ion-label> Public channels </ion-label>
+        </ion-item>
+
+        <ion-list slot="content" lines="none">
+
+          <ion-item *ngFor="let item of publicChannels">
+            <span class="tag"> # </span>
+            <ion-label> {{item}} </ion-label>
+          </ion-item>
+
+        </ion-list>
+
+      </ion-accordion>
+    </ion-accordion-group>
+
+    <ion-accordion-group value="private">
+      <ion-accordion value="private" mode="ios">
+
+        <ion-item slot="header" class="acc-header">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <ion-label> Private channels </ion-label>
+        </ion-item>
+
+        <ion-list slot="content" lines="none">
+
+          <ion-item *ngFor="let item of privateChannels">
+            <span class="tag"> # </span>
+            <ion-label> {{item}} </ion-label>
+          </ion-item>
+
+        </ion-list>
+
+      </ion-accordion>
+    </ion-accordion-group>
+    </div>
+
+</ion-content>
