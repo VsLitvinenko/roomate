@@ -13,12 +13,13 @@
         </ion-item>
 
         <ion-list slot="content" lines="none">
-
-          <ion-item *ngFor="let item of publicChannels"
-                    (click)="openCurrentChannel(item.id)">
-            <span class="tag"> # </span>
-            <ion-label> {{item.title}} </ion-label>
-          </ion-item>
+          <ion-menu-toggle [autoHide]="false">
+            <ion-item *ngFor="let item of publicChannels"
+                      (click)="openCurrentChannel(item.id)">
+              <span class="tag"> # </span>
+              <ion-label> {{item.title}} </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
 
         </ion-list>
 
