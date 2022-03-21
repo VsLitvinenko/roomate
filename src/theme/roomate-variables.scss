@@ -9,5 +9,12 @@
   // gradient colors
   --roomate-g-y: #F4D03FFF;
   --roomate-g-b: #16A085FF;
+  --roomate-g-p: #5F3B7B;
   --roomate-gradient: linear-gradient(132deg, var(--roomate-g-y) 0%, var(--roomate-g-b) 100%);
+
+  --roomate-background-color: #DECCBE;
+}
+
+body.dark {
+  --roomate-background-color: #2D2926;
 }
