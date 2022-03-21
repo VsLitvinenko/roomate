@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-side-menu',
@@ -8,23 +9,24 @@ import { Component, OnInit } from '@angular/core';
 export class SideMenuComponent implements OnInit {
 
   publicChannels = [
-    'public 1',
-    'public 2',
-    'public 3',
-    'public 4',
-    'public 5',
+    { title: 'public 1', id: 1 },
+    { title: 'public 2', id: 2 },
+    { title: 'public 3', id: 3 },
   ];
-
   privateChannels = [
-    'private 1',
-    'private 2',
-    'private 3',
-    'private 4',
-    'private 5',
+    { title: 'private 1', id: 1 },
+    { title: 'private 2', id: 2 },
+    { title: 'private 3', id: 3 },
+    { title: 'private 4', id: 4 },
   ];
 
-  constructor() { }
+  constructor(private readonly router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  public openCurrentChannel(id: string) {
+    this.router.navigate(['channel', id]).then();
+  }
 
 }

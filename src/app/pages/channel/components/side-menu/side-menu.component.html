@@ -14,9 +14,10 @@
 
         <ion-list slot="content" lines="none">
 
-          <ion-item *ngFor="let item of publicChannels">
+          <ion-item *ngFor="let item of publicChannels"
+                    (click)="openCurrentChannel(item.id)">
             <span class="tag"> # </span>
-            <ion-label> {{item}} </ion-label>
+            <ion-label> {{item.title}} </ion-label>
           </ion-item>
 
         </ion-list>
@@ -36,7 +37,7 @@
 
           <ion-item *ngFor="let item of privateChannels">
             <span class="tag"> # </span>
-            <ion-label> {{item}} </ion-label>
+            <ion-label> {{item.title}} </ion-label>
           </ion-item>
 
         </ion-list>

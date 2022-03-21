@@ -37,6 +37,7 @@ ion-content {
       ion-item {
         --background: none;
         padding: 2px;
+        cursor: pointer;
 
         &:after {
           display: block;
