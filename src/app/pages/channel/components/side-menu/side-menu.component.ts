@@ -26,7 +26,7 @@ export class SideMenuComponent implements OnInit {
   }
 
   public openCurrentChannel(id: string) {
-    this.router.navigate(['channel', id]).then();
+    this.router.navigate(['channel', 'current', id]).then();
   }
 
 }

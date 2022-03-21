@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {splitPaneBreakPoint} from '../../../shared/constants';
 
 @Component({
   selector: 'app-channel',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./channel.page.scss'],
 })
 export class ChannelPage implements OnInit {
+  public readonly splitPaneSize = splitPaneBreakPoint.size;
 
   constructor() { }
 

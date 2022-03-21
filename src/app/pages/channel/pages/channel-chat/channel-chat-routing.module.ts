@@ -5,7 +5,7 @@ import {CurrentChatComponent} from './pages/current-chat/current-chat.component'
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: 'current/:id',
     component: CurrentChatComponent
   },
   {
