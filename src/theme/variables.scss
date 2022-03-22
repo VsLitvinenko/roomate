@@ -75,8 +75,8 @@
   --ion-color-light-tint: #f5f6f9;
 
   // main colors
-  --ion-background-color: #e3dcd7;
-  --ion-content-background-color: #ece5e1;
+  --ion-background-color: #e7e7e7;
+  //--ion-content-background-color: #ece5e1;
 }
 
 /*
@@ -150,15 +150,14 @@ body.dark {
 
 
   // main colors
-  --ion-background-color: #232323;
-  --ion-content-background-color: #262524;
-
+  --ion-background-color: #121212;
   --ion-background-color-rgb: 18,18,18;
+
   --ion-text-color: #ffffff;
   --ion-text-color-rgb: 255,255,255;
   --ion-border-color: #222222;
-  --ion-item-background: #232323;
-  --ion-toolbar-background: #232323;
+  --ion-item-background: #1e1e1e;
+  --ion-toolbar-background: #1f1f1f;
   --ion-tab-bar-background: #1f1f1f;
   --ion-card-background: #1e1e1e;
 }

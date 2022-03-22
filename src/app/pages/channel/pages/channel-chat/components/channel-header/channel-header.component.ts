@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import {DarkModeService} from '../../../../../../shared/services/dark-mode.service';
 
 @Component({
   selector: 'app-channel-header',
@@ -7,32 +8,13 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ChannelHeaderComponent implements OnInit {
   @Input() public title: string;
-  private darkMode = window?.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  constructor() { }
+  constructor(private readonly darkMode: DarkModeService) { }
 
   ngOnInit() {
-    this.toggleDarkMode(this.darkMode);
-    this.initPrefersDark();
   }
 
-  public changeDarkMode(): void {
-    this.darkMode = !this.darkMode;
-    document.body.classList.toggle('dark', this.darkMode);
+  changeDarkMode(): void {
+    this.darkMode.changeDarkMode();
   }
-
-  private initPrefersDark(): void {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    prefersDark.addEventListener('change', e => {
-      if (this.darkMode !== e.matches) {
-        this.darkMode = !this.darkMode;
-        this.toggleDarkMode(this.darkMode);
-      }
-    });
-  }
-
-  private toggleDarkMode(enable): void {
-    document.body.classList.toggle('dark', enable);
-  }
-
 }
