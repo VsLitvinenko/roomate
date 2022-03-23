@@ -21,8 +21,22 @@ ion-content {
 
   ion-accordion {
     margin-top: 15px;
+
     .acc-header {
       --background: none;
+      --color: var(--ion-color-medium);
+
+      font-size: 14px;
+      letter-spacing: 1px;
+
+      ion-icon {
+        font-size: 18px;
+        margin-bottom: 2px;
+      }
+
+      ::ng-deep .ion-accordion-toggle-icon {
+        font-size: 18px;
+      }
     }
 
     ion-icon, .tag {
