@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {testMessages} from './data-source';
 
 @Component({
   selector: 'app-current-chat',
@@ -8,6 +9,8 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class CurrentChatComponent implements OnInit {
   public channelId: string;
+
+  public dataSource = testMessages;
 
   constructor(private readonly activatedRoute: ActivatedRoute) { }
 

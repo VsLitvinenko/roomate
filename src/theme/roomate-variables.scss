@@ -15,10 +15,18 @@
   // main custom
   --roomate-background-color: #F2EFE7;
   --roomate-border-color: #E4E1D9;
+
+  // chat colors
+  --roomate-my-message: #fff;
+  --roomate-other-message: #E4E1D9;
 }
 
 body.dark {
   // main custom
   --roomate-background-color: #2D2926;
   --roomate-border-color: #33312e;
+
+  // chat colors
+  --roomate-my-message: #1f1f1f;
+  --roomate-other-message: #33312e;
 }

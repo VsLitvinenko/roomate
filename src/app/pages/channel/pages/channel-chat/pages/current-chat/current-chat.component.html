@@ -1,10 +1,34 @@
-<app-channel-header [title]="'chat ' + channelId">
-</app-channel-header>
+<ion-header mode="md">
+  <app-channel-header [title]="'chat ' + channelId">
+  </app-channel-header>
+</ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="ion-padding">
-    current-chat works
-    <br>
-    id: {{channelId}}
+  <div class="msgs-container ion-padding">
+    <div *ngFor="let msg of dataSource.msgs"
+             class="message"
+             [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'">
+      <span> {{msg.msg}} </span>
+      <span class="ion-text-right">
+        {{ msg.date | date:'hh:mm' }}
+      </span>
+    </div>
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <div class="textarea-container">
+
+      <ion-icon name="document-outline"></ion-icon>
+
+      <ion-textarea class="message-input"
+                    autoGrow="true" rows="1">
+      </ion-textarea>
+
+      <ion-icon name="mic-outline"></ion-icon>
+      <ion-icon name="send-outline"></ion-icon>
+
+    </div>
+  </ion-toolbar>
+</ion-footer>

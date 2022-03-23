@@ -1,9 +1,3 @@
-ion-header {
-  ion-toolbar {
-    --background: transparent;
-  }
-
-  &:after {
-    background-image: none;
-  }
+ion-toolbar {
+  --background: var(--ion-background-color);
 }
