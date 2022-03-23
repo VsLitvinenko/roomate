@@ -1,6 +1,6 @@
-<ion-header class="custom-header">
+<div class="custom-header">
   <span class="title"> ROOMATE </span>
-</ion-header>
+</div>
 
 <ion-content>
   <ion-accordion-group value="public">
@@ -14,12 +14,12 @@
       <ion-list slot="content" lines="none">
         <ion-menu-toggle [autoHide]="false">
           <ion-item *ngFor="let item of publicChannels"
-                    (click)="openCurrentChannel(item.id)">
+                    (click)="openCurrentChannel(item.id)"
+                    [ngClass]="item.unread ? 'unread' : 'read'">
             <span class="tag"> # </span>
             <ion-label> {{item.title}} </ion-label>
           </ion-item>
         </ion-menu-toggle>
-
       </ion-list>
 
     </ion-accordion>
@@ -35,7 +35,8 @@
 
       <ion-list slot="content" lines="none">
 
-        <ion-item *ngFor="let item of privateChannels">
+        <ion-item *ngFor="let item of privateChannels"
+                  [ngClass]="item.unread ? 'unread' : 'read'">
           <span class="tag"> # </span>
           <ion-label> {{item.title}} </ion-label>
         </ion-item>

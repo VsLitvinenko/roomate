@@ -12,9 +12,13 @@
   --roomate-g-p: #5F3B7B;
   --roomate-gradient: linear-gradient(132deg, var(--roomate-g-y) 0%, var(--roomate-g-b) 100%);
 
-  --roomate-background-color: #DECCBE;
+  // main custom
+  --roomate-background-color: #F2EFE7;
+  --roomate-border-color: #E4E1D9;
 }
 
 body.dark {
+  // main custom
   --roomate-background-color: #2D2926;
+  --roomate-border-color: #33312e;
 }

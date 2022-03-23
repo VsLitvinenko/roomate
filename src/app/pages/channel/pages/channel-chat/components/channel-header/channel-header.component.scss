@@ -1,3 +1,9 @@
-ion-searchbar {
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+  }
 
+  &:after {
+    background-image: none;
+  }
 }
