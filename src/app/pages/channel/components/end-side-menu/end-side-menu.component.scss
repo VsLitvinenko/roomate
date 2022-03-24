@@ -1,36 +1,47 @@
-.custom-header {
-  //background: var(--roomate-gradient);
-  //border-radius: 0 0 15px 15px;
-  background: var(--roomate-border-color);
+ion-header {
+  &:after {
+    background-image: none;
+  }
+  ion-toolbar {
+    --background: var(--ion-background-color);
+    padding: 15px 0 5px;
 
-  height: 12vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    .tag {
+      font-size: 22px;
+      margin-right: 10px;
+    }
 
-  .title {
-    letter-spacing: 3px;
-    font-size: 30px;
-    font-weight: 10;
-    color: var(--ion-text-color)
+    ion-row {
+      margin-top: 15px;
+      ion-col {
+        padding: 5px 8px;
+        ion-button {
+          width: 100%;
+          font-size: 13px;
+
+          ion-icon {
+            margin-right: 5px;
+          }
+        }
+      }
+    }
   }
 }
 
 ion-content {
-  height: 88vh;
+  height: calc(100vh - 108px);
 
   .block-header {
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     padding: 5px 10px;
 
     h3 {
-      margin: 0;
+      margin: 0 0 5px 0;
     }
     a {
       cursor: pointer;
-      margin-bottom: 2px;
-      color: var(--roomate-color-green);
+      color: var(--ion-color-medium);
 
       &:hover {
         filter: brightness(80%);
@@ -44,31 +55,45 @@ ion-content {
       --background: var(--roomate-border-color);
 
       ion-card-header {
-        padding-bottom: 8px;
+        padding-bottom: 12px;
 
-        ion-card-title {
-          --color: var(--ion-color-dark-shade);
+        ion-col {
+          padding: 0;
+          ion-card-title {
+            --color: var(--ion-text-color);
+          }
+          ion-card-subtitle {
+            --color: var(--ion-color-medium);
+          }
         }
-        ion-card-subtitle {
-          --color: var(--ion-color-medium-shade);
+
+        .detail-button {
+          --background-hover: none;
+          --color: var(--ion-color-medium);
+          top: 0;
+          right: 0;
+          position: absolute;
         }
       }
 
       ion-card-content {
-        display: flex;
-        justify-content: flex-end;
+        .users {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
 
-        ion-thumbnail {
-          --border-radius: 100%;
-          --size: 30px;
-          filter: brightness(80%);
+          ion-thumbnail {
+            --border-radius: 100%;
+            --size: 30px;
+            filter: brightness(90%);
 
-          &:hover {
-            filter: brightness(100%);
-          }
+            &:hover {
+              filter: brightness(100%);
+            }
 
-          &:not(:last-child) {
-            margin-right: -4px;
+            &:not(:last-child) {
+              margin-right: -5px;
+            }
           }
         }
       }

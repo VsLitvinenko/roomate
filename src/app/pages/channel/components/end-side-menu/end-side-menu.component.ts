@@ -12,6 +12,7 @@ export class EndSideMenuComponent implements OnInit {
     {
       id: 1,
       title: 'room 1',
+      private: true,
       joined: {
         total: 10,
         list: [
@@ -20,27 +21,28 @@ export class EndSideMenuComponent implements OnInit {
           { name: 'anton', img: usersImages[2] },
           { name: 'ilvir', img: usersImages[3] },
           { name: 'sonya', img: usersImages[4] },
-          { name: 'zamir', img: usersImages[5] },
+          // { name: 'zamir', img: usersImages[5] },
         ]
       }
     },
     {
       id: 2,
       title: 'room 2',
+      private: false,
       joined: {
-        total: 5,
+        total: 4,
         list: [
           { name: 'slava', img: usersImages[0] },
           { name: 'sasha', img: usersImages[1] },
           { name: 'anton', img: usersImages[2] },
           { name: 'ilvir', img: usersImages[3] },
-          { name: 'sonya', img: usersImages[4] },
         ]
       }
     },
     {
       id: 3,
       title: 'room 3',
+      private: false,
       joined: {
         total: 2,
         list: [
