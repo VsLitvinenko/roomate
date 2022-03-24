@@ -3,21 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ChannelChatPageRoutingModule } from './channel-chat-routing.module';
-import {CurrentChatComponent} from './pages/current-chat/current-chat.component';
-import {NoChatComponent} from './pages/no-chat/no-chat.component';
-import {ChannelHeaderComponent} from './components/channel-header/channel-header.component';
+import { CurrentChatComponent } from './components/current-chat/current-chat.component';
+import { NoChatComponent } from './components/no-chat/no-chat.component';
+import { SharedModule } from '../../../../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ChannelChatPageRoutingModule
+    ChannelChatPageRoutingModule,
+    SharedModule
   ],
   declarations: [
     CurrentChatComponent,
     NoChatComponent,
-    ChannelHeaderComponent,
   ]
 })
 export class ChannelChatPageModule {}

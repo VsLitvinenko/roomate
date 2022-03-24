@@ -1,7 +1,17 @@
 <ion-split-pane content-id="menu-content" [when]="splitPaneSize">
 
-  <ion-menu content-id="menu-content">
+  <ion-menu content-id="menu-content"
+            menuId="start-menu"
+            side="start" type="reveal">
     <app-side-menu></app-side-menu>
+  </ion-menu>
+
+  <ion-menu content-id="menu-content"
+            menuId="end-menu"
+            side="end" type="reveal">
+    <div class="ion-padding">
+      говно и моча
+    </div>
   </ion-menu>
 
   <ion-router-outlet id="menu-content"
