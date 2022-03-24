@@ -1,5 +1,5 @@
 // https://ionicframework.com/docs/api/split-pane
 export const splitPaneBreakPoint = {
-  size: 'lg',
-  minWidth: 992
+  size: 'xl',
+  minWidth: 1200
 };

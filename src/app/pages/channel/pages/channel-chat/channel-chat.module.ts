@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ChannelChatPageRoutingModule } from './channel-chat-routing.module';
 import { CurrentChatComponent } from './components/current-chat/current-chat.component';
 import { NoChatComponent } from './components/no-chat/no-chat.component';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '../../../../modules/shared/shared.module';
 
 @NgModule({
   imports: [
