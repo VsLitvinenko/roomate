@@ -6,8 +6,10 @@ ion-header {
 
 ion-content {
   .msgs-container {
+    padding: 0 15px;
+
     .message {
-      margin: 20px 5px;
+      margin: 15px 5px;
       padding: 20px 15px 10px;
       border-radius: 10px;
 
