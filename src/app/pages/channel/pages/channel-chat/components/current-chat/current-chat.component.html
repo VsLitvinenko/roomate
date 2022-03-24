@@ -3,7 +3,7 @@
   </app-shared-header>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" appScrollbarTheme>
   <div class="msgs-container ion-padding">
     <div *ngFor="let msg of dataSource.msgs"
              class="message"
