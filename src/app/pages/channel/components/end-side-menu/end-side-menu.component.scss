@@ -1,0 +1,77 @@
+.custom-header {
+  //background: var(--roomate-gradient);
+  //border-radius: 0 0 15px 15px;
+  background: var(--roomate-border-color);
+
+  height: 12vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .title {
+    letter-spacing: 3px;
+    font-size: 30px;
+    font-weight: 10;
+    color: var(--ion-text-color)
+  }
+}
+
+ion-content {
+  height: 88vh;
+
+  .block-header {
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 5px 10px;
+
+    h3 {
+      margin: 0;
+    }
+    a {
+      cursor: pointer;
+      margin-bottom: 2px;
+      color: var(--roomate-color-green);
+
+      &:hover {
+        filter: brightness(80%);
+      }
+    }
+  }
+
+  .rooms-container {
+    ion-card {
+      box-shadow: none !important;
+      --background: var(--roomate-border-color);
+
+      ion-card-header {
+        padding-bottom: 8px;
+
+        ion-card-title {
+          --color: var(--ion-color-dark-shade);
+        }
+        ion-card-subtitle {
+          --color: var(--ion-color-medium-shade);
+        }
+      }
+
+      ion-card-content {
+        display: flex;
+        justify-content: flex-end;
+
+        ion-thumbnail {
+          --border-radius: 100%;
+          --size: 30px;
+          filter: brightness(80%);
+
+          &:hover {
+            filter: brightness(100%);
+          }
+
+          &:not(:last-child) {
+            margin-right: -4px;
+          }
+        }
+      }
+    }
+  }
+}

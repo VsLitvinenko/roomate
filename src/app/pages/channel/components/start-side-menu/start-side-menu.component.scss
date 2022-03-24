@@ -3,21 +3,21 @@
   //border-radius: 0 0 15px 15px;
   background: var(--roomate-border-color);
 
-  height: 15vh;
+  height: 12vh;
   display: flex;
   align-items: center;
   justify-content: center;
 
   .title {
     letter-spacing: 3px;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 10;
     color: var(--ion-text-color)
   }
 }
 
 ion-content {
-  height: 85vh;
+  height: 88vh;
 
   ion-accordion {
     margin-top: 15px;

@@ -7,14 +7,22 @@
   --roomate-color-light: #AAAA88;
 
   // gradient colors
-  --roomate-g-y: #F4D03FFF;
-  --roomate-g-b: #16A085FF;
-  --roomate-g-p: #5F3B7B;
-  --roomate-gradient: linear-gradient(132deg, var(--roomate-g-y) 0%, var(--roomate-g-b) 100%);
+  //--roomate-g-y: #F4D03FFF;
+  //--roomate-g-b: #16A085FF;
+  //--roomate-g-p: #5F3B7B;
+  //--roomate-gradient: linear-gradient(132deg, var(--roomate-g-y) 0%, var(--roomate-g-b) 100%);
 
   // main custom
   --roomate-background-color: #F2EFE7;
   --roomate-border-color: #E4E1D9;
+
+  // ion-roomate-green
+  --ion-color-roomate-green: #6E835A;
+  --ion-color-roomate-green-rgb: 110,131,90;
+  --ion-color-roomate-green-contrast: #ffffff;
+  --ion-color-roomate-green-contrast-rgb: 255,255,255;
+  --ion-color-roomate-green-shade: #61734f;
+  --ion-color-roomate-green-tint: #7d8f6b;
 
   // chat colors
   --roomate-my-message: #fff;
@@ -29,4 +37,15 @@ body.dark {
   // chat colors
   --roomate-my-message: #1f1f1f;
   --roomate-other-message: #33312e;
+}
+
+// custom classes
+
+.ion-color-roomate-green {
+  --ion-color-base: var(--ion-color-roomate-green) !important;
+  --ion-color-base-rgb: var(--ion-color-roomate-green-rgb) !important;
+  --ion-color-contrast: var(--ion-color-roomate-green-contrast) !important;
+  --ion-color-contrast-rgb: var(--ion-color-roomate-green-contrast-rgb) !important;
+  --ion-color-shade: var(--ion-color-roomate-green-shade) !important;
+  --ion-color-tint: var(--ion-color-roomate-green-tint) !important;
 }

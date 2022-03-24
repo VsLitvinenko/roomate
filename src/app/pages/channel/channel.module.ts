@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ChannelPageRoutingModule } from './channel-routing.module';
 import { ChannelPage } from './view/channel.page';
-import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import {StartSideMenuComponent} from './components/start-side-menu/start-side-menu.component';
+import {EndSideMenuComponent} from './components/end-side-menu/end-side-menu.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
   ],
   declarations: [
     ChannelPage,
-    SideMenuComponent,
+    StartSideMenuComponent,
+    EndSideMenuComponent
   ]
 })
 export class ChannelPageModule {}
