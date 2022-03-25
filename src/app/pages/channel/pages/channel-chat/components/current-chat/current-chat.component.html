@@ -3,17 +3,25 @@
   </app-shared-header>
 </ion-header>
 
-<ion-content [fullscreen]="true" appScrollbarTheme>
+<ion-content #currentChatContent
+             appScrollbarTheme>
+
   <div class="msgs-container">
-    <div *ngFor="let msg of dataSource.msgs"
-             class="message"
-             [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'">
+    <div *ngFor="let msg of dataSource; let i = index"
+         [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'"
+         class="message">
       <span> {{msg.msg}} </span>
       <span class="ion-text-right">
+<!--        <b> index: {{i}} </b>-->
         {{ msg.date | date:'hh:mm' }}
       </span>
     </div>
   </div>
+
+  <app-shared-loader [loading]="loading"
+                     [background]="'var(--ion-background-color)'">
+  </app-shared-loader>
+
 </ion-content>
 
 <ion-footer class="ion-no-border">
@@ -23,7 +31,8 @@
       <ion-icon name="document-outline"></ion-icon>
 
       <ion-textarea class="message-input"
-                    autoGrow="true" rows="1">
+                    autoGrow="true" rows="1"
+                    placeholder="enter your message...">
       </ion-textarea>
 
       <ion-icon name="mic-outline"></ion-icon>

@@ -5,6 +5,7 @@ import { SharedHeaderComponent } from './components/shared-header/shared-header.
 import { IonicModule } from '@ionic/angular';
 import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive';
 import { SharedProfileSideComponent } from './components/shared-profile-side/shared-profile-side.component';
+import {SharedLoaderComponent} from './components/shared-loader/shared-loader.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { SharedProfileSideComponent } from './components/shared-profile-side/sha
   declarations: [
     SharedHeaderComponent,
     SharedProfileSideComponent,
+    SharedLoaderComponent,
     ScrollbarThemeDirective,
   ],
   providers: [
@@ -22,6 +24,7 @@ import { SharedProfileSideComponent } from './components/shared-profile-side/sha
   exports: [
     SharedHeaderComponent,
     SharedProfileSideComponent,
+    SharedLoaderComponent,
     ScrollbarThemeDirective,
   ]
 })

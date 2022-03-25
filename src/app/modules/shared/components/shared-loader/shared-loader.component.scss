@@ -1,0 +1,38 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --loader-size: 38px;
+  --loader-border-size: 5px;
+
+  .loader {
+    width: var(--loader-size);
+    height: var(--loader-size);
+
+    border-radius: 100%;
+    border: var(--loader-border-size) solid var(--roomate-color-green);
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+
+    animation: loading 0.75s linear infinite;
+  }
+
+  @keyframes loading {
+    from { transform: rotate(0turn) }
+    from { transform: rotate(1turn) }
+  }
+
+  transition: visibility 0.3s, opacity 0.3s;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

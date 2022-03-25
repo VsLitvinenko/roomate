@@ -7,16 +7,21 @@ ion-header {
 ion-content {
   .msgs-container {
     padding: 0 20px;
+    display: flex;
+    flex-direction: column-reverse;
 
     .message {
-      margin: 15px 5px;
-      padding: 20px 15px 10px;
+      margin: 10px 4px;
+      padding: 16px 12px 8px;
       border-radius: 10px;
+
+      max-width: 80%;
 
       display: flex;
       flex-direction: column;
 
       .ion-text-right {
+        margin-top: 4px;
         filter: brightness(50%);
         font-size: 14px;
       }
@@ -24,12 +29,12 @@ ion-content {
 
     .my-message {
       background-color: var(--roomate-my-message);
-      margin-left: 25% !important;
+      align-self: flex-end;
     }
 
     .other-message {
       background-color: var(--roomate-other-message);
-      margin-right: 25% !important;
+      align-self: flex-start;
     }
   }
 }
