@@ -3,7 +3,7 @@ ion-header {
     background-image: none;
   }
   ion-toolbar {
-    --background: var(--ion-background-color);
+    //--background: var(--ion-background-color);
     padding: 15px 0 5px;
 
     .tag {
@@ -67,12 +67,25 @@ ion-content {
           }
         }
 
-        .detail-button {
-          --background-hover: none;
-          --color: var(--ion-color-medium);
+        .room-corner-container {
           top: 0;
           right: 0;
           position: absolute;
+          align-items: center;
+
+          .lock-icon {
+            font-size: 20px;
+          }
+
+          ion-button {
+            --color: var(--ion-color-medium);
+          }
+        }
+
+        ion-popover {
+          ion-list {
+            --background: red;
+          }
         }
       }
 
@@ -99,4 +112,8 @@ ion-content {
       }
     }
   }
+}
+
+.no-button-hover {
+  --background-hover: none;
 }

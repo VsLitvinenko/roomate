@@ -36,6 +36,7 @@
     </div>
 
     <ion-card *ngFor="let room of rooms">
+
       <ion-card-header>
         <ion-row>
           <ion-col>
@@ -44,24 +45,55 @@
           </ion-col>
         </ion-row>
 
-        <ion-button [id]="'details-button-' + room.id"
-                    size="small"
-                    fill="clear" class="detail-button">
-          <ion-icon name="ellipsis-horizontal"></ion-icon>
-        </ion-button>
+        <ion-row class="room-corner-container">
 
-        <ion-popover [trigger]="'details-button-' + room.id"
-                     [dismissOnSelect]="true"
-                     [showBackdrop]="false">
-          <ng-template>
-              <ion-list>
-                <ion-item> <ion-label>Option 1</ion-label> </ion-item>
-                <ion-item> <ion-label>Option 2</ion-label> </ion-item>
-                <ion-item> <ion-label>Option 3</ion-label> </ion-item>
-              </ion-list>
-          </ng-template>
-        </ion-popover>
+          <ion-icon *ngIf="room.private"
+                    name="lock-closed-outline"
+                    title="private room"
+                    class="lock-icon"> </ion-icon>
+
+          <ion-button [id]="'details-button-' + room.id"
+                      class="no-button-hover"
+                      size="small" fill="clear">
+            <ion-icon name="ellipsis-horizontal"></ion-icon>
+          </ion-button>
+
+          <ion-popover [trigger]="'details-button-' + room.id"
+                       [dismissOnSelect]="true"
+                       [showBackdrop]="false"
+                       mode="md">
+            <ng-template>
+                <ion-list lines="none">
+
+                  <ion-item button="" class="no-button-hover">
+                    <ion-label> close room </ion-label>
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-item>
+
+                  <ion-item button="" class="no-button-hover">
+                    <ion-label> rename room </ion-label>
+                    <ion-icon name="text-outline"></ion-icon>
+                  </ion-item>
+
+                  <ion-item *ngIf="room.private else closeRoomItem"
+                            button="" class="no-button-hover">
+                    <ion-label> unlock room </ion-label>
+                    <ion-icon name="lock-open-outline"></ion-icon>
+                  </ion-item>
+
+                  <ng-template #closeRoomItem>
+                    <ion-item button="" class="no-button-hover">
+                      <ion-label> lock room </ion-label>
+                      <ion-icon name="lock-closed-outline"></ion-icon>
+                    </ion-item>
+                  </ng-template>
+
+                </ion-list>
+            </ng-template>
+          </ion-popover>
+        </ion-row>
       </ion-card-header>
+
       <ion-card-content>
         <ion-row class="ion-align-items-center">
           <ion-button fill="outline" size="small"
@@ -76,6 +108,7 @@
           </div>
         </ion-row>
       </ion-card-content>
+
     </ion-card>
   </div>
 

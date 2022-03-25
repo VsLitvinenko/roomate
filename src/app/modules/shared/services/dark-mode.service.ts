@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 
+const localStorageKey = 'roomate.theme';
+
 @Injectable()
 export class DarkModeService {
 
-  private darkMode = window?.matchMedia('(prefers-color-scheme: dark)').matches;
+  private darkMode = this.getStorage();
 
   constructor() {
     this.toggleDarkMode(this.darkMode);
@@ -19,10 +21,21 @@ export class DarkModeService {
 
   public changeDarkMode(): void {
     this.darkMode = !this.darkMode;
-    document.body.classList.toggle('dark', this.darkMode);
+    this.toggleDarkMode(this.darkMode);
   }
 
-  private toggleDarkMode(enable): void {
+  private toggleDarkMode(enable: boolean): void {
     document.body.classList.toggle('dark', enable);
+    this.setStorage(enable);
+  }
+
+  private setStorage(darkMode: boolean): void {
+    localStorage.setItem(localStorageKey, darkMode ? 'dark' : 'light');
+  }
+
+  private getStorage(): boolean {
+    const storage = localStorage.getItem(localStorageKey);
+    return storage ? (storage === 'dark') :
+      window?.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 }
