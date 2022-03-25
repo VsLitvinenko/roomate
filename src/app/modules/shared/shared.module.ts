@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DarkModeService } from './services/dark-mode.service';
 import { SharedHeaderComponent } from './components/shared-header/shared-header.component';
 import { IonicModule } from '@ionic/angular';
-import {ScrollbarThemeDirective} from './directives/scrollbar-theme-directive';
+import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive';
+import { SharedProfileSideComponent } from './components/shared-profile-side/shared-profile-side.component';
 
 @NgModule({
   imports: [
@@ -12,14 +13,16 @@ import {ScrollbarThemeDirective} from './directives/scrollbar-theme-directive';
   ],
   declarations: [
     SharedHeaderComponent,
-    ScrollbarThemeDirective
+    SharedProfileSideComponent,
+    ScrollbarThemeDirective,
   ],
   providers: [
     DarkModeService,
   ],
   exports: [
     SharedHeaderComponent,
-    ScrollbarThemeDirective
+    SharedProfileSideComponent,
+    ScrollbarThemeDirective,
   ]
 })
 export class SharedModule { }

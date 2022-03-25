@@ -39,7 +39,7 @@ body.dark {
   --roomate-other-message: #33312e;
 }
 
-// custom classes
+// custom color classes
 
 .ion-color-roomate-green {
   --ion-color-base: var(--ion-color-roomate-green) !important;
@@ -48,4 +48,10 @@ body.dark {
   --ion-color-contrast-rgb: var(--ion-color-roomate-green-contrast-rgb) !important;
   --ion-color-shade: var(--ion-color-roomate-green-shade) !important;
   --ion-color-tint: var(--ion-color-roomate-green-tint) !important;
+}
+
+// custom classes
+
+.no-ion-hover {
+  --background-hover: none !important;
 }

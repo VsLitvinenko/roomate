@@ -1,0 +1,17 @@
+<div class="profile-header">
+  <ion-row class="ion-align-items-end">
+    <ion-thumbnail>
+      <img [src]="user.smallImg" alt="">
+    </ion-thumbnail>
+
+    <ion-col>
+      <div class="full-name"> {{ user.fullName }} </div>
+      <div class="screen-name"> @{{ user.screenName }} </div>
+    </ion-col>
+
+    <ion-icon name="exit-outline"
+              color="roomate-green"
+              (click)="userId()">
+    </ion-icon>
+  </ion-row>
+</div>

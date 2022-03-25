@@ -1,8 +1,10 @@
-<div class="custom-header">
-  <span class="title"> ROOMATE </span>
-</div>
+<!--<div class="custom-header">-->
+<!--  <span class="title"> ROOMATE </span>-->
+<!--</div>-->
 
-<ion-content>
+<app-shared-profile-side></app-shared-profile-side>
+
+<ion-content appScrollbarTheme>
   <ion-accordion-group value="public">
     <ion-accordion value="public" mode="ios">
 
@@ -11,11 +13,11 @@
         <ion-label> Public channels </ion-label>
       </ion-item>
 
-      <ion-list slot="content" lines="none">
+      <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
           <ion-item *ngFor="let item of publicChannels"
                     (click)="openCurrentChannel(item.id)"
-                    [ngClass]="item.unread ? 'unread' : 'read'">
+                    [ngClass]="channelNgStyle(item)">
             <span class="tag"> # </span>
             <ion-label> {{item.title}} </ion-label>
           </ion-item>
@@ -33,7 +35,7 @@
         <ion-label> Private channels </ion-label>
       </ion-item>
 
-      <ion-list slot="content" lines="none">
+      <ion-list slot="content" lines="none" mode="md">
 
         <ion-item *ngFor="let item of privateChannels"
                   [ngClass]="item.unread ? 'unread' : 'read'">

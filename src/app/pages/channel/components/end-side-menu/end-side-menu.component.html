@@ -53,7 +53,7 @@
                     class="lock-icon"> </ion-icon>
 
           <ion-button [id]="'details-button-' + room.id"
-                      class="no-button-hover"
+                      class="no-ion-hover"
                       size="small" fill="clear">
             <ion-icon name="ellipsis-horizontal"></ion-icon>
           </ion-button>
@@ -65,24 +65,24 @@
             <ng-template>
                 <ion-list lines="none">
 
-                  <ion-item button="" class="no-button-hover">
+                  <ion-item button="" class="no-ion-hover">
                     <ion-label> close room </ion-label>
                     <ion-icon name="trash-outline"></ion-icon>
                   </ion-item>
 
-                  <ion-item button="" class="no-button-hover">
+                  <ion-item button="" class="no-ion-hover">
                     <ion-label> rename room </ion-label>
                     <ion-icon name="text-outline"></ion-icon>
                   </ion-item>
 
                   <ion-item *ngIf="room.private else closeRoomItem"
-                            button="" class="no-button-hover">
+                            button="" class="no-ion-hover">
                     <ion-label> unlock room </ion-label>
                     <ion-icon name="lock-open-outline"></ion-icon>
                   </ion-item>
 
                   <ng-template #closeRoomItem>
-                    <ion-item button="" class="no-button-hover">
+                    <ion-item button="" class="no-ion-hover">
                       <ion-label> lock room </ion-label>
                       <ion-icon name="lock-closed-outline"></ion-icon>
                     </ion-item>

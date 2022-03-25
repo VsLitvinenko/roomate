@@ -1,0 +1,32 @@
+.profile-header {
+  padding: 25px 15px;
+
+  ion-row {
+    ion-thumbnail {
+      --size: 65px;
+      --border-radius: 100%;
+      border: 2px solid var(--roomate-color-green);
+    }
+
+    ion-col {
+      margin-left: 12px;
+
+      .full-name {
+        font-size: 17px;
+        margin-bottom: 3px;
+        font-weight: bolder;
+        color: var(--ion-text-color);
+      }
+
+      .screen-name {
+        color: var(--ion-color-medium);
+      }
+    }
+
+    ion-icon {
+      cursor: pointer;
+      font-size: 24px;
+      padding: 4px;
+    }
+  }
+}

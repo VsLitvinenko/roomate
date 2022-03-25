@@ -81,12 +81,6 @@ ion-content {
             --color: var(--ion-color-medium);
           }
         }
-
-        ion-popover {
-          ion-list {
-            --background: red;
-          }
-        }
       }
 
       ion-card-content {
@@ -112,8 +106,4 @@ ion-content {
       }
     }
   }
-}
-
-.no-button-hover {
-  --background-hover: none;
 }
