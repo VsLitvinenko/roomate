@@ -1,5 +1,8 @@
 <div class="loader-container"
      [ngStyle]="{ background }"
      [ngClass]="loading ? '' : 'hidden'">
-  <div class="loader"></div>
+  <ion-spinner name="crescent"
+               color="roomate-green"
+               [ngStyle]="spinnerStyle">
+  </ion-spinner>
 </div>

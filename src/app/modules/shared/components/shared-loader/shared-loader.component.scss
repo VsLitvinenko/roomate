@@ -12,24 +12,8 @@
   --loader-size: 38px;
   --loader-border-size: 5px;
 
-  .loader {
-    width: var(--loader-size);
-    height: var(--loader-size);
-
-    border-radius: 100%;
-    border: var(--loader-border-size) solid var(--roomate-color-green);
-    border-left-color: transparent;
-    border-bottom-color: transparent;
-
-    animation: loading 0.75s linear infinite;
-  }
-
-  @keyframes loading {
-    from { transform: rotate(0turn) }
-    from { transform: rotate(1turn) }
-  }
-
-  transition: visibility 0.3s, opacity 0.3s;
+  transition: visibility 0.25s,
+              opacity 0.25s;
 }
 
 .hidden {

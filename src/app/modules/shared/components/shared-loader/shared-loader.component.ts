@@ -8,6 +8,11 @@ import { Component, Input } from '@angular/core';
 export class SharedLoaderComponent {
   @Input() loading: boolean;
   @Input() background = 'transparent';
+  @Input() scale = 1.5;
 
   constructor() { }
+
+  get spinnerStyle(): any {
+    return { transform: `scale(${this.scale})` };
+  }
 }
