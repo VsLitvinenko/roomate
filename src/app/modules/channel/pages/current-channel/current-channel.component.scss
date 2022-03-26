@@ -19,10 +19,11 @@ ion-content {
     flex-direction: column-reverse;
 
     .message {
-      margin: 10px 4px;
+      margin: 8px 4px;
       padding: 16px 12px 8px;
       border-radius: 10px;
 
+      min-width: 170px;
       max-width: 80%;
 
       display: flex;

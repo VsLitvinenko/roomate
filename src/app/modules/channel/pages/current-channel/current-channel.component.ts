@@ -5,10 +5,10 @@ import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-current-chat',
-  templateUrl: './current-chat.component.html',
-  styleUrls: ['./current-chat.component.scss'],
+  templateUrl: './current-channel.component.html',
+  styleUrls: ['./current-channel.component.scss'],
 })
-export class CurrentChatComponent implements OnInit {
+export class CurrentChannelComponent implements OnInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 

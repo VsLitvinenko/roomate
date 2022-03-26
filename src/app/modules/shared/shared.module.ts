@@ -5,7 +5,21 @@ import { SharedHeaderComponent } from './components/shared-header/shared-header.
 import { IonicModule } from '@ionic/angular';
 import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive';
 import { SharedProfileSideComponent } from './components/shared-profile-side/shared-profile-side.component';
-import {SharedLoaderComponent} from './components/shared-loader/shared-loader.component';
+import { SharedLoaderComponent } from './components/shared-loader/shared-loader.component';
+
+const directives = [
+  ScrollbarThemeDirective,
+];
+
+const components = [
+  SharedHeaderComponent,
+  SharedProfileSideComponent,
+  SharedLoaderComponent,
+];
+
+const services = [
+  DarkModeService,
+];
 
 @NgModule({
   imports: [
@@ -13,19 +27,15 @@ import {SharedLoaderComponent} from './components/shared-loader/shared-loader.co
     CommonModule,
   ],
   declarations: [
-    SharedHeaderComponent,
-    SharedProfileSideComponent,
-    SharedLoaderComponent,
-    ScrollbarThemeDirective,
+    ...directives,
+    ...components,
   ],
   providers: [
-    DarkModeService,
+    ...services
   ],
   exports: [
-    SharedHeaderComponent,
-    SharedProfileSideComponent,
-    SharedLoaderComponent,
-    ScrollbarThemeDirective,
+    ...directives,
+    ...components,
   ]
 })
 export class SharedModule { }

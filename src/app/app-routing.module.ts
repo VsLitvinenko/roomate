@@ -4,7 +4,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'channel',
-    loadChildren: () => import('./pages/channel/channel.module').then( m => m.ChannelPageModule)
+    loadChildren: () => import('./modules/channel/channel.module')
+      .then(m => m.ChannelPageModule),
   },
   {
     path: '**',

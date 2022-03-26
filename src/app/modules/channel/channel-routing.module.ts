@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ChannelPage } from './view/channel.page';
+import {CurrentChannelComponent} from './pages/current-channel/current-channel.component';
+import {NoChannelComponent} from './pages/no-channel/no-channel.component';
 
 const routes: Routes = [
   {
@@ -8,13 +10,16 @@ const routes: Routes = [
     component: ChannelPage,
     children: [
       {
-        path: '',
-        loadChildren: () => import('./pages/channel-chat/channel-chat.module')
-          .then( m => m.ChannelChatPageModule)
+        path: 'current/:id',
+        component: CurrentChannelComponent,
+      },
+      {
+        path: 'not-found',
+        component: NoChannelComponent,
       },
       {
         path: '**',
-        redirectTo: '',
+        redirectTo: 'not-found',
         pathMatch: 'full'
       }
     ]

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { splitPaneBreakPoint } from '../../../modules/shared/constants';
+import { splitPaneBreakPoint } from '../../shared/constants';
 
 @Component({
   selector: 'app-channel',
