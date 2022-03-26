@@ -11,12 +11,13 @@
 
       <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
-          <ion-item *ngFor="let item of publicChannels"
-                    (click)="openCurrentChannel(item.id)"
-                    [ngClass]="channelNgStyle(item)">
-            <span class="tag"> # </span>
-            <ion-label> {{item.title}} </ion-label>
-          </ion-item>
+          <ng-container *ngFor="let item of publicChannels">
+            <ion-item (click)="openCurrentChannel(item.id)"
+                      [ngClass]="channelNgStyle(item)">
+              <span class="tag"> # </span>
+              <ion-label> {{item.title}} </ion-label>
+            </ion-item>
+          </ng-container>
         </ion-menu-toggle>
       </ion-list>
 

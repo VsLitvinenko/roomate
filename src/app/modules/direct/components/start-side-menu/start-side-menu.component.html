@@ -3,25 +3,27 @@
 <ion-content appScrollbarTheme>
 
   <ion-list lines="none" mode="md">
-    <ng-container *ngFor="let user of userList">
-      <ion-item (click)="openCurrentDirect(user.id)">
-        <ion-row class="ion-align-items-center">
-          <ion-thumbnail>
-            <img [src]="user.smallImg" alt="">
-          </ion-thumbnail>
+    <ion-menu-toggle [autoHide]="false">
+      <ng-container *ngFor="let user of userList">
+        <ion-item (click)="openCurrentDirect(user.id)">
+          <ion-row class="ion-align-items-center">
+            <ion-thumbnail>
+              <img [src]="user.smallImg" alt="">
+            </ion-thumbnail>
 
-          <div *ngIf="user.online" class="online"></div>
+            <div *ngIf="user.online" class="online"></div>
 
-          <ion-col>
-            <div class="name"> {{user.fullName}} </div>
-            <div class="msg text-overflow"
-                 [style.maxWidth.px]="msgMaxWidth">
-              {{user.lastMessage}}
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ng-container>
+            <ion-col>
+              <div class="name"> {{user.fullName}} </div>
+              <div class="msg text-overflow"
+                   [style.maxWidth.px]="msgMaxWidth">
+                {{user.lastMessage}}
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ng-container>
+    </ion-menu-toggle>
   </ion-list>
 
 </ion-content>
