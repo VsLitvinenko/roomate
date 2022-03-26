@@ -44,7 +44,7 @@ ion-content {
       color: var(--ion-color-medium);
 
       &:hover {
-        filter: brightness(80%);
+        opacity: 0.75;
       }
     }
   }

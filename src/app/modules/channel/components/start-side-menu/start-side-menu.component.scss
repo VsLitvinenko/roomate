@@ -42,7 +42,7 @@ ion-content {
         cursor: pointer;
 
         &:hover {
-          filter: brightness(80%);
+          opacity: 0.75;
         }
       }
 
