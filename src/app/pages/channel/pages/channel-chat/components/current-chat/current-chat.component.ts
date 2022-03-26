@@ -28,10 +28,22 @@ export class CurrentChatComponent implements OnInit {
       .subscribe(params => this.channelId = params.id);
 
     this.loadingCounter += 1;
-    setTimeout(() => {
-      this.dataSource.push(...testMessages);
-      this.chatContent.scrollToBottom(0)
-        .then(() => this.loadingCounter -= 1);
-    }, 1000);
+    this.loadingData()
+      .then(() => this.chatContent.scrollToBottom(0))
+      .then(() => this.loadingCounter -= 1);
+  }
+
+  public infiniteScroll(event: any): void {
+    this.loadingData()
+      .then(() => event.target.complete());
+  }
+
+  private loadingData(): Promise<void> {
+    return new Promise<void>(resolve =>
+      setTimeout(() => {
+        this.dataSource.push(...testMessages);
+        resolve();
+      }, 1000)
+    );
   }
 }

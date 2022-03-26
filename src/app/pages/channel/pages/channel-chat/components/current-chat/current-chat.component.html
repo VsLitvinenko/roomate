@@ -6,21 +6,29 @@
 <ion-content #currentChatContent
              appScrollbarTheme>
 
+  <app-shared-loader [loading]="loading"
+                     [background]="'var(--ion-background-color)'">
+  </app-shared-loader>
+
+  <ion-infinite-scroll *ngIf="!loading"
+                       threshold="50%" position="top"
+                       (ionInfinite)="infiniteScroll($event)">
+    <ion-infinite-scroll-content loading-spinner="crescent"
+                                 class="current-chat-infinite-loading">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
   <div class="msgs-container">
     <div *ngFor="let msg of dataSource; let i = index"
          [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'"
          class="message">
       <span> {{msg.msg}} </span>
       <span class="ion-text-right">
-<!--        <b> index: {{i}} </b>-->
+        <b> index: {{i}} </b>
         {{ msg.date | date:'hh:mm' }}
       </span>
     </div>
   </div>
-
-  <app-shared-loader [loading]="loading"
-                     [background]="'var(--ion-background-color)'">
-  </app-shared-loader>
 
 </ion-content>
 
@@ -37,7 +45,6 @@
 
       <ion-icon name="mic-outline"></ion-icon>
       <ion-icon name="send-outline"></ion-icon>
-
     </div>
   </ion-toolbar>
 </ion-footer>
