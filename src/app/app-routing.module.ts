@@ -8,6 +8,11 @@ const routes: Routes = [
       .then(m => m.ChannelPageModule),
   },
   {
+    path: 'direct',
+    loadChildren: () => import('./modules/direct/direct.module')
+      .then(m => m.DirectModule),
+  },
+  {
     path: '**',
     redirectTo: 'channel',
     pathMatch: 'full'
