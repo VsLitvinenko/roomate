@@ -46,5 +46,9 @@ ion-content {
         }
       }
     }
+
+    .active-item ion-col .name {
+      color: var(--roomate-color-green);
+    }
   }
 }

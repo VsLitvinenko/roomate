@@ -20,8 +20,8 @@ export class SharedHeaderComponent implements OnInit {
   public isFull$ = this.appWidthService.isAppFullWidth$;
 
   public readonly menuLinks: MenuHeaderLink[] = [
+    { module: 'channel', title: 'channel', icon: 'people' },
     { module: 'direct', title: 'direct', icon: 'person' },
-    { module: 'channel', title: 'channel', icon: 'people' }
   ];
 
   constructor(

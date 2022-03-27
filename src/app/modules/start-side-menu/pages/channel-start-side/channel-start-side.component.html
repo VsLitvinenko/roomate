@@ -9,8 +9,8 @@
 
       <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
-          <ng-container *ngFor="let item of publicChannels">
 
+          <ng-container *ngFor="let item of publicChannels">
             <ion-item class="no-ion-hover"
                       [ngClass]="item.unread ? 'unread' : 'read'"
                       [routerLink]="['', {outlets: { content: ['channel','current', item.id] }}]"
@@ -18,8 +18,8 @@
               <span class="tag"> # </span>
               <ion-label> {{item.title}} </ion-label>
             </ion-item>
-
           </ng-container>
+
         </ion-menu-toggle>
       </ion-list>
 

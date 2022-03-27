@@ -10,6 +10,7 @@ import { splitPaneBreakPoint } from './modules/shared/constants';
 export class AppComponent {
 
   public readonly splitPaneSize = splitPaneBreakPoint.size;
+  public readonly menuEdgeStart = 120;
 
   constructor(private readonly darkMode: SharedDarkModeService) {}
 

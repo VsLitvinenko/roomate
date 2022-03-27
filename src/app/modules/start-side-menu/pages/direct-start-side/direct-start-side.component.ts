@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { usersList } from './data-source';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -15,10 +14,7 @@ export class DirectStartSideComponent implements OnInit {
   public userList = usersList;
   public msgMaxWidth: number;
 
-  constructor(
-    private readonly router: Router,
-    private readonly appWidthService: SharedIsFullWidthService,
-  ) { }
+  constructor(private readonly appWidthService: SharedIsFullWidthService) { }
 
   ngOnInit(): void {
     this.appWidthService.isAppFullWidth$
@@ -26,9 +22,5 @@ export class DirectStartSideComponent implements OnInit {
       // pc menu max width = 348 - x = 242; x = 106 (with overflow)
       // so mobile menu max width = 304 - 106 = 198
       .subscribe(full => this.msgMaxWidth = full ? 242 : 198);
-  }
-
-  public openCurrentDirect(id: string) {
-    this.router.navigate(['direct', 'current', id]).then();
   }
 }

@@ -3,16 +3,16 @@
 
     <ion-menu content-id="menu-content"
               menuId="start-menu"
-              max-edge-start="100"
-              side="start" type="reveal">
+              side="start" type="reveal"
+              [maxEdgeStart]="menuEdgeStart">
 <!--      start-side-menu routing-->
       <ion-router-outlet animated="false"></ion-router-outlet>
     </ion-menu>
 
     <ion-menu content-id="menu-content"
               menuId="end-menu"
-              max-edge-start="100"
-              side="end" type="reveal">
+              side="end" type="reveal"
+              [maxEdgeStart]="menuEdgeStart">
       sdfsdfsdf
     </ion-menu>
 

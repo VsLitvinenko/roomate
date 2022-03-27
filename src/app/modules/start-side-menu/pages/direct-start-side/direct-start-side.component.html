@@ -2,8 +2,11 @@
 
   <ion-list lines="none" mode="md">
     <ion-menu-toggle [autoHide]="false">
+
       <ng-container *ngFor="let user of userList">
-        <ion-item (click)="openCurrentDirect(user.id)">
+        <ion-item class="no-ion-hover"
+                  [routerLink]="['', {outlets: { content: ['direct','current', user.id] }}]"
+                  routerLinkActive="active-item">
           <ion-row class="ion-align-items-center">
             <ion-thumbnail>
               <img [src]="user.smallImg" alt="">
@@ -21,6 +24,7 @@
           </ion-row>
         </ion-item>
       </ng-container>
+
     </ion-menu-toggle>
   </ion-list>
 
