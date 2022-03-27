@@ -1,4 +1,26 @@
 <ion-app>
-  <ion-router-outlet [animated]="false">
-  </ion-router-outlet>
+  <ion-split-pane content-id="menu-content" [when]="splitPaneSize">
+
+    <ion-menu content-id="menu-content"
+              menuId="start-menu"
+              max-edge-start="100"
+              side="start" type="reveal">
+<!--      start-side-menu routing-->
+      <ion-router-outlet animated="false"></ion-router-outlet>
+    </ion-menu>
+
+    <ion-menu content-id="menu-content"
+              menuId="end-menu"
+              max-edge-start="100"
+              side="end" type="reveal">
+      sdfsdfsdf
+    </ion-menu>
+
+<!--    content-routing-->
+    <ion-router-outlet id="menu-content"
+                       animated="false"
+                       name="content">
+    </ion-router-outlet>
+
+  </ion-split-pane>
 </ion-app>

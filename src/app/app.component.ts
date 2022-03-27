@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SharedDarkModeService } from './modules/shared/services/shared-dark-mode.service';
+import { splitPaneBreakPoint } from './modules/shared/constants';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,9 @@ import { SharedDarkModeService } from './modules/shared/services/shared-dark-mod
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
+  public readonly splitPaneSize = splitPaneBreakPoint.size;
+
   constructor(private readonly darkMode: SharedDarkModeService) {}
+
 }

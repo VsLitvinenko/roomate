@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-start-side-menu',
-  templateUrl: './start-side-menu.component.html',
-  styleUrls: ['./start-side-menu.component.scss'],
+  selector: 'app-channel-start-side',
+  templateUrl: './channel-start-side.component.html',
+  styleUrls: ['./channel-start-side.component.scss'],
 })
-export class StartSideMenuComponent implements OnInit {
+export class ChannelStartSideComponent implements OnInit {
 
   publicChannels = [
     { title: 'public 1', id: 1, unread: false, active: true },

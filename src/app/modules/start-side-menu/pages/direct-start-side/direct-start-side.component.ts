@@ -6,11 +6,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-start-side-menu',
-  templateUrl: './start-side-menu.component.html',
-  styleUrls: ['./start-side-menu.component.scss'],
+  selector: 'app-direct-start-side',
+  templateUrl: './direct-start-side.component.html',
+  styleUrls: ['./direct-start-side.component.scss'],
 })
-export class StartSideMenuComponent implements OnInit {
+export class DirectStartSideComponent implements OnInit {
 
   public userList = usersList;
   public msgMaxWidth: number;
