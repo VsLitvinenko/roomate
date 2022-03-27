@@ -7,6 +7,7 @@ import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive'
 import { SharedProfileSideComponent } from './components/shared-profile-side/shared-profile-side.component';
 import { SharedLoaderComponent } from './components/shared-loader/shared-loader.component';
 import { SharedIsFullWidthService } from './services/shared-is-full-width.service';
+import { RouterModule } from '@angular/router';
 
 const directives = [
   ScrollbarThemeDirective,
@@ -27,6 +28,7 @@ const services = [
   imports: [
     IonicModule,
     CommonModule,
+    RouterModule,
   ],
   declarations: [
     ...directives,

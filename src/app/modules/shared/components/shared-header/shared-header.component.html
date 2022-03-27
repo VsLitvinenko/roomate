@@ -7,10 +7,23 @@
   </ion-row>
 
   <ion-row class="ion-align-items-center">
-    <ion-button (click)="changeDarkMode()"
-                fill="clear" size="small"
-                color="dark" mode="md">
-      color mode </ion-button>
+<!--    <ion-button (click)="changeDarkMode()"-->
+<!--                fill="clear" size="small"-->
+<!--                color="dark" mode="md">-->
+<!--      color mode </ion-button>-->
+
+    <ng-container *ngIf="isFull$ | async">
+      <a class="link" routerLinkActive="active-link"
+         [routerLink]="['/direct']">
+        <ion-icon name="person"></ion-icon>
+        <span> direct </span>
+      </a>
+      <a class="link" routerLinkActive="active-link"
+         [routerLink]="['/channel']">
+        <ion-icon name="people"></ion-icon>
+        <span> channel </span>
+      </a>
+    </ng-container>
 
     <ion-menu-button menu="end-menu">
       <ion-icon name="globe-outline"></ion-icon>
