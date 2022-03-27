@@ -47,13 +47,13 @@ ion-content {
       }
 
       .unread {
+        font-weight: bolder;
       }
       .read {
         --color: var(--ion-color-medium);
       }
       .active {
-        --color: var(--roomate-color-green) !important;
-        font-weight: bolder;
+        --color: var(--roomate-color-green);
       }
     }
   }

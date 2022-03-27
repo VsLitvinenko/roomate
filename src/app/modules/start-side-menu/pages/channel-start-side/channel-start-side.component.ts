@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-channel-start-side',
@@ -9,9 +8,9 @@ import {Router} from '@angular/router';
 export class ChannelStartSideComponent implements OnInit {
 
   publicChannels = [
-    { title: 'public 1', id: 1, unread: false, active: true },
-    { title: 'public 2', id: 2, unread: true, active: false },
-    { title: 'public 3', id: 3, unread: false, active: false },
+    { title: 'public 1', id: 1, unread: false },
+    { title: 'public 2', id: 2, unread: true },
+    { title: 'public 3', id: 3, unread: false },
   ];
   privateChannels = [
     { title: 'private 1', id: 1, unread: false },
@@ -20,17 +19,8 @@ export class ChannelStartSideComponent implements OnInit {
     { title: 'private 4', id: 4, unread: true },
   ];
 
-  constructor(private readonly router: Router) { }
+  constructor() { }
 
   ngOnInit() {
   }
-
-  public openCurrentChannel(id: string) {
-    this.router.navigate(['channel', 'current', id]).then();
-  }
-
-  public channelNgStyle(item): string {
-    return `${item.unread ? 'unread' : 'read'} ${item.active ? ' active' : ''}`;
-  }
-
 }

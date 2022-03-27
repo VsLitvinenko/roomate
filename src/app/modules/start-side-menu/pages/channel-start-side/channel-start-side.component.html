@@ -2,7 +2,7 @@
   <ion-accordion-group value="public">
     <ion-accordion value="public" mode="ios">
 
-      <ion-item slot="header" class="acc-header">
+      <ion-item slot="header" class="acc-header no-ion-hover">
         <ion-icon name="people-outline"></ion-icon>
         <ion-label> Public channels </ion-label>
       </ion-item>
@@ -10,11 +10,15 @@
       <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
           <ng-container *ngFor="let item of publicChannels">
-            <ion-item (click)="openCurrentChannel(item.id)"
-                      [ngClass]="channelNgStyle(item)">
+
+            <ion-item class="no-ion-hover"
+                      [ngClass]="item.unread ? 'unread' : 'read'"
+                      [routerLink]="['', {outlets: { content: ['channel','current', item.id] }}]"
+                      routerLinkActive="active">
               <span class="tag"> # </span>
               <ion-label> {{item.title}} </ion-label>
             </ion-item>
+
           </ng-container>
         </ion-menu-toggle>
       </ion-list>
@@ -25,7 +29,7 @@
   <ion-accordion-group value="private">
     <ion-accordion value="private" mode="ios">
 
-      <ion-item slot="header" class="acc-header">
+      <ion-item slot="header" class="acc-header no-ion-hover">
         <ion-icon name="lock-closed-outline"></ion-icon>
         <ion-label> Private channels </ion-label>
       </ion-item>
