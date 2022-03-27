@@ -1,14 +1,21 @@
-<ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-menu-button menu="start-menu"></ion-menu-button>
-  </ion-buttons>
-  <ion-title> {{title}} </ion-title>
+<ion-row class="header-container ion-justify-content-between"
+         [style.padding.px]="(isFull$ | async) ? 12 : 5">
 
-  <ion-buttons slot="end">
-    <ion-button (click)="changeDarkMode()"> color mode </ion-button>
+  <ion-row class="ion-align-items-center">
+    <ion-menu-button menu="start-menu" mode="md"></ion-menu-button>
+    <ng-content></ng-content>
+  </ion-row>
+
+  <ion-row class="ion-align-items-center">
+    <ion-button (click)="changeDarkMode()"
+                fill="clear" size="small"
+                color="dark" mode="md">
+      color mode </ion-button>
+
     <ion-menu-button menu="end-menu">
       <ion-icon name="globe-outline"></ion-icon>
     </ion-menu-button>
-  </ion-buttons>
-</ion-toolbar>
+  </ion-row>
+
+</ion-row>
 

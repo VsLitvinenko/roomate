@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
+import { SharedIsFullWidthService } from '../../services/shared-is-full-width.service';
 
 @Component({
   selector: 'app-shared-header',
@@ -7,9 +8,12 @@ import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
   styleUrls: ['./shared-header.component.scss'],
 })
 export class SharedHeaderComponent implements OnInit {
-  @Input() public title: string;
+  public isFull$ = this.appWidthService.isAppFullWidth$;
 
-  constructor(private readonly darkMode: SharedDarkModeService) { }
+  constructor(
+    private readonly darkMode: SharedDarkModeService,
+    private readonly appWidthService: SharedIsFullWidthService,
+  ) { }
 
   ngOnInit() {
   }

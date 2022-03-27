@@ -46,6 +46,14 @@ body.dark {
 
 // custom common classes
 
+.roomate-header-title {
+  font-weight: bolder;
+  color: var(--ion-text-color);
+  display: block;
+  font-size: 18px;
+  margin: 0 10px;
+}
+
 .no-ion-hover {
   --background-hover: none !important;
 }
