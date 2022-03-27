@@ -60,6 +60,14 @@ body.dark {
   --background-activated: transparent !important;
 }
 
+.no-text-selection {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .text-overflow {
   white-space: nowrap !important;
   overflow: hidden !important;
