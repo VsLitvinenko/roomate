@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 const localStorageKey = 'roomate.theme';
 
 @Injectable()
-export class DarkModeService {
+export class SharedDarkModeService {
 
   private darkMode = this.getStorage();
 

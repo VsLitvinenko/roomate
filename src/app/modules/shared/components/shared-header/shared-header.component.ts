@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {DarkModeService} from '../../services/dark-mode.service';
+import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
 
 @Component({
   selector: 'app-shared-header',
@@ -9,7 +9,7 @@ import {DarkModeService} from '../../services/dark-mode.service';
 export class SharedHeaderComponent implements OnInit {
   @Input() public title: string;
 
-  constructor(private readonly darkMode: DarkModeService) { }
+  constructor(private readonly darkMode: SharedDarkModeService) { }
 
   ngOnInit() {
   }

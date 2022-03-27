@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {DarkModeService} from './modules/shared/services/dark-mode.service';
+import { SharedDarkModeService } from './modules/shared/services/shared-dark-mode.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +7,5 @@ import {DarkModeService} from './modules/shared/services/dark-mode.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private readonly darkMode: DarkModeService) {}
+  constructor(private readonly darkMode: SharedDarkModeService) {}
 }

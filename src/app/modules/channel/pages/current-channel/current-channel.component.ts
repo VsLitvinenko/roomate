@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { testMessages } from './data-source';
 import { IonContent } from '@ionic/angular';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-current-chat',
   templateUrl: './current-channel.component.html',
@@ -25,6 +27,7 @@ export class CurrentChannelComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params
+      .pipe(untilDestroyed(this))
       .subscribe(params => this.channelId = params.id);
 
     this.loadingCounter += 1;

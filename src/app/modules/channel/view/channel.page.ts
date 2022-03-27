@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { splitPaneBreakPoint } from '../../shared/constants';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-channel',
@@ -9,9 +10,10 @@ import { splitPaneBreakPoint } from '../../shared/constants';
 export class ChannelPage implements OnInit {
   public readonly splitPaneSize = splitPaneBreakPoint.size;
 
-  constructor() { }
+  constructor(private readonly menuController: MenuController) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // this.menuController.open('start-menu').then();
   }
 
 }
