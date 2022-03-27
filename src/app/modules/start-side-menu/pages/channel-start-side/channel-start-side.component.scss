@@ -47,12 +47,12 @@ ion-content {
       }
 
       .unread {
-        font-weight: bolder;
       }
       .read {
         --color: var(--ion-color-medium);
       }
       .active {
+        font-weight: bolder;
         --color: var(--roomate-color-green);
       }
     }

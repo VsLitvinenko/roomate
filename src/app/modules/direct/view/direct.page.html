@@ -1,21 +1,3 @@
-<ion-split-pane content-id="menu-content" [when]="splitPaneSize">
-
-  <ion-menu content-id="menu-content"
-            menuId="start-menu"
-            max-edge-start="100"
-            side="start" type="reveal">
-    <app-start-side-menu></app-start-side-menu>
-  </ion-menu>
-
-  <ion-menu content-id="menu-content"
-            menuId="end-menu"
-            max-edge-start="100"
-            side="end" type="reveal">
-    <app-end-side-menu></app-end-side-menu>
-  </ion-menu>
-
-  <ion-router-outlet id="menu-content"
-                     animated="false">
-  </ion-router-outlet>
-
-</ion-split-pane>
+<ion-router-outlet id="menu-content"
+                   animated="false">
+</ion-router-outlet>
