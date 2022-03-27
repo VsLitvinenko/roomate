@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { testMessages } from './data-source';
+import { testMessages, userData } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
 
 @UntilDestroy()
 @Component({
@@ -14,12 +15,18 @@ export class CurrentDirectComponent implements OnInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 
+  public isFull$ = this.appWidthService.isAppFullWidth$;
+
   public directId: string;
   public dataSource = [];
+  public currentUser = userData;
 
   private loadingCounter = 0;
 
-  constructor(private readonly activatedRoute: ActivatedRoute) { }
+  constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly appWidthService: SharedIsFullWidthService,
+  ) { }
 
   get loading(): boolean {
     return this.loadingCounter !== 0;

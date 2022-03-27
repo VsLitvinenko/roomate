@@ -2,6 +2,12 @@ ion-header {
   &:after {
     background-image: none;
   }
+  .is-online {
+    color: var(--roomate-color-green);
+    font-size: 13px;
+    margin-top: 4px;
+    margin-left: 6px;
+  }
 }
 
 ion-content {

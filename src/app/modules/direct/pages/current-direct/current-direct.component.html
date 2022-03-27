@@ -1,8 +1,10 @@
 <ion-header mode="md">
   <app-shared-header>
     <span class="roomate-header-title">
-      direct {{directId}}
+      {{(isFull$ | async) ? currentUser.fullName : currentUser.shortName}}
     </span>
+    <span *ngIf="currentUser.online"
+          class="is-online"> online </span>
   </app-shared-header>
 </ion-header>
 
