@@ -2,10 +2,13 @@
          [style.padding.px]="(isFull$ | async) ? 12 : 5">
 
   <ion-row class="ion-align-items-center">
-    <ion-menu-button menu="start-menu" mode="md"></ion-menu-button>
-    <div [class.content]="(isFull$ | async) === false">
-      <ng-content></ng-content>
-    </div>
+    <ion-menu-button menu="start-menu" mode="md"
+                     class="left-menu-button">
+    </ion-menu-button>
+    <ion-row [class.content]="(isFull$ | async) === false"
+             class="ion-align-items-end">
+      <ng-content ></ng-content>
+    </ion-row>
   </ion-row>
 
   <ion-row class="ion-align-items-center">
