@@ -4,6 +4,8 @@
     <ion-menu content-id="menu-content"
               menuId="start-menu"
               side="start" type="reveal"
+              (ionDidOpen)="isMenuShown$.next(true)"
+              (ionDidClose)="isMenuShown$.next(false)"
               [maxEdgeStart]="menuEdgeStart">
 <!--      start-side-menu routing-->
       <ion-router-outlet animated="false"></ion-router-outlet>
@@ -23,4 +25,8 @@
     </ion-router-outlet>
 
   </ion-split-pane>
+
+  <app-tabs *ngIf="isMobile$ | async"
+            [isMenuShown$]="isMenuShown$.asObservable()">
+  </app-tabs>
 </ion-app>

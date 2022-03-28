@@ -5,7 +5,9 @@ import { splitPaneBreakPoint } from '../constants';
 
 const minWidth = splitPaneBreakPoint.minWidth;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SharedIsFullWidthService {
 
   public readonly isAppFullWidth$: Observable<boolean> = fromEvent(window, 'resize')

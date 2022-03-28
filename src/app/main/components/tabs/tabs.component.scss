@@ -1,0 +1,23 @@
+.tabs-container {
+  position: fixed;
+  bottom: 0;
+  padding: 8px;
+  width: 100%;
+  background: var(--ion-background-color);
+
+  ion-tab-button {
+    color: var(--ion-color-medium);
+    border-radius: 15px;
+  }
+  .active-tab {
+    color: var(--ion-color-roomate-green)
+  }
+
+  transition: all 0.1s ease-out;
+}
+
+.hidden {
+  transition: all 0.1s ease-in;
+  visibility: hidden;
+  margin-bottom: -70px;
+}

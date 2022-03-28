@@ -2,13 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
 import { SharedIsFullWidthService } from '../../services/shared-is-full-width.service';
 import { Router } from '@angular/router';
-
-interface MenuHeaderLink {
-  module: string;
-  title: string;
-  icon: string;
-  active?: boolean;
-}
+import { MenuHeaderLink, sharedMenuLinks } from '../../constants';
 
 @Component({
   selector: 'app-shared-header',
@@ -19,10 +13,7 @@ interface MenuHeaderLink {
 export class SharedHeaderComponent implements OnInit {
   public isFull$ = this.appWidthService.isAppFullWidth$;
 
-  public readonly menuLinks: MenuHeaderLink[] = [
-    { module: 'channel', title: 'channel', icon: 'people' },
-    { module: 'direct', title: 'direct', icon: 'person' },
-  ];
+  public readonly menuLinks = sharedMenuLinks;
 
   constructor(
     private readonly darkMode: SharedDarkModeService,
@@ -44,11 +35,14 @@ export class SharedHeaderComponent implements OnInit {
   public moduleNavigate(link: MenuHeaderLink): void {
     if (!link.active) {
       this.router.navigate([link.module])
-        .then(
-          () => this.router.navigate([
-            '', { outlets: { content: [link.module] } }
-          ])
-        );
+        .then(() =>
+          this.router.navigate(
+            ['', { outlets: { content: [link.module] } }]
+          )
+        ).then(() => {
+          this.menuLinks.forEach(item => item.active = false);
+          link.active = true;
+        });
     }
   }
 }
