@@ -1,6 +1,6 @@
 <div class="loader-container"
      [ngStyle]="{ background }"
-     [ngClass]="loading ? '' : 'hidden'"
+     [class.hidden]="!loading"
      (click)="stopPointEvent($event)">
   <ion-spinner name="crescent"
                color="roomate-green"

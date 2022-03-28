@@ -12,7 +12,7 @@
       <!--      links-->
       <a *ngFor="let link of menuLinks"
          (click)="moduleNavigate(link)"
-         [ngClass]="link.active ? 'active-link' : ''"
+         [class.active-link]="link.active"
          class="link no-text-selection">
         <ion-icon [name]="link.icon"></ion-icon>
         <span> {{link.title}} </span>
