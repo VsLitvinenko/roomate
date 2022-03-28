@@ -15,4 +15,8 @@ export class SharedLoaderComponent {
   get spinnerStyle(): any {
     return { transform: `scale(${this.scale})` };
   }
+
+  public stopPointEvent(event: Event) {
+    event.stopImmediatePropagation();
+  }
 }

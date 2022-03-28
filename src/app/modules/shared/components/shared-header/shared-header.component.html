@@ -9,7 +9,7 @@
   <ion-row class="ion-align-items-center">
 
     <ng-container *ngIf="isFull$ | async">
-<!--      links-->
+      <!--      links-->
       <a *ngFor="let link of menuLinks"
          (click)="moduleNavigate(link)"
          [ngClass]="link.active ? 'active-link' : ''"
@@ -17,14 +17,12 @@
         <ion-icon [name]="link.icon"></ion-icon>
         <span> {{link.title}} </span>
       </a>
-
+      <!--      buttons-->
+      <a class="link" (click)="changeDarkMode()">
+        <ion-icon name="settings-sharp"></ion-icon>
+        <span> settings </span>
+      </a>
     </ng-container>
-
-    <!--      buttons-->
-    <a class="link" (click)="changeDarkMode()">
-      <ion-icon name="settings-sharp"></ion-icon>
-      <span> settings </span>
-    </a>
 
     <ion-menu-button menu="end-menu">
       <ion-icon name="globe-outline"></ion-icon>
