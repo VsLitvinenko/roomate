@@ -4,6 +4,12 @@
 
   ion-menu-button {
     --color: var(--ion-color-dark);
+    position: absolute;
+  }
+
+  .content {
+    // for static content position while menu button is rendering
+    margin-left: 48px;
   }
 
   .link {

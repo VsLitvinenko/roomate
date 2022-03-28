@@ -2,7 +2,6 @@
 :root {
   --roomate-color-sand: #DECCBE;
   --roomate-color-brown: #7F493F;
-  --roomate-color-green: #6E835A;
   --roomate-color-dark: #2D2926;
   --roomate-color-light: #AAAA88;
 
@@ -10,13 +9,16 @@
   --roomate-background-color: #F2EFE7;
   --roomate-border-color: #E4E1D9;
 
+  //--roomate-color-green: #6E835A;
+  // roomate-green
+  --roomate-color-green: #5f8d41;
   // ion-roomate-green
-  --ion-color-roomate-green: #6E835A;
-  --ion-color-roomate-green-rgb: 110,131,90;
+  --ion-color-roomate-green: #5f8d41;
+  --ion-color-roomate-green-rgb: 95,141,65;
   --ion-color-roomate-green-contrast: #ffffff;
   --ion-color-roomate-green-contrast-rgb: 255,255,255;
-  --ion-color-roomate-green-shade: #61734f;
-  --ion-color-roomate-green-tint: #7d8f6b;
+  --ion-color-roomate-green-shade: #547c39;
+  --ion-color-roomate-green-tint: #6f9854;
 
   // chat colors
   --roomate-my-message: #fff;
