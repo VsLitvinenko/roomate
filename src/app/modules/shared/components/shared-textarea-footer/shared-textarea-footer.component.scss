@@ -1,0 +1,27 @@
+ion-toolbar {
+  --background: var(--roomate-border-color);
+  border-top: 2px solid var(--ion-background-color);
+  //filter: brightness(95%);
+
+
+  .textarea-container {
+    display: flex;
+    align-items: center;
+
+    ion-icon {
+      cursor: pointer;
+      margin: 4px 6px;
+      padding: 8px;
+      font-size: 20px;
+
+      &:hover {
+        color: var(--roomate-color-green);
+      }
+    }
+
+    ion-textarea {
+      margin: 0;
+      flex: 1;
+    }
+  }
+}

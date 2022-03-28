@@ -47,26 +47,3 @@ ion-content {
     }
   }
 }
-
-ion-footer {
-  ion-toolbar {
-    filter: brightness(95%);
-    --background: var(--roomate-border-color);
-
-
-    .textarea-container {
-      display: flex;
-      align-items: flex-end;
-
-      ion-icon {
-        margin: 12px;
-        font-size: 20px;
-      }
-
-      ion-textarea {
-        margin: 0;
-        flex: 1;
-      }
-    }
-  }
-}

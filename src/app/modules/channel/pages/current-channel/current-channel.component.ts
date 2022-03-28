@@ -44,6 +44,10 @@ export class CurrentChannelComponent implements OnInit {
       .then(() => event.target.complete());
   }
 
+  public messageSend(event: string): void {
+    alert(event);
+  }
+
   private loadingData(): Promise<void> {
     return new Promise<void>(resolve =>
       setTimeout(() => {

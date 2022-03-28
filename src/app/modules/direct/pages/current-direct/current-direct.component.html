@@ -38,18 +38,6 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar>
-    <div class="textarea-container">
-
-      <ion-icon name="document-outline"></ion-icon>
-
-      <ion-textarea class="message-input"
-                    autoGrow="true" rows="1"
-                    placeholder="enter your message...">
-      </ion-textarea>
-
-      <ion-icon name="mic-outline"></ion-icon>
-      <ion-icon name="send-outline"></ion-icon>
-    </div>
-  </ion-toolbar>
+  <app-shared-textarea-footer (messageSend)="messageSend($event)">
+  </app-shared-textarea-footer>
 </ion-footer>
