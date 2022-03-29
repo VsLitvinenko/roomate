@@ -19,6 +19,7 @@ export class DirectPage implements OnInit {
   // proxy by ion-router-outlet
   ionViewWillEnter(): void {
     this.menuController.setStartSideMenuComponent(DirectStartSideComponent);
+    this.menuController.clearEndSideMenuTemplate();
   }
 
 }

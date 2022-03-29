@@ -1,8 +1,11 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Injector, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { testMessages } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { MenuControllerService } from '../../../../main/services/menu-controller.service';
+import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
+import { InjectableDataClass } from '../../injectable-data.class';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +22,11 @@ export class CurrentChannelComponent implements OnInit {
 
   private loadingCounter = 0;
 
-  constructor(private readonly activatedRoute: ActivatedRoute) { }
+  constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly menuController: MenuControllerService,
+    private readonly inj: Injector,
+  ) { }
 
   get loading(): boolean {
     return this.loadingCounter !== 0;
@@ -30,6 +37,7 @@ export class CurrentChannelComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(params => {
         this.channelId = params.id;
+        this.updateEndSideMenu(this.channelId);
 
         this.dataSource = [];
         this.loadingCounter += 1;
@@ -55,5 +63,17 @@ export class CurrentChannelComponent implements OnInit {
         resolve();
       }, 1000)
     );
+  }
+
+  private updateEndSideMenu(id: string): void {
+    const injector = Injector.create([{
+      provide: InjectableDataClass,
+      useValue: new InjectableDataClass(id)
+    }], this.inj);
+
+    this.menuController.setEndSideMenuTemplate({
+      component: ChannelEndSideComponent,
+      injector
+    });
   }
 }

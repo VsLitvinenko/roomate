@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {usersImages} from './data-source';
+import { usersImages } from './data-source';
+import { InjectableDataClass } from '../../injectable-data.class';
 
 @Component({
   selector: 'app-end-side-menu',
@@ -53,7 +54,11 @@ export class ChannelEndSideComponent implements OnInit {
     },
   ];
 
-  constructor() { }
+  public channelId: string;
+
+  constructor(private item: InjectableDataClass) {
+    this.channelId = item.channelId;
+  }
 
   ngOnInit() {}
 

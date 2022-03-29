@@ -14,9 +14,10 @@ import { MenuControllerService } from './services/menu-controller.service';
 export class AppComponent {
 
   public startSideMenuComponent = this.menuController.startSideMenuComponent$;
+  public endSideMenuTemplate = this.menuController.endSideMenuTemplate$;
 
   public readonly splitPaneSize = splitPaneBreakPoint.size;
-  public readonly menuEdgeStart = 120;
+  public readonly menuEdgeStart = 125;
 
   public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)

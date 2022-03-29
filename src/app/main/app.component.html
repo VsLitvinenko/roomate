@@ -17,7 +17,10 @@
               menuId="end-menu"
               side="end" type="reveal"
               [maxEdgeStart]="menuEdgeStart">
-      sdfsdfsdf
+      <ng-container *ngIf="(endSideMenuTemplate | async) as template">
+        <ng-container *ngComponentOutlet="template.component;
+                      injector: template.injector"></ng-container>
+      </ng-container>
     </ion-menu>
 
     <!--    content-routing-->
