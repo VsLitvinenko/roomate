@@ -5,7 +5,7 @@
 
       <ng-container *ngFor="let user of userList">
         <ion-item class="no-ion-hover"
-                  [routerLink]="['', {outlets: { content: ['direct','current', user.id] }}]"
+                  [routerLink]="['/direct', 'current', user.id]"
                   routerLinkActive="active-item">
           <ion-row class="ion-align-items-center">
             <ion-thumbnail>

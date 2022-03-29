@@ -3,10 +3,10 @@ import {usersImages} from './data-source';
 
 @Component({
   selector: 'app-end-side-menu',
-  templateUrl: './end-side-menu.component.html',
-  styleUrls: ['./end-side-menu.component.scss'],
+  templateUrl: './channel-end-side.component.html',
+  styleUrls: ['./channel-end-side.component.scss'],
 })
-export class EndSideMenuComponent implements OnInit {
+export class ChannelEndSideComponent implements OnInit {
 
   public rooms = [
     {

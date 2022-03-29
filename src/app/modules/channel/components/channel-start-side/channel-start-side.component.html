@@ -13,7 +13,7 @@
           <ng-container *ngFor="let item of publicChannels">
             <ion-item class="no-ion-hover"
                       [ngClass]="item.unread ? 'unread' : 'read'"
-                      [routerLink]="['', {outlets: { content: ['channel','current', item.id] }}]"
+                      [routerLink]="['/channel', 'current', item.id]"
                       routerLinkActive="active">
               <span class="tag"> # </span>
               <ion-label> {{item.title}} </ion-label>

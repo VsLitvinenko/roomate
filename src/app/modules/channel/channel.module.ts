@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ChannelPageRoutingModule } from './channel-routing.module';
 import { ChannelPage } from './view/channel.page';
-import { EndSideMenuComponent } from './components/end-side-menu/end-side-menu.component';
 import { SharedModule } from '../shared/shared.module';
 import { NoChannelComponent } from './pages/no-channel/no-channel.component';
 import { CurrentChannelComponent } from './pages/current-channel/current-channel.component';
 import { ChannelStartSideComponent } from './components/channel-start-side/channel-start-side.component';
+import { ChannelEndSideComponent } from './components/channel-end-side/channel-end-side.component';
 
 const commonComponents = [
-  EndSideMenuComponent,
+  ChannelEndSideComponent,
   ChannelStartSideComponent,
 ];
 
