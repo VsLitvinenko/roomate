@@ -1,19 +1,15 @@
 .header-container {
   background: var(--ion-background-color);
   min-height: 58px;
+  padding: 5px;
 
   ion-menu-button {
     --color: var(--ion-color-dark);
   }
 
-  .left-menu-button {
-    position: absolute;
-  }
-
-  .content {
-    // for static content position while menu button is rendering
-    margin-left: 48px;
-  }
+  // for static content position while menu button is rendering
+  .left-menu-button { position: absolute; }
+  .content { margin-left: 48px; }
 
   .link {
     padding: 5px 10px;
