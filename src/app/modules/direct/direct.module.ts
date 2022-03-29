@@ -8,9 +8,11 @@ import { EndSideMenuComponent } from './components/end-side-menu/end-side-menu.c
 import { SharedModule } from '../shared/shared.module';
 import { NoDirectComponent } from './pages/no-direct/no-direct.component';
 import { CurrentDirectComponent } from './pages/current-direct/current-direct.component';
+import { DirectStartSideComponent } from './components/direct-start-side/direct-start-side.component';
 
 const commonComponents = [
   EndSideMenuComponent,
+  DirectStartSideComponent
 ];
 
 const pagesComponents = [

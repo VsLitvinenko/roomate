@@ -7,8 +7,10 @@
               (ionDidOpen)="isMenuShown$.next(true)"
               (ionDidClose)="isMenuShown$.next(false)"
               [maxEdgeStart]="menuEdgeStart">
-<!--      start-side-menu routing-->
-      <ion-router-outlet animated="false"></ion-router-outlet>
+
+      <app-profile-header></app-profile-header>
+      <ng-container *ngComponentOutlet="startSideMenuComponent | async">
+      </ng-container>
     </ion-menu>
 
     <ion-menu content-id="menu-content"
@@ -18,10 +20,9 @@
       sdfsdfsdf
     </ion-menu>
 
-<!--    content-routing-->
+    <!--    content-routing-->
     <ion-router-outlet id="menu-content"
-                       animated="false"
-                       name="content">
+                       animated="false">
     </ion-router-outlet>
 
   </ion-split-pane>

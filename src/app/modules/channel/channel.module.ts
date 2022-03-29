@@ -8,9 +8,11 @@ import { EndSideMenuComponent } from './components/end-side-menu/end-side-menu.c
 import { SharedModule } from '../shared/shared.module';
 import { NoChannelComponent } from './pages/no-channel/no-channel.component';
 import { CurrentChannelComponent } from './pages/current-channel/current-channel.component';
+import { ChannelStartSideComponent } from './components/channel-start-side/channel-start-side.component';
 
 const commonComponents = [
   EndSideMenuComponent,
+  ChannelStartSideComponent,
 ];
 
 const pagesComponents = [

@@ -3,7 +3,8 @@ import { SharedDarkModeService } from '../modules/shared/services/shared-dark-mo
 import { splitPaneBreakPoint } from '../modules/shared/constants';
 import { SharedIsFullWidthService } from '../modules/shared/services/shared-is-full-width.service';
 import { map } from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
+import { MenuControllerService } from './services/menu-controller.service';
 
 @Component({
   selector: 'app-root',
@@ -12,17 +13,21 @@ import {Subject} from 'rxjs';
 })
 export class AppComponent {
 
+  public startSideMenuComponent = this.menuController.startSideMenuComponent$;
+
   public readonly splitPaneSize = splitPaneBreakPoint.size;
   public readonly menuEdgeStart = 120;
 
   public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)
   );
+
   public readonly isMenuShown$ = new Subject<boolean>();
 
   constructor(
     private readonly darkMode: SharedDarkModeService,
-    private readonly appWidthService: SharedIsFullWidthService
+    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly menuController: MenuControllerService
   ) {}
 
 }

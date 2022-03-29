@@ -2,9 +2,8 @@
          [class.hidden]="!isTabsShowing">
   <!--      links-->
   <ion-tab-button *ngFor="let link of menuLinks"
-                  mode="md"
-                  (click)="moduleNavigate(link)"
-                  [class.active-tab]="link.active">
+                  [routerLink]="[link.url]"
+                  routerLinkActive="active-tab" mode="md">
     <ion-icon [name]="link.icon"></ion-icon>
     <ion-label> {{link.title}} </ion-label>
   </ion-tab-button>

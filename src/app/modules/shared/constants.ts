@@ -5,14 +5,13 @@ export const splitPaneBreakPoint = {
 };
 
 export interface MenuHeaderLink {
-  module: string;
+  url: string;
   title: string;
   icon: string;
-  active?: boolean;
 }
 
 export const sharedMenuLinks: MenuHeaderLink[] = [
-  { module: 'channel', title: 'channel', icon: 'people' },
-  { module: 'direct', title: 'direct', icon: 'person' },
+  { url: '/channel', title: 'channel', icon: 'people' },
+  { url: '/direct', title: 'direct', icon: 'person' },
 ];
 

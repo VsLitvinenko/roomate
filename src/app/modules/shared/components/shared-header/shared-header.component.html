@@ -16,8 +16,8 @@
     <ng-container *ngIf="isFull$ | async">
       <!--      links-->
       <a *ngFor="let link of menuLinks"
-         (click)="moduleNavigate(link)"
-         [class.active-link]="link.active"
+         [routerLink]="[link.url]"
+         routerLinkActive="active-link"
          class="link no-text-selection">
         <ion-icon [name]="link.icon"></ion-icon>
         <span> {{link.title}} </span>
