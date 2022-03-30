@@ -10,6 +10,7 @@ export interface EndSideMenuTemplate {
 export class MenuControllerService {
 
   private startSideMenuComponent$$ = new Subject<any>();
+
   private endSideMenuTemplate$$ = new Subject<EndSideMenuTemplate>();
 
   constructor() { }

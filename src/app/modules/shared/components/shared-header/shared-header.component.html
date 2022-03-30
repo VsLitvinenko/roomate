@@ -28,8 +28,9 @@
       </a>
     </ng-container>
 
-    <ion-menu-button menu="end-menu">
-      <ion-icon name="globe-outline"></ion-icon>
+    <ion-menu-button *ngIf="endSideButtonIcon as name"
+                     menu="end-menu">
+      <ion-icon [name]="name"></ion-icon>
     </ion-menu-button>
 
   </ion-row>

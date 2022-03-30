@@ -13,13 +13,13 @@ import { MenuControllerService } from './services/menu-controller.service';
 })
 export class AppComponent {
 
-  public startSideMenuComponent = this.menuController.startSideMenuComponent$;
-  public endSideMenuTemplate = this.menuController.endSideMenuTemplate$;
+  public readonly startSideMenuComponent = this.menuController.startSideMenuComponent$;
+  public readonly endSideMenuTemplate = this.menuController.endSideMenuTemplate$;
 
   public readonly splitPaneSize = splitPaneBreakPoint.size;
-  public readonly menuEdgeStart = 125;
+  public readonly menuEdgeStart = splitPaneBreakPoint.menuEdgeStart;
 
-  public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
+  public readonly isMobile = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)
   );
 
@@ -29,6 +29,6 @@ export class AppComponent {
     private readonly darkMode: SharedDarkModeService,
     private readonly appWidthService: SharedIsFullWidthService,
     private readonly menuController: MenuControllerService
-  ) {}
+  ) { }
 
 }

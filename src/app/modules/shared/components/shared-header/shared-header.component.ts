@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
 import { SharedIsFullWidthService } from '../../services/shared-is-full-width.service';
 import { sharedMenuLinks } from '../../constants';
@@ -10,8 +10,9 @@ import { sharedMenuLinks } from '../../constants';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedHeaderComponent implements OnInit {
-  public isFull$ = this.appWidthService.isAppFullWidth$;
+  @Input() endSideButtonIcon: string;
 
+  public isFull$ = this.appWidthService.isAppFullWidth$;
   public readonly menuLinks = sharedMenuLinks;
 
   constructor(

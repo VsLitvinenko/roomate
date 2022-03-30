@@ -16,6 +16,7 @@
     <ion-menu content-id="menu-content"
               menuId="end-menu"
               side="end" type="reveal"
+              [swipeGesture]="(endSideMenuTemplate | async) !== null"
               [maxEdgeStart]="menuEdgeStart">
       <ng-container *ngIf="(endSideMenuTemplate | async) as template">
         <ng-container *ngComponentOutlet="template.component;
@@ -30,7 +31,7 @@
 
   </ion-split-pane>
 
-  <app-tabs *ngIf="isMobile$ | async"
+  <app-tabs *ngIf="isMobile | async"
             [isMenuShown$]="isMenuShown$.asObservable()">
   </app-tabs>
 </ion-app>
