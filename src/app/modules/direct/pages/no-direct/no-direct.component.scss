@@ -3,3 +3,25 @@ ion-header {
     background-image: none;
   }
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+  padding-bottom: 75px;
+
+  .huge-icon {
+    color: var(--ion-color-medium);
+    font-size: 70px;
+  }
+
+  .text {
+    color: var(--ion-color-medium);
+    margin: 10px;
+    font-weight: bolder;
+  }
+}
