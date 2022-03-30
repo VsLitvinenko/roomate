@@ -4,6 +4,9 @@ import { testMessages, userData } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
+import { MenuControllerService } from '../../../../main/services/menu-controller.service';
+import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
+import { DirectEndSideComponent } from '../../components/direct-end-side/direct-end-side.component';
 
 @UntilDestroy()
 @Component({
@@ -26,6 +29,8 @@ export class CurrentDirectComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly appWidthService: SharedIsFullWidthService,
+    private readonly menuController: MenuControllerService,
+    protected readonly inj: SharedInjectorService,
   ) { }
 
   get loading(): boolean {
@@ -37,6 +42,7 @@ export class CurrentDirectComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(params => {
         this.directId = params.id;
+        this.updateEndSideMenu(this.directId);
 
         this.dataSource = [];
         this.loadingCounter += 1;
@@ -62,5 +68,12 @@ export class CurrentDirectComponent implements OnInit {
         resolve();
       }, 1000)
     );
+  }
+
+  private updateEndSideMenu(id: string): void {
+    this.menuController.setEndSideMenuTemplate({
+      component: DirectEndSideComponent,
+      injector: this.inj.createInjector<string>(id)
+    });
   }
 }
