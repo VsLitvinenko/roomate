@@ -8,11 +8,11 @@ import { InjectableDataClass } from '../../../shared/services/shared-injector.se
   styleUrls: ['./direct-end-side.component.scss'],
 })
 export class DirectEndSideComponent implements OnInit {
-  public readonly user = userData;
+  public user: any;
   public isNotify = true;
 
   constructor(private item: InjectableDataClass<string>) {
-    this.user.id = parseInt(item.injectedItem, 10);
+    this.user = userData(item.injectedItem);
   }
 
   ngOnInit() {}
