@@ -13,8 +13,13 @@ const routes: Routes = [
         .then(m => m.DirectModule),
   },
   {
+    path: 'room',
+    loadChildren: () => import('./modules/room/room.module')
+      .then(m => m.RoomPageModule),
+  },
+  {
     path: '**',
-    redirectTo: 'channel',
+    redirectTo: 'room',
     pathMatch: 'full',
   }
 ];
