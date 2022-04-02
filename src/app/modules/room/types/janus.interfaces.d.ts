@@ -59,6 +59,15 @@ declare namespace JanusJS {
     error?: (error: Error | unknown) => void
   }
 
+  interface Publisher {
+    id: number;
+    display: string;
+    streams: any[];
+    audio_codec?: string;
+    video_codec?: string;
+    talking?: boolean;
+  }
+
   enum MessageType {
     Recording = 'recording',
     Starting = 'starting',
@@ -76,6 +85,7 @@ declare namespace JanusJS {
       uplink?: number;
     };
     error?: Error;
+    publishers?: Publisher[];
   }
 
   interface PluginOptions {
