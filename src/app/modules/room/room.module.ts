@@ -6,6 +6,15 @@ import { RoomPageRoutingModule } from './room-routing.module';
 import { RoomPage } from './view/room.page';
 import { SharedModule } from '../shared/shared.module';
 import { JanusService } from './janus/janus.service';
+import { PublisherComponent } from './components/publisher/publisher.component';
+
+const commonComponents = [
+  PublisherComponent,
+];
+
+const pagesComponents = [
+  RoomPage,
+];
 
 @NgModule({
   imports: [
@@ -16,7 +25,8 @@ import { JanusService } from './janus/janus.service';
     SharedModule
   ],
   declarations: [
-    RoomPage,
+    ...pagesComponents,
+    ...commonComponents,
   ],
   providers: [
     JanusService,

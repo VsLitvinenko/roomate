@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { acodec, doDtx, doSimulcast, Janus, vcodec } from './janus.constants';
 import { JanusJS } from './janus.interfaces';
 
-export interface RemoteStream {
-  stream: MediaStream;
+export interface NewPublisher {
+  sessionAttach: (options: JanusJS.PluginOptions) => void;
   publisher: JanusJS.Publisher;
+  myPrivateId: number;
 }
+
+const token = '1649527254,janus,janus.plugin.videoroom:dEZZZXaIW/P83gn4P7lfleFp4WM=';
 
 @Injectable()
 export class JanusService {
-  public newRemoteStream$ = new Subject<RemoteStream>();
-  public localStream$ = new Subject<MediaStream>();
+
+  private newPublisher$$ = new Subject<NewPublisher>();
+  private deletePublisher$$ = new Subject<number>();
+  private localStream$$ = new Subject<MediaStream>();
 
   private janusReady$ = new BehaviorSubject<boolean>(false);
   private janus: JanusJS.Janus;
@@ -20,9 +25,6 @@ export class JanusService {
   private roomId: number;
   private myPrivateId: number;
   private mainPlugin: JanusJS.PluginHandle;
-  private publishersHandles: { [key: number]: JanusJS.PluginHandle } = {};
-
-  private bufferRemoteTracks: MediaStreamTrack[] = [];
 
   constructor() {
     Janus.init({
@@ -30,6 +32,18 @@ export class JanusService {
       dependencies: Janus.useDefaultDependencies(null),
       callback: () => this.janusReady$.next(true)
     });
+  }
+
+  public get newPublisher$(): Observable<NewPublisher> {
+    return this.newPublisher$$.asObservable();
+  }
+
+  public get deletePublisher$(): Observable<number> {
+    return this.deletePublisher$$.asObservable();
+  }
+
+  public get localStream$(): Observable<MediaStream> {
+    return this.localStream$$.asObservable();
   }
 
   public joinRoom(roomId: number): void {
@@ -44,7 +58,8 @@ export class JanusService {
     ).subscribe(() => this.janus = new Janus({
         server: 'https://80-78-247-250.cloudvps.regruhosting.ru/janusbase/janus/',
         success: () => this.mainPluginAttaching(),
-        error: error => Janus.error('Roomate session creating error', error)
+        error: error => Janus.error('Roomate session creating error', error),
+        token
       }));
   }
 
@@ -108,79 +123,23 @@ export class JanusService {
     });
   }
 
-  private onDeletePublisher(publisherId: number): void {
-    delete this.publishersHandles[publisherId];
-    // document.getElementById(`publisher${publisherId}`).remove();
-  }
-
-  private onNewPublisher(publisher: JanusJS.Publisher): void {
-    this.janus.attach({
-      plugin: 'janus.plugin.videoroom',
-      success: pluginHandle => this.publisherPluginHandling(publisher, pluginHandle),
-      error: error => Janus.error('publisher attaching error', error),
-      onmessage: (msg, jsep) => this.onPublisherMessage(publisher, msg, jsep),
-      onremotetrack: (track, mid, on) => this.onRemoteTrack(track, publisher),
+  private onNewPublisher(newPublisher: JanusJS.Publisher): void {
+    this.newPublisher$$.next({
+      sessionAttach: this.janus.attach,
+      publisher: newPublisher,
+      myPrivateId: this.myPrivateId
     });
   }
 
-  private publisherPluginHandling(publisher: JanusJS.Publisher, plugin: JanusJS.PluginHandle): void {
-    this.publishersHandles[publisher.id] = plugin;
-    const subscription = [];
-    publisher.streams
-      ?.forEach(stream => subscription
-        .push({ feed: publisher.id, mid: stream.mid }));
-
-    const request = {
-      request: 'join',
-      room: this.roomId,
-      ptype: 'subscriber',
-      streams: subscription,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      private_id: this.myPrivateId
-    };
-    plugin.send({ message: request });
-  }
-
-  private onPublisherMessage(publisher: JanusJS.Publisher, msg: JanusJS.Message, jsep: any): void {
-    if (jsep) {
-      const stereo = (jsep.sdp.indexOf('stereo=1') !== -1);
-      this.publishersHandles[publisher.id].createAnswer({
-        jsep,
-        media: { audioSend: false, videoSend: false },
-        customizeSdp: currentJsep => {
-          if (stereo && currentJsep.sdp.indexOf('stereo=1') === -1) {
-            // Make sure that our offer contains stereo too
-            currentJsep.sdp = currentJsep.sdp.replace('useinbandfec=1', 'useinbandfec=1;stereo=1');
-          }
-        },
-        success: currentJsep => {
-          const request = { request: 'start', room: this.roomId };
-          this.publishersHandles[publisher.id].send({ message: request, jsep: currentJsep });
-        },
-        error: error => Janus.error('WebRTC error:', error)
-      });
-    }
-  }
-
-  private onRemoteTrack(track: MediaStreamTrack, publisher: JanusJS.Publisher): void {
-    if (track.muted) {
-      return;
-    }
-    this.bufferRemoteTracks.push(track.clone());
-    if (this.bufferRemoteTracks.length === 2) {
-      const stream = new MediaStream();
-      this.bufferRemoteTracks
-        .forEach(currentTrack => stream.addTrack(currentTrack));
-      this.bufferRemoteTracks = [];
-      this.newRemoteStream$.next({ stream, publisher });
-    }
+  private onDeletePublisher(publisherId: number): void {
+    this.deletePublisher$$.next(publisherId);
   }
 
   private onLocalTrack(track: MediaStreamTrack): void {
     if (track.kind === 'video') {
       const stream = new MediaStream();
       stream.addTrack(track.clone());
-      this.localStream$.next(stream);
+      this.localStream$$.next(stream);
     }
   }
 }

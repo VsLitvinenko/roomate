@@ -1,0 +1,20 @@
+.stream-container {
+  position: relative;
+  border-radius: 15px;
+  background: var(--roomate-border-color);
+  height: 100%;
+
+  video {
+    height: 100%;
+    width: 100%;
+  }
+
+  .display {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--roomate-border-color);
+  }
+}

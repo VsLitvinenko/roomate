@@ -6,6 +6,15 @@
   </app-shared-header>
 </ion-header>
 
-<ion-content class="ion-padding">
-
+<ion-content appScrollbarTheme>
+  <div class="streams-container ion-padding"
+       [class.mobile-container]="isMobile$ | async">
+    <ng-container *ngFor="let item of publishers">
+      <app-publisher [publisher]="item.publisher"
+                     [myPrivateId]="item.myPrivateId"
+                     [roomId]="roomId"
+                     [sessionAttach]="item.sessionAttach">
+      </app-publisher>
+    </ng-container>
+  </div>
 </ion-content>

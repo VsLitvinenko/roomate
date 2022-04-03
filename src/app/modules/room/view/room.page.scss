@@ -3,3 +3,21 @@ ion-header {
     background-image: none;
   }
 }
+
+.streams-container {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+
+  app-publisher {
+    height: 350px;
+  }
+}
+
+.mobile-container {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+
+  app-publisher {
+    height: 235px !important;
+  }
+}
