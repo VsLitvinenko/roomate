@@ -1,4 +1,11 @@
+import adapter from 'webrtc-adapter';
+
 /*eslint-disable */
+
+// global Janus lib variables
+(window as any).adapter = adapter;
+export const Janus = (window as any).Janus;
+
 
 export const acodec = (getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null);
 
@@ -18,7 +25,7 @@ export const doSvc = getQueryStringValue("svc") || null;
 // Helper to parse query string
 function getQueryStringValue(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+  const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
     results = regex.exec(location.search);
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }

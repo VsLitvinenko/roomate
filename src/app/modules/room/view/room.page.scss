@@ -1,4 +1,5 @@
-video {
-  height: 500px;
-  width: 500px;
+ion-header {
+  &:after {
+    background-image: none;
+  }
 }
