@@ -10,10 +10,10 @@
   <div class="streams-container ion-padding"
        [class.mobile-container]="isMobile$ | async">
     <ng-container *ngFor="let item of publishers">
-      <app-publisher [publisher]="item.publisher"
-                     [myPrivateId]="item.myPrivateId"
-                     [roomId]="roomId"
-                     [sessionAttach]="item.sessionAttach">
+      <app-publisher [roomId]="roomId"
+                     [publisher]="item"
+                     [myPrivateId]="roomReady.privateId"
+                     [sessionAttach]="roomReady.sessionAttach">
       </app-publisher>
     </ng-container>
   </div>
@@ -31,12 +31,15 @@
         <ion-icon name="desktop-outline"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" color="medium" mode="md">
-        <ion-icon name="videocam"></ion-icon>
+      <ion-button fill="clear" color="medium" mode="md"
+                  (click)="toggleVideo()">
+        <ion-icon [name]="'videocam' + (isVideoMuted ? '-off' : '')"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" color="roomate-green" mode="md">
-        <ion-icon name="mic-sharp"></ion-icon>
+      <ion-button color="medium" mode="md"
+                  (click)="toggleAudio()"
+                  [fill]="isAudioMuted ? 'outline' : 'clear'">
+        <ion-icon [name]="'mic' + (isAudioMuted ? '-off' : '')"></ion-icon>
       </ion-button>
 
       <ion-button fill="clear" color="danger" mode="md">

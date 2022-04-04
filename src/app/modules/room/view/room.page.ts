@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { JanusService, NewPublisher } from '../janus/janus.service';
+import { JanusService, RoomReady } from '../janus/janus.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from '../components/room-end-side/room-end-side.component';
+import { JanusJS } from '../janus/janus.interfaces';
 
 @UntilDestroy()
 @Component({
@@ -18,8 +19,12 @@ export class RoomPage implements OnInit {
     map(value => !value)
   );
 
-  public publishers: NewPublisher[] = [];
+  public publishers: JanusJS.Publisher[] = [];
   public readonly roomId = 1234;
+  public roomReady: RoomReady;
+
+  public isAudioMuted = false;
+  public isVideoMuted = false;
 
   constructor(
     private readonly janusService: JanusService,
@@ -41,7 +46,20 @@ export class RoomPage implements OnInit {
     this.menuController.clearEndSideMenuTemplate();
   }
 
+  public toggleAudio(): void {
+    this.isAudioMuted = !this.isAudioMuted;
+    this.janusService.toggleAudio(this.isAudioMuted);
+  }
+
+  public toggleVideo(): void {
+    this.isVideoMuted = !this.isVideoMuted;
+    this.janusService.toggleVideo(this.isVideoMuted);
+  }
+
   private janusServiceSubscribes(): void {
+    this.janusService.roomReady$()
+      .subscribe(rdy => this.roomReady = rdy);
+
     this.janusService.newPublisher$
       .pipe(untilDestroyed(this))
       .subscribe(newPublisher => this.publishers.push(newPublisher));
@@ -50,7 +68,7 @@ export class RoomPage implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(id => this.publishers
         .splice(this.publishers
-          .findIndex(item => item.publisher.id === id), 1));
+          .findIndex(publisher => publisher.id === id), 1));
 
     this.janusService.localStream$
       .pipe(untilDestroyed(this))

@@ -4,10 +4,9 @@ import { filter, take } from 'rxjs/operators';
 import { acodec, doDtx, doSimulcast, Janus, vcodec } from './janus.constants';
 import { JanusJS } from './janus.interfaces';
 
-export interface NewPublisher {
+export interface RoomReady {
   sessionAttach: (options: JanusJS.PluginOptions) => void;
-  publisher: JanusJS.Publisher;
-  myPrivateId: number;
+  privateId: number;
 }
 
 const token = '1649527254,janus,janus.plugin.videoroom:dEZZZXaIW/P83gn4P7lfleFp4WM=';
@@ -15,15 +14,16 @@ const token = '1649527254,janus,janus.plugin.videoroom:dEZZZXaIW/P83gn4P7lfleFp4
 @Injectable()
 export class JanusService {
 
-  private newPublisher$$ = new Subject<NewPublisher>();
+  private newPublisher$$ = new Subject<JanusJS.Publisher>();
   private deletePublisher$$ = new Subject<number>();
   private localStream$$ = new Subject<MediaStream>();
+
+  private roomReady$$ = new BehaviorSubject<RoomReady>(null);
 
   private janusReady$ = new BehaviorSubject<boolean>(false);
   private janus: JanusJS.Janus;
 
   private roomId: number;
-  private myPrivateId: number;
   private mainPlugin: JanusJS.PluginHandle;
 
   constructor() {
@@ -34,7 +34,7 @@ export class JanusService {
     });
   }
 
-  public get newPublisher$(): Observable<NewPublisher> {
+  public get newPublisher$(): Observable<JanusJS.Publisher> {
     return this.newPublisher$$.asObservable();
   }
 
@@ -46,9 +46,36 @@ export class JanusService {
     return this.localStream$$.asObservable();
   }
 
+  public roomReady$(): Observable<RoomReady> {
+    return this.roomReady$$.pipe(
+      filter(value => value !== null),
+      take(1)
+    );
+  }
+
   public joinRoom(roomId: number): void {
     this.roomId = roomId;
     this.createSession();
+  }
+
+  public toggleAudio(muted: boolean): void {
+    this.roomReady$().subscribe(() => {
+      if (muted) {
+        this.mainPlugin.muteAudio();
+      } else  {
+        this.mainPlugin.unmuteAudio();
+      }
+    });
+  }
+
+  public toggleVideo(muted: boolean): void {
+    this.roomReady$().subscribe(() => {
+      if (muted) {
+        this.mainPlugin.muteVideo();
+      } else  {
+        this.mainPlugin.unmuteVideo();
+      }
+    });
   }
 
   private createSession(): void {
@@ -100,7 +127,10 @@ export class JanusService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
-    this.myPrivateId = (msg as any).private_id;
+    this.roomReady$$.next({
+      privateId: (msg as any).private_id,
+      sessionAttach: this.janus.attach
+    });
     this.mainPlugin.createOffer({
       media: { audioRecv: false, videoRecv: false, audioSend: true, videoSend: true },
       simulcast: doSimulcast,
@@ -124,11 +154,7 @@ export class JanusService {
   }
 
   private onNewPublisher(newPublisher: JanusJS.Publisher): void {
-    this.newPublisher$$.next({
-      sessionAttach: this.janus.attach,
-      publisher: newPublisher,
-      myPrivateId: this.myPrivateId
-    });
+    this.newPublisher$$.next(newPublisher);
   }
 
   private onDeletePublisher(publisherId: number): void {
