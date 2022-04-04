@@ -17,8 +17,10 @@ export class PublisherComponent implements OnInit {
   private readonly videoEl: ElementRef<HTMLVideoElement>;
 
   public videoVolume = 100;
+  public isModalOpened = false;
 
   private publisherHandle: JanusJS.PluginHandle;
+  private remoteStream: MediaStream;
   private bufferRemoteTracks: MediaStreamTrack[] = [];
 
   constructor() { }
@@ -31,6 +33,25 @@ export class PublisherComponent implements OnInit {
       onmessage: (msg, jsep) => this.onPublisherMessage(msg, jsep),
       onremotetrack: (track, mid, on) => this.onRemoteTrack(track),
     });
+  }
+
+  public openModal(): void {
+    this.isModalOpened = true;
+  }
+
+  public onModalOpened(): void {
+    const modalVideoEl = document.getElementById('modalVideoEl') as HTMLVideoElement;
+    this.videoEl.nativeElement.srcObject = null;
+    Janus.attachMediaStream(modalVideoEl, this.remoteStream);
+  }
+
+  public closeModal(): void {
+    this.isModalOpened = false;
+  }
+
+  public onModalClosed(): void {
+    this.isModalOpened = false;
+    this.videoEl.nativeElement.srcObject = this.remoteStream;
   }
 
   private publisherPluginHandling(plugin: JanusJS.PluginHandle): void {
@@ -78,10 +99,10 @@ export class PublisherComponent implements OnInit {
     }
     this.bufferRemoteTracks.push(track.clone());
     if (this.bufferRemoteTracks.length === 2) {
-      const stream = new MediaStream();
+      this.remoteStream = new MediaStream();
       this.bufferRemoteTracks
-        .forEach(currentTrack => stream.addTrack(currentTrack));
-      Janus.attachMediaStream(this.videoEl.nativeElement, stream);
+        .forEach(currentTrack => this.remoteStream.addTrack(currentTrack));
+      Janus.attachMediaStream(this.videoEl.nativeElement, this.remoteStream);
       this.bufferRemoteTracks = [];
     }
   }

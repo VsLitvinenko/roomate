@@ -1,22 +1,20 @@
 <div class="stream-container">
   <video #videoEl
          [volume]="videoVolume / 100"
-         playsinline
-         autoplay>
+         playsinline autoplay>
   </video>
 
   <div class="display">
     {{publisher.display}}
   </div>
 
-  <ion-button [id]="'publisher' + publisher.id"
+  <ion-button [id]="'publisher-popover-' + publisher.id"
               class="no-ion-hover popover-button"
               size="small" fill="clear">
     <ion-icon name="ellipsis-horizontal"></ion-icon>
   </ion-button>
 
-  <ion-popover [trigger]="'publisher' + publisher.id"
-               [dismissOnSelect]="true"
+  <ion-popover [trigger]="'publisher-popover-' + publisher.id"
                [showBackdrop]="false"
                mode="md">
     <ng-template>
@@ -28,7 +26,8 @@
           </ion-range>
         </ion-item>
 
-        <ion-item button="" class="no-ion-hover">
+        <ion-item button="" class="no-ion-hover"
+                  (click)="openModal()">
           <ion-label> full screen </ion-label>
           <ion-icon name="expand-outline"></ion-icon>
         </ion-item>
@@ -36,3 +35,29 @@
     </ng-template>
   </ion-popover>
 </div>
+
+<ion-modal [isOpen]="isModalOpened"
+           (ionModalDidPresent)="onModalOpened()"
+           (ionModalWillDismiss)="onModalClosed()"
+           css-class="publisher-modal" mode="md">
+  <ng-template>
+    <ion-row>
+      <ion-range color="roomate-green" [(ngModel)]="videoVolume">
+        <ion-icon slot="start" name="volume-low-outline"></ion-icon>
+        <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+      </ion-range>
+
+      <ion-button class="no-ion-hover" fill="clear"
+                  color="roomate-green"
+                  (click)="closeModal()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-row>
+    <video id="modalVideoEl"
+           [volume]="videoVolume / 100"
+           playsinline autoplay>
+    </video>
+  </ng-template>
+</ion-modal>
+
+
