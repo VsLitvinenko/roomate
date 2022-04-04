@@ -1,7 +1,7 @@
 <ion-header mode="md">
-  <app-shared-header endSideButtonIcon="globe-sharp">
+  <app-shared-header endSideButtonIcon="chatbox">
     <span class="roomate-header-title">
-      room
+      room {{roomId}}
     </span>
   </app-shared-header>
 </ion-header>
@@ -18,3 +18,30 @@
     </ng-container>
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border" mode="md">
+  <ion-toolbar>
+    <ion-row class="actions-container"
+             [class.mobile-actions]="isMobile$ | async">
+      <ion-button fill="clear" color="medium" mode="md">
+        <ion-icon name="settings-sharp"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" color="medium" mode="md">
+        <ion-icon name="desktop-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" color="medium" mode="md">
+        <ion-icon name="videocam"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" color="roomate-green" mode="md">
+        <ion-icon name="mic-sharp"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" color="danger" mode="md">
+        <ion-icon name="call-sharp"></ion-icon>
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

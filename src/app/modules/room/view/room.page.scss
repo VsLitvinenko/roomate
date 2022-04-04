@@ -4,20 +4,46 @@ ion-header {
   }
 }
 
-.streams-container {
-  display: grid;
-  grid-gap: 15px;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+ion-content {
+  .streams-container {
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    app-publisher {
+      height: 350px;
+    }
+  }
 
-  app-publisher {
-    height: 350px;
+  .mobile-container {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+    app-publisher {
+      height: 235px !important;
+    }
   }
 }
 
-.mobile-container {
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+.actions-container {
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 
-  app-publisher {
-    height: 235px !important;
+  ion-button {
+    margin: 15px;
+    --border-radius: 10px;
+    ion-icon {
+      font-size: 25px;
+    }
+  }
+
+  width: 500px;
+}
+
+.mobile-actions {
+  width: 350px;
+  ion-button {
+    margin: 5px;
+    ion-icon {
+      font-size: 22px !important;
+    }
   }
 }
