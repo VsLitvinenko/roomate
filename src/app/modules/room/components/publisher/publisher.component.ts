@@ -1,23 +1,24 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { JanusJS } from '../../janus/janus.interfaces';
 import { Janus } from '../../janus/janus.constants';
+import { IonModal, IonPopover } from '@ionic/angular';
 
 @Component({
   selector: 'app-publisher',
   templateUrl: './publisher.component.html',
   styleUrls: ['./publisher.component.scss'],
 })
-export class PublisherComponent implements OnInit {
+export class PublisherComponent implements OnInit, OnDestroy {
   @Input() publisher: JanusJS.Publisher;
   @Input() myPrivateId: number;
   @Input() roomId: number;
   @Input() sessionAttach: (options: JanusJS.PluginOptions) => void;
 
-  @ViewChild('videoEl')
-  private readonly videoEl: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoEl') private readonly videoEl: ElementRef<HTMLVideoElement>;
+  @ViewChild('modal') private readonly modal: IonModal;
+  @ViewChild('popover') private readonly popover: IonPopover;
 
   public videoVolume = 100;
-  public isModalOpened = false;
   public modalLoading = false;
 
   private publisherHandle: JanusJS.PluginHandle;
@@ -26,7 +27,7 @@ export class PublisherComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sessionAttach({
       plugin: 'janus.plugin.videoroom',
       success: pluginHandle => this.publisherPluginHandling(pluginHandle),
@@ -36,24 +37,31 @@ export class PublisherComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.closeModal().then();
+    this.popover.dismiss().then();
+  }
+
+  public openPopover(): void {
+    this.popover.present().then();
+  }
+
   public openModal(): void {
-    this.isModalOpened = true;
     this.modalLoading = true;
+    this.modal.present()
+      .then(() => {
+        const modalVideoEl = document.getElementById('modalVideoEl') as HTMLVideoElement;
+        this.videoEl.nativeElement.srcObject = null;
+        Janus.attachMediaStream(modalVideoEl, this.remoteStream);
+        this.modalLoading = false;
+      });
   }
 
-  public onModalOpened(): void {
-    const modalVideoEl = document.getElementById('modalVideoEl') as HTMLVideoElement;
-    this.videoEl.nativeElement.srcObject = null;
-    Janus.attachMediaStream(modalVideoEl, this.remoteStream);
-    this.modalLoading = false;
+  public async closeModal(): Promise<boolean> {
+    return this.modal.dismiss();
   }
 
-  public closeModal(): void {
-    this.isModalOpened = false;
-  }
-
-  public onModalClosed(): void {
-    this.isModalOpened = false;
+  public onModalWillClose(): void {
     this.videoEl.nativeElement.srcObject = this.remoteStream;
   }
 

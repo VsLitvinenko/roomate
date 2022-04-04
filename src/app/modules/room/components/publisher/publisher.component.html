@@ -1,4 +1,4 @@
-<div class="stream-container">
+<div class="stream-container" (click)="openPopover()">
   <video #videoEl
          [volume]="videoVolume / 100"
          playsinline autoplay>
@@ -14,9 +14,10 @@
     <ion-icon name="ellipsis-horizontal"></ion-icon>
   </ion-button>
 
-  <ion-popover [trigger]="'publisher-popover-' + publisher.id"
+  <ion-popover #popover
+               [trigger]="'publisher-popover-' + publisher.id"
                [showBackdrop]="false"
-               mode="md">
+               mode="md" side="left">
     <ng-template>
       <ion-list lines="none" class="popover-list">
         <ion-item button="" class="no-ion-hover">
@@ -36,9 +37,8 @@
   </ion-popover>
 </div>
 
-<ion-modal [isOpen]="isModalOpened"
-           (ionModalDidPresent)="onModalOpened()"
-           (ionModalWillDismiss)="onModalClosed()"
+<ion-modal #modal
+           (ionModalWillDismiss)="onModalWillClose()"
            css-class="publisher-modal" mode="md">
   <ng-template>
     <ion-row>
