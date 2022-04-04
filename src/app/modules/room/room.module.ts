@@ -7,9 +7,11 @@ import { RoomPage } from './view/room.page';
 import { SharedModule } from '../shared/shared.module';
 import { JanusService } from './janus/janus.service';
 import { PublisherComponent } from './components/publisher/publisher.component';
+import { RoomStartSideComponent } from './components/room-start-side/room-start-side.component';
 
 const commonComponents = [
   PublisherComponent,
+  RoomStartSideComponent,
 ];
 
 const pagesComponents = [

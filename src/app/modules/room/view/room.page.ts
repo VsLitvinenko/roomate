@@ -3,6 +3,8 @@ import { JanusService, NewPublisher } from '../janus/janus.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-width.service';
 import { map } from 'rxjs/operators';
+import { MenuControllerService } from '../../../main/services/menu-controller.service';
+import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
 
 @UntilDestroy()
 @Component({
@@ -21,11 +23,23 @@ export class RoomPage implements OnInit {
   constructor(
     private readonly janusService: JanusService,
     private readonly appWidthService: SharedIsFullWidthService,
+    private readonly menuController: MenuControllerService,
   ) {}
 
   ngOnInit() {
     this.janusService.joinRoom(this.roomId);
+    this.janusServiceSubscribes();
+  }
 
+  ionViewWillEnter(): void {
+    this.menuController.setStartSideMenuComponent(RoomStartSideComponent);
+  }
+
+  ionViewWillLeave(): void {
+    this.menuController.clearEndSideMenuTemplate();
+  }
+
+  private janusServiceSubscribes(): void {
     this.janusService.newPublisher$
       .pipe(untilDestroyed(this))
       .subscribe(newPublisher => this.publishers.push(newPublisher));

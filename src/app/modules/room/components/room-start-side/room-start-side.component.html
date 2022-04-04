@@ -1,0 +1,28 @@
+<ion-content appScrollbarTheme>
+
+  <div class="title"> now in room (4): </div>
+
+  <ion-list lines="none" mode="md">
+    <ng-container *ngFor="let user of userList">
+      <ion-item class="no-ion-hover">
+        <ion-row class="ion-align-items-center">
+          <ion-thumbnail>
+            <img [src]="user.smallImg" alt="">
+          </ion-thumbnail>
+
+          <ion-col>
+            <div class="name"> {{user.fullName}} </div>
+            <div class="login"> @{{user.screenName}} </div>
+          </ion-col>
+
+          <ion-icon [name]="user.muted ? 'mic-off' : 'mic'"></ion-icon>
+        </ion-row>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <ion-button expand="block" fill="clear"
+              mode="md" color="roomate-green">
+    <ion-label> add user to this room </ion-label>
+  </ion-button>
+</ion-content>
