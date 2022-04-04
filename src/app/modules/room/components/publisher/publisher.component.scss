@@ -17,4 +17,26 @@
     border-radius: 10px;
     background: var(--roomate-border-color);
   }
+
+  .popover-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    --color: var(--ion-color-medium);
+    --background: var(--roomate-border-color);
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.popover-list {
+  ion-range {
+    padding: 0;
+  }
+  ion-label, ion-icon {
+    color: var(--ion-color-medium);
+  }
 }

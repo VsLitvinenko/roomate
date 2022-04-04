@@ -1,5 +1,6 @@
 <div class="stream-container">
   <video #videoEl
+         [volume]="videoVolume / 100"
          playsinline
          autoplay>
   </video>
@@ -7,4 +8,31 @@
   <div class="display">
     {{publisher.display}}
   </div>
+
+  <ion-button [id]="'publisher' + publisher.id"
+              class="no-ion-hover popover-button"
+              size="small" fill="clear">
+    <ion-icon name="ellipsis-horizontal"></ion-icon>
+  </ion-button>
+
+  <ion-popover [trigger]="'publisher' + publisher.id"
+               [dismissOnSelect]="true"
+               [showBackdrop]="false"
+               mode="md">
+    <ng-template>
+      <ion-list lines="none" class="popover-list">
+        <ion-item button="" class="no-ion-hover">
+          <ion-range color="roomate-green" [(ngModel)]="videoVolume">
+            <ion-icon slot="start" name="volume-low-outline"></ion-icon>
+            <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+          </ion-range>
+        </ion-item>
+
+        <ion-item button="" class="no-ion-hover">
+          <ion-label> full screen </ion-label>
+          <ion-icon name="expand-outline"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ion-popover>
 </div>

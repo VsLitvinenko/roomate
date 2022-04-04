@@ -16,6 +16,8 @@ export class PublisherComponent implements OnInit {
   @ViewChild('videoEl')
   private readonly videoEl: ElementRef<HTMLVideoElement>;
 
+  public videoVolume = 100;
+
   private publisherHandle: JanusJS.PluginHandle;
   private bufferRemoteTracks: MediaStreamTrack[] = [];
 
