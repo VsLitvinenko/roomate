@@ -14,5 +14,6 @@ export interface MenuHeaderLink {
 export const sharedMenuLinks: MenuHeaderLink[] = [
   { url: '/channel', title: 'channel', icon: 'people' },
   { url: '/direct', title: 'direct', icon: 'person' },
+  { url: '/room', title: 'room', icon: 'flash' },
 ];
 

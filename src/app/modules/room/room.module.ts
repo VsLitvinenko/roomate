@@ -8,10 +8,12 @@ import { SharedModule } from '../shared/shared.module';
 import { JanusService } from './janus/janus.service';
 import { PublisherComponent } from './components/publisher/publisher.component';
 import { RoomStartSideComponent } from './components/room-start-side/room-start-side.component';
+import { RoomEndSideComponent } from './components/room-end-side/room-end-side.component';
 
 const commonComponents = [
   PublisherComponent,
   RoomStartSideComponent,
+  RoomEndSideComponent,
 ];
 
 const pagesComponents = [

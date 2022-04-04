@@ -3,7 +3,7 @@ import {Observable, Subject} from 'rxjs';
 
 export interface EndSideMenuTemplate {
   component: any;
-  injector: Injector;
+  injector?: Injector;
 }
 
 @Injectable()

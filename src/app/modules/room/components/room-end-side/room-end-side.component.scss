@@ -1,0 +1,47 @@
+:host {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  ion-content {
+    .msgs-container {
+      padding: 4px 12px;
+      display: flex;
+      flex-direction: column-reverse;
+
+      .message {
+        display: flex;
+        margin: 8px 0;
+        align-items: end;
+
+        .img-container {
+          width: 40px;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          ion-thumbnail {
+            --border-radius: 100%;
+            --size: 40px;
+          }
+        }
+
+        .text-container {
+          background-color: var(--roomate-other-message);
+          padding: 8px 8px 8px 12px;
+          border-radius: 10px;
+
+          .name {
+            margin-bottom: 5px;
+            font-weight: bolder;
+            color: var(--roomate-color-green);
+          }
+          .date {
+            margin-top: 6px;
+            text-align: right;
+            opacity: 0.5;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}

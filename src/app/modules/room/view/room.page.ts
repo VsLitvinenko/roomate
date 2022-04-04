@@ -5,6 +5,7 @@ import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-w
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
+import { RoomEndSideComponent } from '../components/room-end-side/room-end-side.component';
 
 @UntilDestroy()
 @Component({
@@ -33,6 +34,7 @@ export class RoomPage implements OnInit {
 
   ionViewWillEnter(): void {
     this.menuController.setStartSideMenuComponent(RoomStartSideComponent);
+    this.menuController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
   }
 
   ionViewWillLeave(): void {
