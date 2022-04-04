@@ -18,6 +18,7 @@ export class PublisherComponent implements OnInit {
 
   public videoVolume = 100;
   public isModalOpened = false;
+  public modalLoading = false;
 
   private publisherHandle: JanusJS.PluginHandle;
   private remoteStream: MediaStream;
@@ -37,12 +38,14 @@ export class PublisherComponent implements OnInit {
 
   public openModal(): void {
     this.isModalOpened = true;
+    this.modalLoading = true;
   }
 
   public onModalOpened(): void {
     const modalVideoEl = document.getElementById('modalVideoEl') as HTMLVideoElement;
     this.videoEl.nativeElement.srcObject = null;
     Janus.attachMediaStream(modalVideoEl, this.remoteStream);
+    this.modalLoading = false;
   }
 
   public closeModal(): void {
