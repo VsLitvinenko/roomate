@@ -7,7 +7,8 @@
 </ion-header>
 
 <ion-content appScrollbarTheme>
-  <div class="streams-container ion-padding"
+  <div *ngIf="roomReady"
+       class="streams-container ion-padding"
        [class.mobile-container]="isMobile$ | async">
     <ng-container *ngFor="let item of publishers">
       <app-publisher [roomId]="roomId"
@@ -19,7 +20,8 @@
   </div>
 </ion-content>
 
-<ion-footer class="ion-no-border" mode="md">
+<ion-footer class="ion-no-border" mode="md"
+            [class.footer-visible]="roomReady">
   <ion-toolbar>
     <ion-row class="actions-container"
              [class.mobile-actions]="isMobile$ | async">

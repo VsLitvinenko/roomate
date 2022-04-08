@@ -127,29 +127,34 @@ export class JanusService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
-    this.roomReady$$.next({
-      privateId: (msg as any).private_id,
-      sessionAttach: this.janus.attach
-    });
     this.mainPlugin.createOffer({
       media: { audioRecv: false, videoRecv: false, audioSend: true, videoSend: true },
       simulcast: doSimulcast,
-      success: jsep => {
-        const request = {
-          request: 'configure',
-          audio: true,
-          video: true,
-          audiocodec: acodec || undefined,
-          videocodec: vcodec || undefined
-        };
-        this.mainPlugin.send({ message: request, jsep });
-      },
+      success: jsep => this.initialConfigure((msg as any).private, jsep),
       error: error => Janus.error('WebRTC error:', error),
       customizeSdp: jsep => {
         if (doDtx) {
           jsep.sdp = jsep.sdp.replace('useinbandfec=1', 'useinbandfec=1;usedtx=1');
         }
       }
+    });
+  }
+
+  private initialConfigure(privateId: number, jsep): void {
+    const request = {
+      request: 'configure',
+      audio: true,
+      video: true,
+      audiocodec: acodec || undefined,
+      videocodec: vcodec || undefined
+    };
+    this.mainPlugin.send({
+      success: () => this.roomReady$$.next({
+        sessionAttach: this.janus.attach,
+        privateId,
+      }),
+      message: request,
+      jsep
     });
   }
 

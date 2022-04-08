@@ -8,7 +8,7 @@ ion-content {
   .streams-container {
     display: grid;
     grid-gap: 15px;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     app-publisher {
       height: 350px;
     }
@@ -46,4 +46,13 @@ ion-content {
       font-size: 22px !important;
     }
   }
+}
+
+ion-footer {
+  margin-bottom: -70px;
+}
+
+.footer-visible {
+  transition: all 0.3s ease-in;
+  margin-bottom: 0;
 }
