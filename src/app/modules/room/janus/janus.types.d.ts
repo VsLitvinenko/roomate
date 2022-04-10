@@ -68,6 +68,19 @@ declare namespace JanusJS {
     talking?: boolean;
   }
 
+  interface RemoteStream {
+    active: boolean;
+    codec: string;
+    feed_display: string;
+    feed_id: number;
+    feed_mid: string;
+    mid: string;
+    mindex: number;
+    ready: boolean;
+    send: boolean;
+    type: string;
+  }
+
   enum MessageType {
     Recording = 'recording',
     Starting = 'starting',
@@ -86,6 +99,7 @@ declare namespace JanusJS {
     };
     error?: Error;
     publishers?: Publisher[];
+    streams?: RemoteStream[];
   }
 
   interface PluginOptions {

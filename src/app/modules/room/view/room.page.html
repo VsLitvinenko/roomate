@@ -7,21 +7,19 @@
 </ion-header>
 
 <ion-content appScrollbarTheme>
-  <div *ngIf="roomReady"
+  <div *ngIf="roomConfigured"
        class="streams-container ion-padding"
        [class.mobile-container]="isMobile$ | async">
-    <ng-container *ngFor="let item of publishers">
-      <app-publisher [roomId]="roomId"
-                     [publisher]="item"
-                     [myPrivateId]="roomReady.privateId"
-                     [sessionAttach]="roomReady.sessionAttach">
-      </app-publisher>
-    </ng-container>
+    <app-stream *ngFor="let item of remoteTracks; let i = index"
+                [display]="item.display"
+                [tracks]="item.tracks"
+                [index]="i">
+    </app-stream>
   </div>
 </ion-content>
 
 <ion-footer class="ion-no-border" mode="md"
-            [class.footer-visible]="roomReady">
+            [class.footer-visible]="roomConfigured">
   <ion-toolbar>
     <ion-row class="actions-container"
              [class.mobile-actions]="isMobile$ | async">

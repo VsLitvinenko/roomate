@@ -5,17 +5,17 @@
   </video>
 
   <div class="display">
-    {{publisher.display}}
+    {{display}}
   </div>
 
-  <ion-button [id]="'publisher-popover-' + publisher.id"
+  <ion-button [id]="'publisher-popover-' + index"
               class="no-ion-hover popover-button"
               size="small" fill="clear">
     <ion-icon name="ellipsis-horizontal"></ion-icon>
   </ion-button>
 
   <ion-popover #popover
-               [trigger]="'publisher-popover-' + publisher.id"
+               [trigger]="'publisher-popover-' + index"
                [showBackdrop]="false"
                mode="md" side="left">
     <ng-template>
@@ -53,7 +53,7 @@
       </ion-button>
     </ion-row>
 
-    <video id="modalVideoEl"
+    <video [id]="'modal-video-el-' + index"
            [volume]="videoVolume / 100"
            playsinline autoplay>
     </video>

@@ -9,14 +9,14 @@ ion-content {
     display: grid;
     grid-gap: 15px;
     grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-    app-publisher {
-      height: 350px;
+    app-stream {
+      height: 350px !important;
     }
   }
 
   .mobile-container {
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
-    app-publisher {
+    app-stream {
       height: 235px !important;
     }
   }

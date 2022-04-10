@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { JanusService, RoomReady } from '../janus/janus.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { JanusMainService } from '../janus/services/janus-main.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-width.service';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from '../components/room-end-side/room-end-side.component';
-import { JanusJS } from '../janus/janus.interfaces';
+import { PublisherTracks } from '../janus/services/janus-subscribe.service';
 
 @UntilDestroy()
 @Component({
@@ -19,18 +19,22 @@ export class RoomPage implements OnInit {
     map(value => !value)
   );
 
-  public publishers: JanusJS.Publisher[] = [];
   public readonly roomId = 1234;
-  public roomReady: RoomReady;
 
+  public roomConfigured = false;
   public isAudioMuted = false;
   public isVideoMuted = false;
 
   constructor(
-    private readonly janusService: JanusService,
+    private readonly janusService: JanusMainService,
     private readonly appWidthService: SharedIsFullWidthService,
     private readonly menuController: MenuControllerService,
   ) {}
+
+  public get remoteTracks(): PublisherTracks[] {
+    return Object.values(this.janusService.remoteTracks)
+      .filter(item => item.tracks?.length >= 2);
+  }
 
   ngOnInit() {
     this.janusService.joinRoom(this.roomId);
@@ -57,26 +61,11 @@ export class RoomPage implements OnInit {
   }
 
   private janusServiceSubscribes(): void {
-    this.janusService.roomReady$()
-      .subscribe(rdy => {
-        this.roomReady = rdy;
+    this.janusService.roomConfigured
+      .subscribe(() => {
+        this.roomConfigured = true;
         this.toggleAudio();
       });
-
-    this.janusService.newPublisher$
-      .pipe(untilDestroyed(this))
-      .subscribe(newPublisher => this.publishers.push(newPublisher));
-
-    this.janusService.deletePublisher$
-      .pipe(
-        map(id => this.publishers.findIndex(publisher => publisher.id === id)),
-        filter(index => index !== -1),
-        untilDestroyed(this)
-      ).subscribe(index => this.publishers.splice(index, 1));
-
-    this.janusService.localStream$
-      .pipe(untilDestroyed(this))
-      .subscribe(localStream => {});
   }
 
 }

@@ -1,32 +1,27 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
-import { acodec, doDtx, doSimulcast, Janus, vcodec } from './janus.constants';
-import { JanusJS } from './janus.interfaces';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter, mapTo, take } from 'rxjs/operators';
+import { acodec, doDtx, doSimulcast, Janus, vcodec } from '../janus.constants';
+import { JanusJS } from '../janus.types';
+import { JanusSubscribeService, PublisherTracks } from './janus-subscribe.service';
 
 export interface RoomReady {
   sessionAttach: (options: JanusJS.PluginOptions) => void;
   privateId: number;
 }
 
-const token = '1649527254,janus,janus.plugin.videoroom:dEZZZXaIW/P83gn4P7lfleFp4WM=';
+const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
 
 @Injectable()
-export class JanusService {
-
-  private newPublisher$$ = new Subject<JanusJS.Publisher>();
-  private deletePublisher$$ = new Subject<number>();
-  private localStream$$ = new Subject<MediaStream>();
-
-  private roomReady$$ = new BehaviorSubject<RoomReady>(null);
-
+export class JanusMainService {
   private janusReady$ = new BehaviorSubject<boolean>(false);
+  private roomConfigured$ = new BehaviorSubject<boolean>(false);
   private janus: JanusJS.Janus;
 
   private roomId: number;
   private mainPlugin: JanusJS.PluginHandle;
 
-  constructor() {
+  constructor(private readonly receiveService: JanusSubscribeService) {
     Janus.init({
       debug: true,
       dependencies: Janus.useDefaultDependencies(null),
@@ -34,23 +29,16 @@ export class JanusService {
     });
   }
 
-  public get newPublisher$(): Observable<JanusJS.Publisher> {
-    return this.newPublisher$$.asObservable();
-  }
-
-  public get deletePublisher$(): Observable<number> {
-    return this.deletePublisher$$.asObservable();
-  }
-
-  public get localStream$(): Observable<MediaStream> {
-    return this.localStream$$.asObservable();
-  }
-
-  public roomReady$(): Observable<RoomReady> {
-    return this.roomReady$$.pipe(
-      filter(value => value !== null),
+  public get roomConfigured(): Observable<void> {
+    return this.roomConfigured$.pipe(
+      filter(ready => ready),
+      mapTo(void 0),
       take(1)
     );
+  }
+
+  public get remoteTracks(): { [publisherId: number]: PublisherTracks } {
+    return this.receiveService.remoteTracks;
   }
 
   public joinRoom(roomId: number): void {
@@ -59,23 +47,19 @@ export class JanusService {
   }
 
   public toggleAudio(muted: boolean): void {
-    this.roomReady$().subscribe(() => {
-      if (muted) {
-        this.mainPlugin.muteAudio();
-      } else  {
-        this.mainPlugin.unmuteAudio();
-      }
-    });
+    if (muted) {
+      this.mainPlugin.muteAudio();
+    } else  {
+      this.mainPlugin.unmuteAudio();
+    }
   }
 
   public toggleVideo(muted: boolean): void {
-    this.roomReady$().subscribe(() => {
-      if (muted) {
-        this.mainPlugin.muteVideo();
-      } else  {
-        this.mainPlugin.unmuteVideo();
-      }
-    });
+    if (muted) {
+      this.mainPlugin.muteVideo();
+    } else  {
+      this.mainPlugin.unmuteVideo();
+    }
   }
 
   private createSession(): void {
@@ -116,10 +100,12 @@ export class JanusService {
       this.onJoinedRoom(msg);
     }
     if (msg.publishers?.length) {
-      msg.publishers.forEach(publisher => this.onNewPublisher(publisher));
+      msg.publishers.forEach(
+        publisher => this.receiveService.onNewPublisher(publisher)
+      );
     }
-    if ((msg as any).unpublished) {
-      this.onDeletePublisher((msg as any).unpublished);
+    if ((msg as any).leaving) {
+      this.receiveService.onDeletePublisher((msg as any).leaving);
     }
     if (jsep) {
       this.mainPlugin.handleRemoteJsep({ jsep });
@@ -130,7 +116,10 @@ export class JanusService {
     this.mainPlugin.createOffer({
       media: { audioRecv: false, videoRecv: false, audioSend: true, videoSend: true },
       simulcast: doSimulcast,
-      success: jsep => this.initialConfigure((msg as any).private, jsep),
+      success: jsep => {
+        this.initialConfigure(jsep);
+        this.receiveService.attachPlugin(this.janus.attach, (msg as any).private, this.roomId);
+      },
       error: error => Janus.error('WebRTC error:', error),
       customizeSdp: jsep => {
         if (doDtx) {
@@ -140,7 +129,7 @@ export class JanusService {
     });
   }
 
-  private initialConfigure(privateId: number, jsep): void {
+  private initialConfigure(jsep): void {
     const request = {
       request: 'configure',
       audio: true,
@@ -149,28 +138,17 @@ export class JanusService {
       videocodec: vcodec || undefined
     };
     this.mainPlugin.send({
-      success: () => this.roomReady$$.next({
-        sessionAttach: this.janus.attach,
-        privateId,
-      }),
+      success: () => this.roomConfigured$.next(true),
       message: request,
       jsep
     });
-  }
-
-  private onNewPublisher(newPublisher: JanusJS.Publisher): void {
-    this.newPublisher$$.next(newPublisher);
-  }
-
-  private onDeletePublisher(publisherId: number): void {
-    this.deletePublisher$$.next(publisherId);
   }
 
   private onLocalTrack(track: MediaStreamTrack): void {
     if (track.kind === 'video') {
       const stream = new MediaStream();
       stream.addTrack(track.clone());
-      this.localStream$$.next(stream);
+      // this.localStream$$.next(stream);
     }
   }
 }
