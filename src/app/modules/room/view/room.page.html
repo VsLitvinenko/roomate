@@ -23,7 +23,9 @@
   <ion-toolbar>
     <ion-row class="actions-container"
              [class.mobile-actions]="isMobile$ | async">
-      <ion-button fill="clear" color="medium" mode="md">
+
+      <ion-button fill="clear" color="medium" mode="md"
+                  (click)="modal.present()">
         <ion-icon name="settings-sharp"></ion-icon>
       </ion-button>
 
@@ -45,6 +47,68 @@
       <ion-button fill="clear" color="danger" mode="md">
         <ion-icon name="call-sharp"></ion-icon>
       </ion-button>
+
     </ion-row>
   </ion-toolbar>
 </ion-footer>
+
+<ion-modal #modal>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <span class="roomate-header-title">
+          Devices options
+        </span>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="roomate-green"
+                      (click)="modal.dismiss()"> close </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content appScrollbarTheme>
+      <ion-list lines="none">
+        <ion-radio-group [(ngModel)]="activeAudioInputId">
+          <ion-list-header>
+            <ion-label> Audio input </ion-label>
+          </ion-list-header>
+          <ion-item *ngFor="let item of audioInputDevices"
+                    class="no-ion-hover">
+            <ion-label> {{item.label}} </ion-label>
+            <ion-radio slot="start" color="roomate-green"
+                       [value]="item.deviceId"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+
+      <ion-list lines="none">
+        <ion-radio-group [(ngModel)]="activeVideoInputId"
+                         (ngModelChange)="videoDeviceChanged($event)">
+          <ion-list-header>
+            <ion-label> Video input </ion-label>
+          </ion-list-header>
+          <ion-item *ngFor="let item of videoInputDevices"
+                    class="no-ion-hover">
+            <ion-label> {{item.label}} </ion-label>
+            <ion-radio slot="start" color="roomate-green"
+                       [value]="item.deviceId"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+
+      <ion-list lines="none">
+        <ion-radio-group [(ngModel)]="activeAudioOutputId">
+          <ion-list-header>
+            <ion-label> Audio output </ion-label>
+          </ion-list-header>
+          <ion-item *ngFor="let item of audioOutputDevices"
+                    class="no-ion-hover">
+            <ion-label> {{item.label}} </ion-label>
+            <ion-radio slot="start" color="roomate-green"
+                       [value]="item.deviceId"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

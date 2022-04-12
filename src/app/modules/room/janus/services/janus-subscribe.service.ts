@@ -116,15 +116,16 @@ export class JanusSubscribeService {
   }
 
   private onRemoteTrack(track: MediaStreamTrack, mid: string, on: boolean): void {
-    if (!on) {
+    const publisherId = this.mids[mid];
+    if (!on && !this.remoteTracks[publisherId]) {
+      // publisher have leaved
       delete this.mids[mid];
       return;
     }
-    if (track.muted) {
-      return;
+    if (this.remoteTracks[publisherId].tracks.length < 2) {
+      // new publisher
+      this.remoteTracks[publisherId].tracks.push(track);
     }
-    const publisherId = this.mids[mid];
-    this.remoteTracks[publisherId].tracks.push(track.clone());
   }
 
   private getSubscribeRequestMessage(subscription): any {

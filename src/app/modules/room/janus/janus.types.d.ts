@@ -151,7 +151,7 @@ declare namespace JanusJS {
 
   interface PluginMessage {
     message: {
-      request: string;
+      request?: string;
       [otherProps: string]: any;
     };
     jsep?: JSEP;

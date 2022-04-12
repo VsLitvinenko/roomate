@@ -55,11 +55,34 @@ export class JanusMainService {
   }
 
   public toggleVideo(muted: boolean): void {
+    let media;
     if (muted) {
+      media = { removeVideo: true };
       this.mainPlugin.muteVideo();
     } else  {
+      media = { addVideo: true };
       this.mainPlugin.unmuteVideo();
     }
+    this.mainPlugin.createOffer({
+      success: (jsep) => this.mainPlugin.send({
+        message: {audio: true, video: true},
+        jsep
+      }),
+      media,
+    });
+  }
+
+  public replaceVideo(deviceId: string): void {
+    this.mainPlugin.createOffer({
+      media: {
+        video: { deviceId },
+        replaceVideo: true
+      },
+      success: jsep => this.mainPlugin.send({
+        message: {audio: true, video: true},
+        jsep
+      })
+    });
   }
 
   private createSession(): void {

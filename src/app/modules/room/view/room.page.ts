@@ -25,6 +25,14 @@ export class RoomPage implements OnInit {
   public isAudioMuted = false;
   public isVideoMuted = false;
 
+  public readonly audioInputDevices: MediaDeviceInfo[] = [];
+  public readonly audioOutputDevices: MediaDeviceInfo[] = [];
+  public readonly videoInputDevices: MediaDeviceInfo[] = [];
+
+  public activeAudioInputId: string;
+  public activeAudioOutputId: string;
+  public activeVideoInputId: string;
+
   constructor(
     private readonly janusService: JanusMainService,
     private readonly appWidthService: SharedIsFullWidthService,
@@ -60,12 +68,39 @@ export class RoomPage implements OnInit {
     this.janusService.toggleVideo(this.isVideoMuted);
   }
 
+  public videoDeviceChanged(event): void {
+    this.janusService.replaceVideo(event);
+  }
+
   private janusServiceSubscribes(): void {
     this.janusService.roomConfigured
       .subscribe(() => {
         this.roomConfigured = true;
+        this.setMediaDevices();
         this.toggleAudio();
       });
+  }
+
+  private setMediaDevices(): void {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      devices.filter(device => device.deviceId !== 'communications')
+        .forEach(device => {
+          switch (device.kind) {
+            case 'audioinput':
+              this.audioInputDevices.push(device);
+              break;
+            case 'audiooutput':
+              this.audioOutputDevices.push(device);
+              break;
+            case 'videoinput':
+              this.videoInputDevices.push(device);
+              break;
+          }
+        });
+      this.activeAudioInputId = this.audioInputDevices[0].deviceId;
+      this.activeAudioOutputId = this.audioOutputDevices[0].deviceId;
+      this.activeVideoInputId = this.videoInputDevices[0].deviceId;
+    });
   }
 
 }
