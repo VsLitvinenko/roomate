@@ -23,7 +23,7 @@ export class ScrollbarThemeDirective implements OnInit {
   constructor(private readonly el: ElementRef) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const styleElmt = this.el.nativeElement.shadowRoot.querySelector('style');
 
     if (styleElmt) {

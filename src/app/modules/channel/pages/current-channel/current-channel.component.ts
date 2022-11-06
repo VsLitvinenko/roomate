@@ -33,18 +33,18 @@ export class CurrentChannelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(untilDestroyed(this))
-      .subscribe(params => {
-        this.channelId = params.id;
-        this.updateEndSideMenu(this.channelId);
+    this.activatedRoute.params.pipe(
+      untilDestroyed(this)
+    ).subscribe(params => {
+      this.channelId = params.id;
+      this.updateEndSideMenu(this.channelId);
 
-        this.dataSource = [];
-        this.loadingCounter += 1;
-        this.loadingData()
-          .then(() => this.chatContent.scrollToBottom(0))
-          .then(() => this.loadingCounter -= 1);
-      });
+      this.dataSource = [];
+      this.loadingCounter += 1;
+      this.loadingData()
+        .then(() => this.chatContent.scrollToBottom(0))
+        .then(() => this.loadingCounter -= 1);
+    });
   }
 
   public infiniteScroll(event: any): void {

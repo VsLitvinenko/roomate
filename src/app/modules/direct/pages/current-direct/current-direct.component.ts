@@ -38,18 +38,18 @@ export class CurrentDirectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(untilDestroyed(this))
-      .subscribe(params => {
-        this.directId = params.id;
-        this.updateEndSideMenu(this.directId);
+    this.activatedRoute.params.pipe(
+      untilDestroyed(this)
+    ).subscribe(params => {
+      this.directId = params.id;
+      this.updateEndSideMenu(this.directId);
 
-        this.dataSource = [];
-        this.loadingCounter += 1;
-        this.loadingData()
-          .then(() => this.chatContent.scrollToBottom(0))
-          .then(() => this.loadingCounter -= 1);
-      });
+      this.dataSource = [];
+      this.loadingCounter += 1;
+      this.loadingData()
+        .then(() => this.chatContent.scrollToBottom(0))
+        .then(() => this.loadingCounter -= 1);
+    });
   }
 
   public infiniteScroll(event: any): void {

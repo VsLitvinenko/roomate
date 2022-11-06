@@ -20,7 +20,7 @@ export class SharedHeaderComponent implements OnInit {
     private readonly appWidthService: SharedIsFullWidthService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   public changeDarkMode(): void {

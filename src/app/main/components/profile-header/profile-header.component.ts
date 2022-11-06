@@ -12,7 +12,8 @@ export class ProfileHeaderComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+  }
 
   public userId(): void {
     alert(`current user id: ${user.id}`);

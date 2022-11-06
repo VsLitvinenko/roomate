@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { testMessages, usersList } from './data-source';
 import { IonContent } from '@ionic/angular';
 
@@ -7,7 +7,7 @@ import { IonContent } from '@ionic/angular';
   templateUrl: './room-end-side.component.html',
   styleUrls: ['./room-end-side.component.scss'],
 })
-export class RoomEndSideComponent implements OnInit {
+export class RoomEndSideComponent implements OnInit, AfterViewInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 
@@ -18,8 +18,11 @@ export class RoomEndSideComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-    setTimeout(() => this.chatContent.scrollToBottom(0), 1);
+  ngOnInit(): void {
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await this.chatContent.scrollToBottom(0);
   }
 
 }

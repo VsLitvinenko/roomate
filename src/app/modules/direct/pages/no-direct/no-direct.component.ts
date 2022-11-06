@@ -10,7 +10,8 @@ export class NoDirectComponent implements OnInit {
 
   constructor(private readonly menuController: MenuControllerService) { }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+  }
 
   // proxy by ion-router-outlet
   ionViewWillEnter(): void {

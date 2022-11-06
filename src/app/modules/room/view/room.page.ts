@@ -44,7 +44,7 @@ export class RoomPage implements OnInit {
       .filter(item => item.tracks?.length >= 2);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.janusService.joinRoom(this.roomId);
     this.janusServiceSubscribes();
   }

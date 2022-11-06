@@ -12,6 +12,7 @@ export class RoomStartSideComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+  }
 
 }

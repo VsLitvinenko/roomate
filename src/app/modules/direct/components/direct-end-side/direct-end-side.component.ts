@@ -15,7 +15,7 @@ export class DirectEndSideComponent implements OnInit {
     this.user = userData(item.injectedItem);
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
   public changeNotify(): void {
     this.isNotify = !this.isNotify;

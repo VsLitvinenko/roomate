@@ -11,7 +11,7 @@ export class DirectPage implements OnInit {
 
   constructor(private readonly menuController: MenuControllerService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   ionViewWillEnter(): void {

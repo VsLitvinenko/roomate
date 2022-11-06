@@ -16,6 +16,7 @@ export class ChannelEndSideComponent implements OnInit {
     this.channelId = item.injectedItem;
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+  }
 
 }

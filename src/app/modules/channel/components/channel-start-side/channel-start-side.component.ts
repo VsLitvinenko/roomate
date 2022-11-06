@@ -21,6 +21,6 @@ export class ChannelStartSideComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 }

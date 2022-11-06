@@ -16,6 +16,7 @@ export class SharedTextareaFooterComponent implements OnInit {
     this.messageSend.next(message);
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+  }
 
 }
