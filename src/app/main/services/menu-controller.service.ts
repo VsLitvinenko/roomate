@@ -1,5 +1,5 @@
-import {Injectable, Injector} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Injectable, Injector } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 export interface EndSideMenuTemplate {
   component: any;
@@ -10,7 +10,6 @@ export interface EndSideMenuTemplate {
 export class MenuControllerService {
 
   private startSideMenuComponent$$ = new Subject<any>();
-
   private endSideMenuTemplate$$ = new Subject<EndSideMenuTemplate>();
 
   constructor() { }
