@@ -6,11 +6,11 @@ ion-toolbar {
 
   .textarea-container {
     display: flex;
-    align-items: center;
+    align-items: end;
 
     ion-icon {
       cursor: pointer;
-      margin: 4px 6px;
+      margin: 10px 6px;
       padding: 8px;
       font-size: 20px;
 
@@ -20,8 +20,16 @@ ion-toolbar {
     }
 
     ion-textarea {
+      align-self: center;
       margin: 0;
       flex: 1;
+
+      ::ng-deep {
+        .textarea-wrapper, .native-textarea {
+          min-height: 39px !important;
+          max-height: 260px !important;
+        }
+      }
     }
   }
 }
