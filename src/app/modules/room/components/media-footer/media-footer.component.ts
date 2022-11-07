@@ -64,10 +64,6 @@ export class MediaFooterComponent implements OnInit {
 
         Object.keys(this.activeDevicesId)
           .forEach(key => this.activeDevicesId[key] = this.devices[key][0].deviceId);
-
-        // this.activeAudioInputId = this.audioInputDevices[0].deviceId;
-        // this.activeAudioOutputId = this.audioOutputDevices[0].deviceId;
-        // this.activeVideoInputId = this.videoInputDevices[0].deviceId;
       });
   }
 

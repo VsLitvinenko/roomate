@@ -5,12 +5,13 @@ import { acodec, doDtx, doSimulcast, Janus, vcodec } from '../janus.constants';
 import { JanusJS } from '../janus.types';
 import { JanusSubscribeService, PublisherTracks } from './janus-subscribe.service';
 
-export interface RoomReady {
-  sessionAttach: (options: JanusJS.PluginOptions) => void;
-  privateId: number;
-}
+// export interface RoomReady {
+//   sessionAttach: (options: JanusJS.PluginOptions) => void;
+//   privateId: number;
+// }
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
+const server = 'https://80-78-247-250.cloudvps.regruhosting.ru/janusbase/janus/';
 
 @Injectable()
 export class JanusMainService {
@@ -39,11 +40,6 @@ export class JanusMainService {
 
   public get remoteTracks(): { [publisherId: number]: PublisherTracks } {
     return this.receiveService.remoteTracks;
-  }
-
-  public joinRoom(roomId: number): void {
-    this.roomId = roomId;
-    this.createSession();
   }
 
   public toggleAudio(muted: boolean): void {
@@ -85,14 +81,19 @@ export class JanusMainService {
     });
   }
 
+  public joinRoom(roomId: number): void {
+    this.roomId = roomId;
+    // this.createSession();
+  }
+
   private createSession(): void {
     this.janusReady$.pipe(
       filter(ready => ready),
       take(1)
     ).subscribe(() => this.janus = new Janus({
-        server: 'https://80-78-247-250.cloudvps.regruhosting.ru/janusbase/janus/',
         success: () => this.mainPluginAttaching(),
         error: error => Janus.error('Roomate session creating error', error),
+        server,
         token
       }));
   }

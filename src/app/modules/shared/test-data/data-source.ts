@@ -47,6 +47,11 @@ export const usersList = [
 
 export const testGroupMessages = [
   {
+    from: 5,
+    date: 'Thu Aug 26 2021 17:40:52 GMT+0200 (Central European Summer Time)',
+    msg: 'Adipisicing nulla'
+  },
+  {
     from: 1,
     date: 'Wed Aug 25 2021 04:34:39 GMT+0200 (Central European Summer Time)',
     msg: 'Et nulla tempor nulla'
