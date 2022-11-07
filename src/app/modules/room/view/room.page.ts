@@ -15,23 +15,13 @@ import { PublisherTracks } from '../janus/services/janus-subscribe.service';
   styleUrls: ['./room.page.scss'],
 })
 export class RoomPage implements OnInit {
-  public isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
+  public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)
   );
 
   public readonly roomId = 1234;
 
-  public roomConfigured = false;
-  public isAudioMuted = false;
-  public isVideoMuted = false;
-
-  public readonly audioInputDevices: MediaDeviceInfo[] = [];
-  public readonly audioOutputDevices: MediaDeviceInfo[] = [];
-  public readonly videoInputDevices: MediaDeviceInfo[] = [];
-
-  public activeAudioInputId: string;
-  public activeAudioOutputId: string;
-  public activeVideoInputId: string;
+  public roomConfigured = true;
 
   constructor(
     private readonly janusService: JanusMainService,
@@ -58,49 +48,12 @@ export class RoomPage implements OnInit {
     this.menuController.clearEndSideMenuTemplate();
   }
 
-  public toggleAudio(): void {
-    this.isAudioMuted = !this.isAudioMuted;
-    this.janusService.toggleAudio(this.isAudioMuted);
-  }
-
-  public toggleVideo(): void {
-    this.isVideoMuted = !this.isVideoMuted;
-    this.janusService.toggleVideo(this.isVideoMuted);
-  }
-
-  public videoDeviceChanged(event): void {
-    this.janusService.replaceVideo(event);
-  }
-
   private janusServiceSubscribes(): void {
     this.janusService.roomConfigured
       .subscribe(() => {
         this.roomConfigured = true;
-        this.setMediaDevices();
-        this.toggleAudio();
+        // this.setMediaDevices();
+        // this.toggleAudio();
       });
   }
-
-  private setMediaDevices(): void {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      devices.filter(device => device.deviceId !== 'communications')
-        .forEach(device => {
-          switch (device.kind) {
-            case 'audioinput':
-              this.audioInputDevices.push(device);
-              break;
-            case 'audiooutput':
-              this.audioOutputDevices.push(device);
-              break;
-            case 'videoinput':
-              this.videoInputDevices.push(device);
-              break;
-          }
-        });
-      this.activeAudioInputId = this.audioInputDevices[0].deviceId;
-      this.activeAudioOutputId = this.audioOutputDevices[0].deviceId;
-      this.activeVideoInputId = this.videoInputDevices[0].deviceId;
-    });
-  }
-
 }

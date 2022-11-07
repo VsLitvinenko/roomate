@@ -10,9 +10,11 @@ import { StreamComponent } from './components/stream/stream.component';
 import { RoomStartSideComponent } from './components/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from './components/room-end-side/room-end-side.component';
 import { JanusSubscribeService } from './janus/services/janus-subscribe.service';
+import { MediaFooterComponent } from './components/media-footer/media-footer.component';
 
 const commonComponents = [
   StreamComponent,
+  MediaFooterComponent,
   RoomStartSideComponent,
   RoomEndSideComponent,
 ];
