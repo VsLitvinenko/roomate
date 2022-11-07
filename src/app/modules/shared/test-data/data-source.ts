@@ -45,7 +45,7 @@ export const usersList = [
   },
 ]
 
-export const testMessages = [
+export const testGroupMessages = [
   {
     from: 1,
     date: 'Wed Aug 25 2021 04:34:39 GMT+0200 (Central European Summer Time)',

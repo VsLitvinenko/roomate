@@ -6,7 +6,10 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./shared-messages-group.component.scss'],
 })
 export class SharedMessagesGroupComponent implements OnInit {
-  @Input() public groupMessages: any[];
+  @Input() public groupMessages: {
+    messages: any[];
+    user: any;
+  };
 
   constructor() { }
 

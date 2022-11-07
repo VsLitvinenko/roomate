@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { testMessages, usersList } from './data-source';
+import { testGroupMessages, usersList } from '../../../shared/test-data/data-source';
 import { IonContent } from '@ionic/angular';
 import { splitMessagesIntoGroups } from '../../../shared/functions/split-messages-into-groups';
 
@@ -12,11 +12,11 @@ export class RoomEndSideComponent implements OnInit, AfterViewInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 
-  public messages = splitMessagesIntoGroups(
-    testMessages.map(msg => ({
-      ...msg,
-      user: usersList.find(user => user.id === msg.from)
-    }))
+  public messages = splitMessagesIntoGroups(testGroupMessages).map(
+    group => ({
+      ...group,
+      user: usersList.find(user => user.id === group.from)
+    })
   );
 
   constructor() { }

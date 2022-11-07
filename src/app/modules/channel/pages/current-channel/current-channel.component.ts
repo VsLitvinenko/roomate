@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { testMessages } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
+import { splitMessagesIntoGroups } from '../../../shared/functions/split-messages-into-groups';
+import { testGroupMessages, usersList } from '../../../shared/test-data/data-source';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +19,7 @@ export class CurrentChannelComponent implements OnInit {
   private readonly chatContent: IonContent;
 
   public channelId: string;
-  public dataSource = [];
+  public messages = [];
 
   private loadingCounter = 0;
 
@@ -39,7 +40,7 @@ export class CurrentChannelComponent implements OnInit {
       this.channelId = params.id;
       this.updateEndSideMenu(this.channelId);
 
-      this.dataSource = [];
+      this.messages = [];
       this.loadingCounter += 1;
       this.loadingData()
         .then(() => this.chatContent.scrollToBottom(0))
@@ -59,7 +60,13 @@ export class CurrentChannelComponent implements OnInit {
   private loadingData(): Promise<void> {
     return new Promise<void>(resolve =>
       setTimeout(() => {
-        this.dataSource.push(...testMessages);
+        const groups = splitMessagesIntoGroups(testGroupMessages).map(
+          group => ({
+            ...group,
+            user: usersList.find(user => user.id === group.from)
+          })
+        );
+        this.messages.push(...groups);
         resolve();
       }, 1000)
     );

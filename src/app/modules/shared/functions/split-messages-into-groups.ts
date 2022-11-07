@@ -5,11 +5,14 @@ export const splitMessagesIntoGroups = (messages: any[]): any[] => messages.redu
       (item.from !== arr[index - 1].from)
     ) {
       // new group
-      res.push([item]);
+      res.push({
+        messages: [item],
+        from: item.from
+      });
     }
     else {
       // add to existing group
-      res[res.length - 1].push(item);
+      res[res.length - 1].messages.push(item);
     }
     return res;
   },

@@ -5,8 +5,9 @@
 }
 
 .message {
-  display: flex;
   margin: 4px 0;
+
+  display: flex;
   align-items: flex-end;
 
   .img-container {
@@ -20,9 +21,12 @@
   }
 
   .text-container {
-    background-color: var(--roomate-other-message);
+    //min-width: 100px;
+    max-width: 80%;
     margin-left: 50px;
     padding: 8px 12px;
+
+    background-color: var(--roomate-other-message);
     border-radius: 10px;
 
     .name {

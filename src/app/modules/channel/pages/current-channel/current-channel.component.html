@@ -22,15 +22,9 @@
   </ion-infinite-scroll>
 
   <div class="msgs-container">
-    <div *ngFor="let msg of dataSource; let i = index"
-         [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'"
-         class="message">
-      <span> {{msg.msg}} </span>
-      <span class="ion-text-right">
-        <b> index: {{i}} </b>
-        {{ msg.date | date:'hh:mm' }}
-      </span>
-    </div>
+    <app-shared-messages-group *ngFor="let group of messages"
+                               [groupMessages]="group">
+    </app-shared-messages-group>
   </div>
 
 </ion-content>
