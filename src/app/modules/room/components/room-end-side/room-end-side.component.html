@@ -1,19 +1,9 @@
 <ion-content #currentChatContent
              appScrollbarTheme>
   <div class="msgs-container">
-    <div *ngFor="let msg of messages"
-         class="message">
-      <div class="img-container">
-        <ion-thumbnail>
-          <img [src]="msg.user.smallImg" alt="">
-        </ion-thumbnail>
-      </div>
-      <div class="text-container">
-        <div class="name"> {{msg.user.shortName}} </div>
-        <div class="text"> {{msg.msg}} </div>
-        <div class="date"> {{ msg.date | date:'hh:mm' }} </div>
-      </div>
-    </div>
+    <app-shared-messages-group *ngFor="let group of messages"
+                               [groupMessages]="group">
+    </app-shared-messages-group>
   </div>
 </ion-content>
 

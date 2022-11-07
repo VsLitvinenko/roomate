@@ -15,20 +15,20 @@ export const usersList = [
     screenName: 'sooooonya',
     smallImg: 'https://sun9-43.userapi.com/impf/c851428/v851428511/dcef/po3GAAjA4Yc.jpg?size=604x604&quality=96&sign=b149f9aa34c8e84d7752938c48d4a012&type=album'
   },
-  // {
-  //   id: 3,
-  //   fullName: 'Alexandr Lyakishev',
-  //   shortName: 'Alexandr',
-  //   screenName: 'naruto',
-  //   smallImg: 'https://sun9-55.userapi.com/impf/c851428/v851428511/dcad/nzCHOSymubI.jpg?size=604x604&quality=96&sign=43485fed20675ee11638189635eaafd4&type=album'
-  // },
-  // {
-  //   id: 4,
-  //   fullName: 'Zamir Ramazanov',
-  //   shortName: 'Zamir',
-  //   screenName: 'htoya',
-  //   smallImg: 'https://sun9-56.userapi.com/impf/c845017/v845017302/f6a61/ZgBk9vvzdeI.jpg?size=604x604&quality=96&sign=ff5aa03402bd6c0dcf447dd9f2449426&type=album'
-  // },
+  {
+    id: 3,
+    fullName: 'Alexandr Lyakishev',
+    shortName: 'Alexandr',
+    screenName: 'naruto',
+    smallImg: 'https://sun9-55.userapi.com/impf/c851428/v851428511/dcad/nzCHOSymubI.jpg?size=604x604&quality=96&sign=43485fed20675ee11638189635eaafd4&type=album'
+  },
+  {
+    id: 4,
+    fullName: 'Zamir Ramazanov',
+    shortName: 'Zamir',
+    screenName: 'htoya',
+    smallImg: 'https://sun9-56.userapi.com/impf/c845017/v845017302/f6a61/ZgBk9vvzdeI.jpg?size=604x604&quality=96&sign=ff5aa03402bd6c0dcf447dd9f2449426&type=album'
+  },
   {
     id: 5,
     fullName: 'Ilvir Harisov',
@@ -55,6 +55,21 @@ export const testMessages = [
     from: 2,
     date: 'Sat Aug 14 2021 06:09:53 GMT+0200 (Central European Summer Time)',
     msg: 'Veniam esse non occaecat eiusmod. Adipisicing quis consectetur irure nostrud proident.'
+  },
+  {
+    from: 3,
+    date: 'Tue Aug 31 2021 12:54:03 GMT+0200 (Central European Summer Time)',
+    msg: '???'
+  },
+  {
+    from: 3,
+    date: 'Tue Aug 31 2021 12:53:37 GMT+0200 (Central European Summer Time)',
+    msg: 'Ut ut esse occaecat Lorem.'
+  },
+  {
+    from: 3,
+    date: 'Tue Aug 31 2021 12:53:57 GMT+0200 (Central European Summer Time)',
+    msg: 'Ut ut esse occaecat Lorem Boom blabla hey'
   },
   {
     from: 5,
@@ -120,11 +135,6 @@ export const testMessages = [
     from: 6,
     date: 'Tue Aug 10 2021 23:22:28 GMT+0200 (Central European Summer Time)',
     msg: 'Dolor adipisicing laborum esse incididunt esse consequat cupidatat esse. Est consequat incididunt pariatur sint sint magna.'
-  },
-  {
-    from: 1,
-    date: 'Tue Aug 31 2021 12:53:37 GMT+0200 (Central European Summer Time)',
-    msg: 'Ut ut esse occaecat Lorem.'
   },
   {
     from: 5,

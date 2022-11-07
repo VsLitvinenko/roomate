@@ -6,6 +6,7 @@ import { SharedHeaderComponent } from './components/shared-header/shared-header.
 import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive';
 import { SharedLoaderComponent } from './components/shared-loader/shared-loader.component';
 import { SharedTextareaFooterComponent } from './components/shared-textarea-footer/shared-textarea-footer.component';
+import { SharedMessagesGroupComponent } from './components/shared-messages-group/shared-messages-group.component';
 
 const directives = [
   ScrollbarThemeDirective,
@@ -15,6 +16,7 @@ const components = [
   SharedHeaderComponent,
   SharedLoaderComponent,
   SharedTextareaFooterComponent,
+  SharedMessagesGroupComponent,
 ];
 
 @NgModule({
