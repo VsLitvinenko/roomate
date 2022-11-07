@@ -13,19 +13,10 @@
                      [background]="'var(--ion-background-color)'">
   </app-shared-loader>
 
-  <ion-infinite-scroll *ngIf="!loading"
-                       threshold="50%" position="top"
-                       (ionInfinite)="infiniteScroll($event)">
-    <ion-infinite-scroll-content loading-spinner="crescent"
-                                 class="current-chat-infinite-loading">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-
-  <div class="msgs-container">
-    <app-shared-messages-group *ngFor="let group of messages"
-                               [groupMessages]="group">
-    </app-shared-messages-group>
-  </div>
+  <app-shared-chat [scrollEnabled]="!loading"
+                   [messages]="messages"
+                   (infiniteScroll)="infiniteScroll($event)">
+  </app-shared-chat>
 
 </ion-content>
 

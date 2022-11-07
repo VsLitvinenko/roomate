@@ -1,10 +1,8 @@
 <ion-content #currentChatContent
              appScrollbarTheme>
-  <div class="msgs-container">
-    <app-shared-messages-group *ngFor="let group of messages"
-                               [groupMessages]="group">
-    </app-shared-messages-group>
-  </div>
+  <app-shared-chat [scrollEnabled]="false"
+                   [messages]="messages">
+  </app-shared-chat>
 </ion-content>
 
 <ion-footer class="ion-no-border">

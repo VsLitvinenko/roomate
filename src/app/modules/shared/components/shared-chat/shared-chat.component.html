@@ -1,0 +1,13 @@
+<ion-infinite-scroll *ngIf="scrollEnabled"
+                     threshold="50%" position="top"
+                     (ionInfinite)="infiniteScroll.emit($event)">
+  <ion-infinite-scroll-content loading-spinner="crescent"
+                               class="current-chat-infinite-loading">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+<div class="msgs-container">
+  <app-shared-messages-group *ngFor="let group of messageGroups"
+                             [groupMessages]="group">
+  </app-shared-messages-group>
+</div>

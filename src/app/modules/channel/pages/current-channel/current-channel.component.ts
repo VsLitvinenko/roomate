@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
-import { splitMessagesIntoGroups } from '../../../shared/functions/split-messages-into-groups';
-import { testGroupMessages, usersList } from '../../../shared/test-data/data-source';
+import { testGroupMessages } from '../../../shared/test-data/data-source';
 
 @UntilDestroy()
 @Component({
@@ -60,13 +59,7 @@ export class CurrentChannelComponent implements OnInit {
   private loadingData(): Promise<void> {
     return new Promise<void>(resolve =>
       setTimeout(() => {
-        const groups = splitMessagesIntoGroups(testGroupMessages).map(
-          group => ({
-            ...group,
-            user: usersList.find(user => user.id === group.from)
-          })
-        );
-        this.messages.push(...groups);
+        this.messages.push(...testGroupMessages);
         resolve();
       }, 1000)
     );
