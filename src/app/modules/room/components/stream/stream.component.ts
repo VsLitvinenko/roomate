@@ -57,9 +57,9 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.playerReady$.next(true);
   }
 
-  ngOnDestroy(): void {
-    this.closeModal().then();
-    this.popover.dismiss().then();
+  async ngOnDestroy(): Promise<void> {
+    await this.closeModal();
+    await this.popover.dismiss();
   }
 
   public openPopover(): void {

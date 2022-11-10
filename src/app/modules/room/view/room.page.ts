@@ -35,7 +35,10 @@ export class RoomPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.janusService.joinRoom(this.roomId);
+    navigator.mediaDevices.getUserMedia( {
+      video: true,
+      audio: true
+    }).then(() => this.janusService.joinRoom(this.roomId));
   }
 
   ionViewWillEnter(): void {

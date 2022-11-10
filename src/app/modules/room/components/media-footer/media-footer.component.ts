@@ -16,6 +16,7 @@ export class MediaFooterComponent implements OnInit {
   public roomConfigured = false;
   public isAudioMuted = false;
   public isVideoMuted = false;
+  public isScreenSharing = false;
 
   public readonly devices: { [id: string]: MediaDeviceInfo[] } = {
     audioinput: [],
@@ -59,11 +60,14 @@ export class MediaFooterComponent implements OnInit {
     // this.janusService.replaceVideo(event);
   }
 
+  public shareScreen(): void {
+    this.isScreenSharing = !this.isScreenSharing;
+    this.janusService.shareScreen(this.isScreenSharing);
+  }
+
   private setMediaDevices(): void {
-    navigator.mediaDevices.getUserMedia( {
-      video: true,
-      audio: true
-    }).then(() => navigator.mediaDevices.enumerateDevices())
+    // get user media request should be already done
+    navigator.mediaDevices.enumerateDevices()
       .then(devices => {
         devices
           .filter(device => device.deviceId !== 'communications')

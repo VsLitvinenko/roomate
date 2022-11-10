@@ -4,11 +4,7 @@ import { filter, mapTo, take } from 'rxjs/operators';
 import { acodec, doDtx, doSimulcast, Janus, vcodec } from '../janus.constants';
 import { JanusJS } from '../janus.types';
 import { JanusSubscribeService, PublisherTracks } from './janus-subscribe.service';
-
-// export interface RoomReady {
-//   sessionAttach: (options: JanusJS.PluginOptions) => void;
-//   privateId: number;
-// }
+import { JanusShareScreenService } from './janus-share-screen.service';
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
 const server = 'http://localhost:8088/janus';
@@ -22,7 +18,10 @@ export class JanusMainService {
   private roomId: number;
   private mainPlugin: JanusJS.PluginHandle;
 
-  constructor(private readonly receiveService: JanusSubscribeService) {
+  constructor(
+    private readonly receiveService: JanusSubscribeService,
+    private readonly screenService: JanusShareScreenService
+  ) {
     Janus.init({
       debug: true,
       dependencies: Janus.useDefaultDependencies(null),
@@ -79,6 +78,15 @@ export class JanusMainService {
         jsep
       })
     });
+  }
+
+  public shareScreen(share: boolean): void {
+    if (share) {
+      this.screenService.attachPlugin(this.janus.attach, this.roomId);
+    }
+    else {
+      this.screenService.destroyPlugin();
+    }
   }
 
   public joinRoom(roomId: number): void {

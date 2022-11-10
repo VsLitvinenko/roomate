@@ -11,6 +11,7 @@ import { RoomStartSideComponent } from './components/room-start-side/room-start-
 import { RoomEndSideComponent } from './components/room-end-side/room-end-side.component';
 import { JanusSubscribeService } from './janus/services/janus-subscribe.service';
 import { MediaFooterComponent } from './components/media-footer/media-footer.component';
+import { JanusShareScreenService } from './janus/services/janus-share-screen.service';
 
 const commonComponents = [
   StreamComponent,
@@ -26,6 +27,7 @@ const pagesComponents = [
 const services = [
   JanusMainService,
   JanusSubscribeService,
+  JanusShareScreenService,
 ];
 
 @NgModule({

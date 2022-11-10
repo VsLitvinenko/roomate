@@ -9,7 +9,10 @@
         <ion-icon name="settings-sharp"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" color="medium" mode="md">
+      <ion-button mode="md"
+                  [fill]="isScreenSharing ? 'outline' : 'clear'"
+                  [color]="isScreenSharing ? 'roomate-green' : 'medium'"
+                  (click)="shareScreen()">
         <ion-icon name="desktop-outline"></ion-icon>
       </ion-button>
 

@@ -121,7 +121,8 @@ export class JanusSubscribeService {
       delete this.mids[mid];
       return;
     }
-    if (this.remoteTracks[publisherId].tracks.length < 2) {
+    // if (this.remoteTracks[publisherId].tracks.length < 2) {
+    if (!track.muted) {
       // new publisher
       this.remoteTracks[publisherId].tracks.push(track);
     }
