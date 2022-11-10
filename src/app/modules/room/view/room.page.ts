@@ -36,7 +36,6 @@ export class RoomPage implements OnInit {
 
   ngOnInit(): void {
     this.janusService.joinRoom(this.roomId);
-    this.janusServiceSubscribes();
   }
 
   ionViewWillEnter(): void {
@@ -48,12 +47,4 @@ export class RoomPage implements OnInit {
     this.menuController.clearEndSideMenuTemplate();
   }
 
-  private janusServiceSubscribes(): void {
-    this.janusService.roomConfigured
-      .subscribe(() => {
-        this.roomConfigured = true;
-        // this.setMediaDevices();
-        // this.toggleAudio();
-      });
-  }
 }

@@ -59,9 +59,8 @@ export class JanusSubscribeService {
         display: publisher.display,
         tracks: [] // would attached in onRemoteTrack()
       };
-      const subscription = [];
-      publisher.streams?.forEach(
-        stream => subscription.push({
+      const subscription = publisher.streams?.map(
+        stream => ({
           feed: publisher.id,
           mid: stream.mid
         })

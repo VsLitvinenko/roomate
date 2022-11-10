@@ -11,7 +11,7 @@ import { JanusSubscribeService, PublisherTracks } from './janus-subscribe.servic
 // }
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
-const server = 'https://80-78-247-250.cloudvps.regruhosting.ru/janusbase/janus/';
+const server = 'http://localhost:8088/janus';
 
 @Injectable()
 export class JanusMainService {
@@ -83,7 +83,7 @@ export class JanusMainService {
 
   public joinRoom(roomId: number): void {
     this.roomId = roomId;
-    // this.createSession();
+    this.createSession();
   }
 
   private createSession(): void {

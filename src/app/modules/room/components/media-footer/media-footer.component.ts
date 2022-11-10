@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import { JanusMainService } from '../../janus/services/janus-main.service';
 
 @Component({
   selector: 'app-media-footer',
@@ -8,12 +9,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./media-footer.component.scss'],
 })
 export class MediaFooterComponent implements OnInit {
-  @Input() public roomConfigured: boolean;
-
   public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)
   );
 
+  public roomConfigured = false;
   public isAudioMuted = false;
   public isVideoMuted = false;
 
@@ -32,20 +32,27 @@ export class MediaFooterComponent implements OnInit {
 
   constructor(
     private readonly appWidthService: SharedIsFullWidthService,
+    private readonly janusService: JanusMainService,
   ) { }
 
   ngOnInit(): void {
-    this.setMediaDevices();
+    this.janusService.roomConfigured.pipe(
+      take(1)
+    ).subscribe(() => {
+      this.setMediaDevices();
+      this.toggleAudio();
+      this.roomConfigured = true;
+    });
   }
 
   public toggleAudio(): void {
     this.isAudioMuted = !this.isAudioMuted;
-    // this.janusService.toggleAudio(this.isAudioMuted);
+    this.janusService.toggleAudio(this.isAudioMuted);
   }
 
   public toggleVideo(): void {
     this.isVideoMuted = !this.isVideoMuted;
-    // this.janusService.toggleVideo(this.isVideoMuted);
+    this.janusService.toggleVideo(this.isVideoMuted);
   }
 
   public videoDeviceChanged(event): void {
