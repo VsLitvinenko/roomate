@@ -60,9 +60,9 @@ export class MediaFooterComponent implements OnInit {
     // this.janusService.replaceVideo(event);
   }
 
-  public shareScreen(): void {
+  public toggleScreen(): void {
     this.isScreenSharing = !this.isScreenSharing;
-    this.janusService.shareScreen(this.isScreenSharing);
+    this.janusService.toggleScreen(this.isScreenSharing);
   }
 
   private setMediaDevices(): void {

@@ -98,7 +98,7 @@ export class JanusSubscribeService {
       const stereo = (jsep.sdp.indexOf('stereo=1') !== -1);
       this.plugin.createAnswer({
         jsep,
-        media: { audioSend: false, videoSend: false },
+        tracks: [ { type: 'data' } ],
         customizeSdp: currentJsep => {
           if (stereo && currentJsep.sdp.indexOf('stereo=1') === -1) {
             // Make sure that our offer contains stereo too

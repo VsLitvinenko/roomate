@@ -28,6 +28,7 @@ export class JanusShareScreenService {
   }
 
   public destroyPlugin(): void {
+    this.shareScreenPublisherId$.next(undefined);
     this.screenPlugin.detach({});
   }
 
@@ -54,7 +55,10 @@ export class JanusShareScreenService {
   private onJoinedRoom(message: any): void {
     this.shareScreenPublisherId$.next(message.id);
     this.screenPlugin.createOffer({
-      media: { video: 'screen', audioSend: true, videoRecv: false},
+      tracks: [
+        { type: 'audio', capture: true },
+        { type: 'screen', capture: true }
+      ],
       success: jsep => this.initialConfigure(jsep),
       error: error => Janus.error('WebRTC error:', error),
     });

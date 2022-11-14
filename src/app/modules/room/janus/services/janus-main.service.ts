@@ -52,22 +52,25 @@ export class JanusMainService {
   }
 
   public toggleVideo(muted: boolean): void {
-    let media;
     if (muted) {
-      media = { removeVideo: true };
       this.mainPlugin.muteVideo();
     } else  {
-      media = { addVideo: true };
       this.mainPlugin.unmuteVideo();
     }
-    this.mainPlugin.createOffer({
-      success: (jsep) => this.mainPlugin.send({
-        message: {audio: true, video: true},
-        jsep
-      }),
-      media,
-    });
   }
+
+  public toggleScreen(share: boolean): void {
+    if (share) {
+      this.screenService.attachPlugin(this.janus.attach, this.roomId).pipe(
+        take(1)
+      ).subscribe(id => this.myScreenPublishId = id);
+    }
+    else {
+      this.myScreenPublishId = undefined;
+      this.screenService.destroyPlugin();
+    }
+  }
+
 
   public replaceVideo(deviceId: string): void {
     this.mainPlugin.createOffer({
@@ -80,18 +83,6 @@ export class JanusMainService {
         jsep
       })
     });
-  }
-
-  public shareScreen(share: boolean): void {
-    if (share) {
-      this.screenService.attachPlugin(this.janus.attach, this.roomId).pipe(
-        take(1)
-      ).subscribe(id => this.myScreenPublishId = id);
-    }
-    else {
-      this.myScreenPublishId = undefined;
-      this.screenService.destroyPlugin();
-    }
   }
 
   public joinRoom(roomId: number): void {
@@ -151,7 +142,10 @@ export class JanusMainService {
 
   private onJoinedRoom(msg: JanusJS.Message): void {
     this.mainPlugin.createOffer({
-      media: { audioRecv: false, videoRecv: false, audioSend: true, videoSend: true },
+      tracks: [
+        { type: 'audio', capture: true },
+        { type: 'video', capture: true }
+      ],
       simulcast: doSimulcast,
       success: jsep => {
         this.initialConfigure(jsep);
