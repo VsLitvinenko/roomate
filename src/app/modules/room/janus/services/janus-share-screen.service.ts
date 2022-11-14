@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { JanusJS } from '../janus.types';
 import { Janus } from '../janus.constants';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class JanusShareScreenService {
 
   private roomId: number;
   private screenPlugin: JanusJS.PluginHandle;
+  private shareScreenPublisherId$ = new Subject<number>();
 
   constructor() { }
 
   public attachPlugin(
     sessionAttach: (options: JanusJS.PluginOptions) => void,
     roomId: number
-  ): void {
+  ): Observable<number> {
     this.roomId = roomId;
     sessionAttach({
       plugin: 'janus.plugin.videoroom',
@@ -22,6 +24,7 @@ export class JanusShareScreenService {
       onmessage: (message, jsep) => this.onScreenMessage(message, jsep),
       // onlocaltrack: (track, on) => this.onLocalTrack(track),
     });
+    return this.shareScreenPublisherId$.asObservable();
   }
 
   public destroyPlugin(): void {
@@ -41,14 +44,15 @@ export class JanusShareScreenService {
 
   private onScreenMessage(msg: JanusJS.Message, jsep: JanusJS.JSEP): void {
     if ((msg as any).videoroom === 'joined') {
-      this.onJoinedRoom();
+      this.onJoinedRoom(msg);
     }
     if (jsep) {
       this.screenPlugin.handleRemoteJsep({ jsep });
     }
   }
 
-  private onJoinedRoom(): void {
+  private onJoinedRoom(message: any): void {
+    this.shareScreenPublisherId$.next(message.id);
     this.screenPlugin.createOffer({
       media: { video: 'screen', audioSend: true, videoRecv: false},
       success: jsep => this.initialConfigure(jsep),
@@ -59,7 +63,7 @@ export class JanusShareScreenService {
   private initialConfigure(jsep): void {
     const request = {
       request: 'configure',
-      audio: false,
+      audio: true,
       video: true,
     };
     this.screenPlugin.send({

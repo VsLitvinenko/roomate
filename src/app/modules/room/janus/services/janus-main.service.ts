@@ -13,10 +13,12 @@ const server = 'http://localhost:8088/janus';
 export class JanusMainService {
   private janusReady$ = new BehaviorSubject<boolean>(false);
   private roomConfigured$ = new BehaviorSubject<boolean>(false);
+
   private janus: JanusJS.Janus;
+  private mainPlugin: JanusJS.PluginHandle;
 
   private roomId: number;
-  private mainPlugin: JanusJS.PluginHandle;
+  private myScreenPublishId: number;
 
   constructor(
     private readonly receiveService: JanusSubscribeService,
@@ -82,9 +84,12 @@ export class JanusMainService {
 
   public shareScreen(share: boolean): void {
     if (share) {
-      this.screenService.attachPlugin(this.janus.attach, this.roomId);
+      this.screenService.attachPlugin(this.janus.attach, this.roomId).pipe(
+        take(1)
+      ).subscribe(id => this.myScreenPublishId = id);
     }
     else {
+      this.myScreenPublishId = undefined;
       this.screenService.destroyPlugin();
     }
   }
@@ -132,9 +137,9 @@ export class JanusMainService {
       this.onJoinedRoom(msg);
     }
     if (msg.publishers?.length) {
-      msg.publishers.forEach(
-        publisher => this.receiveService.onNewPublisher(publisher)
-      );
+      msg.publishers
+        .filter(publisher => this.myScreenPublishId === undefined || publisher.id !== this.myScreenPublishId)
+        .forEach(publisher => this.receiveService.onNewPublisher(publisher));
     }
     if ((msg as any).leaving) {
       this.receiveService.onDeletePublisher((msg as any).leaving);

@@ -57,7 +57,7 @@ export class JanusSubscribeService {
     this.receivePluginReady.subscribe(() => {
       this.remoteTracks[publisher.id] = {
         display: publisher.display,
-        tracks: [] // would attached in onRemoteTrack()
+        tracks: [] // would be attached in onRemoteTrack()
       };
       const subscription = publisher.streams?.map(
         stream => ({
