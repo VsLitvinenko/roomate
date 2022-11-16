@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class JanusShareScreenService {
+  public localScreenPublisher: JanusJS.PublisherTracks;
 
   private roomId: number;
   private screenPlugin: JanusJS.PluginHandle;
@@ -22,12 +23,13 @@ export class JanusShareScreenService {
       success: pluginHandle => this.screenPluginHandling(pluginHandle),
       error: error => Janus.error('pluginAttaching error:', error),
       onmessage: (message, jsep) => this.onScreenMessage(message, jsep),
-      // onlocaltrack: (track, on) => this.onLocalTrack(track),
+      onlocaltrack: (track, on) => this.onLocalTrack(track),
     });
     return this.shareScreenPublisherId$.asObservable();
   }
 
   public destroyPlugin(): void {
+    this.localScreenPublisher = undefined;
     this.shareScreenPublisherId$.next(undefined);
     this.screenPlugin.detach({});
   }
@@ -73,5 +75,13 @@ export class JanusShareScreenService {
       message: request,
       jsep
     });
+  }
+
+  private onLocalTrack(track): void {
+    this.localScreenPublisher = {
+      display: 'Your screen sharing',
+      videoTrack: track,
+      audioTrack: null
+    };
   }
 }

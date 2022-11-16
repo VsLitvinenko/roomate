@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
 import { acodec, doDtx, doSimulcast, Janus, vcodec } from '../janus.constants';
 import { JanusJS } from '../janus.types';
-import { JanusSubscribeService, PublisherTracks } from './janus-subscribe.service';
+import { JanusSubscribeService } from './janus-subscribe.service';
 import { JanusShareScreenService } from './janus-share-screen.service';
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
@@ -19,6 +19,12 @@ export class JanusMainService {
 
   private roomId: number;
   private myScreenPublishId: number;
+
+  private localPublisher: JanusJS.PublisherTracks = {
+    display: 'You',
+    audioTrack: null,
+    videoTrack: null
+  };
 
   constructor(
     private readonly receiveService: JanusSubscribeService,
@@ -39,8 +45,15 @@ export class JanusMainService {
     );
   }
 
-  public get remoteTracks(): { [publisherId: number]: PublisherTracks } {
+  public get remoteTracks(): { [publisherId: number]: JanusJS.PublisherTracks } {
     return this.receiveService.remoteTracks;
+  }
+
+  public get localTracks(): JanusJS.PublisherTracks[] {
+    return [
+      this.localPublisher,
+      this.screenService.localScreenPublisher
+    ].filter(item => item);
   }
 
   public toggleAudio(muted: boolean): void {
@@ -175,10 +188,13 @@ export class JanusMainService {
   }
 
   private onLocalTrack(track: MediaStreamTrack): void {
-    if (track.kind === 'video') {
-      const stream = new MediaStream();
-      stream.addTrack(track.clone());
-      // this.localStream$$.next(stream);
+    switch (track.kind) {
+      case 'audio':
+        this.localPublisher.audioTrack = track;
+        break;
+      case 'video':
+        this.localPublisher.videoTrack = track;
+        break;
     }
   }
 }

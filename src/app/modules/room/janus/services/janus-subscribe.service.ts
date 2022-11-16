@@ -4,16 +4,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
 import { Janus } from '../janus.constants';
 
-export interface PublisherTracks {
-  display: string;
-  videoTrack: MediaStreamTrack;
-  audioTrack: MediaStreamTrack;
-}
-
 @Injectable()
 export class JanusSubscribeService {
 
-  public readonly remoteTracks: { [publisherId: number]: PublisherTracks } = {};
+  public readonly remoteTracks: { [publisherId: number]: JanusJS.PublisherTracks } = {};
   private readonly mids: { [mid: string]: number } = {};
 
   private pluginReady$ = new BehaviorSubject(false);

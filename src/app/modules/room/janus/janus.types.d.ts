@@ -68,6 +68,12 @@ declare namespace JanusJS {
     talking?: boolean;
   }
 
+  interface PublisherTracks {
+    display: string;
+    videoTrack: MediaStreamTrack;
+    audioTrack: MediaStreamTrack;
+  }
+
   interface RemoteStream {
     active: boolean;
     codec: string;

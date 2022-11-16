@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from '../components/room-end-side/room-end-side.component';
-import { PublisherTracks } from '../janus/services/janus-subscribe.service';
+import { JanusJS } from '../janus/janus.types';
 
 @UntilDestroy()
 @Component({
@@ -29,8 +29,12 @@ export class RoomPage implements OnInit {
     private readonly menuController: MenuControllerService,
   ) {}
 
-  public get remoteTracks(): PublisherTracks[] {
+  public get remoteTracks(): JanusJS.PublisherTracks[] {
     return Object.values(this.janusService.remoteTracks);
+  }
+
+  public get localTracks(): JanusJS.PublisherTracks[] {
+    return this.janusService.localTracks;
   }
 
   ngOnInit(): void {
