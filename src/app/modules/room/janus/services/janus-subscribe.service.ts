@@ -48,21 +48,41 @@ export class JanusSubscribeService {
   }
 
 
-  public onNewPublisher(publisher: JanusJS.Publisher): void {
-    this.receivePluginReady.subscribe(() => {
+  public onUpdatePublisher(publisher: JanusJS.Publisher): void {
+    // new publisher
+    if (!this.remoteTracks[publisher.id]) {
       this.remoteTracks[publisher.id] = {
         display: publisher.display,
         // would be attached in onRemoteTrack()
         videoTrack: null,
         audioTrack: null
       };
-      const subscription = publisher.streams?.map(
-        stream => ({
-          feed: publisher.id,
-          mid: stream.mid
-        })
-      );
-      const message = this.getSubscribeRequestMessage(subscription);
+    }
+    this.receivePluginReady.subscribe(() => {
+      const newSubscriptions = [];
+      publisher.streams.forEach(stream => {
+        if (stream.disabled) {
+          // newly disabled stream
+          if (this.mids[stream.mid]) {
+            switch (stream.type) {
+              case 'audio':
+                this.remoteTracks[publisher.id].audioTrack = null;
+                break;
+              case 'video':
+                this.remoteTracks[publisher.id].videoTrack = null;
+                break;
+            }
+          }
+        }
+        // literally new stream we want to subscribe
+        else if (!this.mids[stream.mid]) {
+          newSubscriptions.push({
+            feed: publisher.id,
+            mid: stream.mid
+          });
+        }
+      });
+      const message = this.getSubscribeRequestMessage(newSubscriptions);
       this.plugin.send({ message });
     });
   }
@@ -88,7 +108,7 @@ export class JanusSubscribeService {
   private onMessage(msg: JanusJS.Message, jsep: any): void {
     if (msg.streams) {
       msg.streams
-        .filter(stream => stream.active)
+        .filter(stream => stream.active && !stream.ready)
         .forEach(stream => this.mids[stream.mid] = stream.feed_id);
     }
     if (jsep) {
@@ -113,12 +133,11 @@ export class JanusSubscribeService {
 
   private onRemoteTrack(track: MediaStreamTrack, mid: string, on: boolean): void {
     const publisherId = this.mids[mid];
-    if (!on && !this.remoteTracks[publisherId]) {
-      // publisher have leaved
+    if (!on) {
+      // disabled stream
       delete this.mids[mid];
       return;
     }
-    // if (this.remoteTracks[publisherId].tracks.length < 2) {
     if (!track.muted) {
       // new publisher
       switch (track.kind) {

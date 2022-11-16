@@ -48,15 +48,11 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.playerReady.subscribe(() => {
-      if (changes.videoTrack?.currentValue) {
-        this.remoteVideoStream = new MediaStream();
-        this.remoteVideoStream.addTrack(this.videoTrack);
-        Janus.attachMediaStream(this.videoEl.nativeElement, this.remoteVideoStream);
+      if (changes.videoTrack) {
+        this.trackHandler(this.videoTrack, 'video');
       }
-      if (changes.audioTrack?.currentValue) {
-        this.remoteAudioStream = new MediaStream();
-        this.remoteAudioStream.addTrack(this.audioTrack);
-        Janus.attachMediaStream(this.audioEl.nativeElement, this.remoteAudioStream);
+      if (changes.audioTrack) {
+        this.trackHandler(this.audioTrack, 'audio');
       }
     });
   }
@@ -93,5 +89,24 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   public onModalWillClose(): void {
     this.videoEl.nativeElement.srcObject = this.remoteVideoStream;
+  }
+
+  private trackHandler(track: MediaStreamTrack, kind: 'video' | 'audio'): void {
+    const attachEl = (kind === 'video' ? this.videoEl : this.audioEl).nativeElement;
+    let stream;
+    if (track === null) {
+      stream = null;
+    }
+    else {
+      stream = new MediaStream();
+      stream.addTrack(track);
+      if (kind === 'video') {
+        this.remoteVideoStream = stream;
+      }
+      else {
+        this.remoteAudioStream = stream;
+      }
+    }
+    setTimeout(() => Janus.attachMediaStream(attachEl, stream), 0);
   }
 }

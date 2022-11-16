@@ -6,8 +6,12 @@
          [volume]="audioVolume / 100"
          autoplay> </audio>
 
+  <div *ngIf="!videoEl.srcObject" class="no-video">
+    <ion-icon name="videocam-off-outline"></ion-icon>
+  </div>
+
   <div class="display">
-    {{display}} {{audioTrack?.enabled}}
+    {{display}}
   </div>
 
   <ion-button [id]="'publisher-popover-' + index"

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
-import { acodec, doDtx, doSimulcast, Janus, vcodec } from '../janus.constants';
+import { acodec, doDtx, Janus, vcodec } from '../janus.constants';
 import { JanusJS } from '../janus.types';
 import { JanusSubscribeService } from './janus-subscribe.service';
 import { JanusShareScreenService } from './janus-share-screen.service';
@@ -25,6 +25,7 @@ export class JanusMainService {
     audioTrack: null,
     videoTrack: null
   };
+  private streams: any[];
 
   constructor(
     private readonly receiveService: JanusSubscribeService,
@@ -65,11 +66,16 @@ export class JanusMainService {
   }
 
   public toggleVideo(muted: boolean): void {
+    const tracks = [];
+    const request = { request: 'configure', video: true };
     if (muted) {
-      this.mainPlugin.muteVideo();
-    } else  {
-      this.mainPlugin.unmuteVideo();
+      const currentStream = this.streams.find(item => !item.disabled && item.type === 'video');
+      tracks.push({ type: 'video', mid: currentStream.mid, remove: true });
     }
+    else {
+      tracks.push({ type: 'video', add: true, capture: true, recv: false });
+    }
+    this.createOffer(tracks, request);
   }
 
   public toggleScreen(share: boolean): void {
@@ -121,7 +127,7 @@ export class JanusMainService {
       success: pluginHandle => this.mainPluginHandling(pluginHandle),
       error: error => Janus.error('pluginAttaching error:', error),
       onmessage: (message, jsep) => this.onMainMessage(message, jsep),
-      onlocaltrack: (track, on) => this.onLocalTrack(track),
+      onlocaltrack: (track, on) => this.onLocalTrack(track, on),
     });
   }
 
@@ -140,13 +146,16 @@ export class JanusMainService {
     if ((msg as any).videoroom === 'joined') {
       this.onJoinedRoom(msg);
     }
-    if (msg.publishers?.length) {
+    if (msg.publishers) {
       msg.publishers
         .filter(publisher => this.myScreenPublishId === undefined || publisher.id !== this.myScreenPublishId)
-        .forEach(publisher => this.receiveService.onNewPublisher(publisher));
+        .forEach(publisher => this.receiveService.onUpdatePublisher(publisher));
     }
     if ((msg as any).leaving) {
       this.receiveService.onDeletePublisher((msg as any).leaving);
+    }
+    if (msg.streams) {
+      this.streams = msg.streams;
     }
     if (jsep) {
       this.mainPlugin.handleRemoteJsep({ jsep });
@@ -154,14 +163,36 @@ export class JanusMainService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
+    const request = {
+      request: 'configure',
+      audio: true,
+      video: true,
+      audiocodec: acodec || undefined,
+      videocodec: vcodec || undefined
+    };
+    const tracks = [
+      { type: 'audio', capture: true, recv: false },
+      { type: 'video', capture: true, recv: false }
+    ];
+    const handler = () => this.receiveService.attachPlugin(
+      this.janus.attach,
+      (msg as any).private,
+      this.roomId
+    );
+    this.createOffer(tracks, request, handler, true);
+  }
+
+  private createOffer(
+    tracks: any[],
+    configureRequest: any,
+    successHandler = () => undefined,
+    initial = false
+  ): void {
     this.mainPlugin.createOffer({
-      tracks: [
-        { type: 'audio', capture: true },
-        { type: 'video', capture: true, simulcast: doSimulcast }
-      ],
+      tracks,
       success: jsep => {
-        this.initialConfigure(jsep);
-        this.receiveService.attachPlugin(this.janus.attach, (msg as any).private, this.roomId);
+        this.configure(jsep, configureRequest, initial);
+        successHandler();
       },
       error: error => Janus.error('WebRTC error:', error),
       customizeSdp: jsep => {
@@ -172,28 +203,25 @@ export class JanusMainService {
     });
   }
 
-  private initialConfigure(jsep): void {
-    const request = {
-      request: 'configure',
-      audio: true,
-      video: true,
-      audiocodec: acodec || undefined,
-      videocodec: vcodec || undefined
-    };
+  private configure(jsep, message, initial: boolean): void {
     this.mainPlugin.send({
-      success: () => this.roomConfigured$.next(true),
-      message: request,
-      jsep
+      message,
+      jsep,
+      success: () => {
+        if (initial) {
+          this.roomConfigured$.next(true);
+        }
+      }
     });
   }
 
-  private onLocalTrack(track: MediaStreamTrack): void {
+  private onLocalTrack(track: MediaStreamTrack, on: boolean): void {
     switch (track.kind) {
       case 'audio':
-        this.localPublisher.audioTrack = track;
+        this.localPublisher.audioTrack = on ? track : null;
         break;
       case 'video':
-        this.localPublisher.videoTrack = track;
+        this.localPublisher.videoTrack = on ? track : null;
         break;
     }
   }
