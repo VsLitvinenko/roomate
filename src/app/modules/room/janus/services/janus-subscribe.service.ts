@@ -6,7 +6,8 @@ import { Janus } from '../janus.constants';
 
 export interface PublisherTracks {
   display: string;
-  tracks: MediaStreamTrack[];
+  videoTrack: MediaStreamTrack;
+  audioTrack: MediaStreamTrack;
 }
 
 @Injectable()
@@ -57,7 +58,9 @@ export class JanusSubscribeService {
     this.receivePluginReady.subscribe(() => {
       this.remoteTracks[publisher.id] = {
         display: publisher.display,
-        tracks: [] // would be attached in onRemoteTrack()
+        // would be attached in onRemoteTrack()
+        videoTrack: null,
+        audioTrack: null
       };
       const subscription = publisher.streams?.map(
         stream => ({
@@ -124,7 +127,14 @@ export class JanusSubscribeService {
     // if (this.remoteTracks[publisherId].tracks.length < 2) {
     if (!track.muted) {
       // new publisher
-      this.remoteTracks[publisherId].tracks.push(track);
+      switch (track.kind) {
+        case 'audio':
+          this.remoteTracks[publisherId].audioTrack = track;
+          break;
+        case 'video':
+          this.remoteTracks[publisherId].videoTrack = track;
+          break;
+      }
     }
   }
 

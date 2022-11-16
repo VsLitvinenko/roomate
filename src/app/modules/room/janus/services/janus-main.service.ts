@@ -144,9 +144,8 @@ export class JanusMainService {
     this.mainPlugin.createOffer({
       tracks: [
         { type: 'audio', capture: true },
-        { type: 'video', capture: true }
+        { type: 'video', capture: true, simulcast: doSimulcast }
       ],
-      simulcast: doSimulcast,
       success: jsep => {
         this.initialConfigure(jsep);
         this.receiveService.attachPlugin(this.janus.attach, (msg as any).private, this.roomId);

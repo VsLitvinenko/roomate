@@ -30,8 +30,7 @@ export class RoomPage implements OnInit {
   ) {}
 
   public get remoteTracks(): PublisherTracks[] {
-    return Object.values(this.janusService.remoteTracks)
-      .filter(item => item.tracks?.length >= 2);
+    return Object.values(this.janusService.remoteTracks);
   }
 
   ngOnInit(): void {

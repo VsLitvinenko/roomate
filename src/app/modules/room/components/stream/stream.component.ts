@@ -20,17 +20,20 @@ import { filter, mapTo, take } from 'rxjs/operators';
 })
 export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() public display: string;
-  @Input() public tracks: MediaStreamTrack[];
+  @Input() public videoTrack: MediaStreamTrack;
+  @Input() public audioTrack: MediaStreamTrack;
   @Input() public index: number;
 
   @ViewChild('videoEl') private readonly videoEl: ElementRef<HTMLVideoElement>;
+  @ViewChild('audioEl') private readonly audioEl: ElementRef<HTMLAudioElement>;
   @ViewChild('modal') private readonly modal: IonModal;
   @ViewChild('popover') private readonly popover: IonPopover;
 
-  public videoVolume = 100;
+  public audioVolume = 100;
   public modalLoading = false;
 
-  private remoteStream: MediaStream;
+  private remoteVideoStream: MediaStream;
+  private remoteAudioStream: MediaStream;
   private playerReady$ = new BehaviorSubject(false);
 
   constructor() { }
@@ -44,13 +47,18 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.tracks) {
-      this.playerReady.subscribe(() => {
-        this.remoteStream = new MediaStream();
-        this.tracks.forEach(track => this.remoteStream.addTrack(track));
-        Janus.attachMediaStream(this.videoEl.nativeElement, this.remoteStream);
-      });
-    }
+    this.playerReady.subscribe(() => {
+      if (changes.videoTrack?.currentValue) {
+        this.remoteVideoStream = new MediaStream();
+        this.remoteVideoStream.addTrack(this.videoTrack);
+        Janus.attachMediaStream(this.videoEl.nativeElement, this.remoteVideoStream);
+      }
+      if (changes.audioTrack?.currentValue) {
+        this.remoteAudioStream = new MediaStream();
+        this.remoteAudioStream.addTrack(this.audioTrack);
+        Janus.attachMediaStream(this.audioEl.nativeElement, this.remoteAudioStream);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -74,7 +82,7 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
           .getElementById(`modal-video-el-${this.index}`) as HTMLVideoElement;
         this.videoEl.nativeElement.srcObject = null;
 
-        Janus.attachMediaStream(modalVideoEl, this.remoteStream);
+        Janus.attachMediaStream(modalVideoEl, this.remoteVideoStream);
         this.modalLoading = false;
       });
   }
@@ -84,6 +92,6 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   public onModalWillClose(): void {
-    this.videoEl.nativeElement.srcObject = this.remoteStream;
+    this.videoEl.nativeElement.srcObject = this.remoteVideoStream;
   }
 }

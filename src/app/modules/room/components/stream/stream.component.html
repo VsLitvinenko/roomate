@@ -1,8 +1,10 @@
 <div class="stream-container" (click)="openPopover()">
   <video #videoEl
-         [volume]="videoVolume / 100"
-         playsinline autoplay>
-  </video>
+         playsinline autoplay> </video>
+
+  <audio #audioEl
+         [volume]="audioVolume / 100"
+         autoplay> </audio>
 
   <div class="display">
     {{display}}
@@ -20,8 +22,10 @@
                mode="md" side="left">
     <ng-template>
       <ion-list lines="none" class="popover-list">
-        <ion-item button="" class="no-ion-hover">
-          <ion-range color="roomate-green" [(ngModel)]="videoVolume">
+        <ion-item *ngIf="audioTrack"
+                  button="" class="no-ion-hover">
+          <ion-range [(ngModel)]="audioVolume"
+                     color="roomate-green" >
             <ion-icon slot="start" name="volume-low-outline"></ion-icon>
             <ion-icon slot="end" name="volume-high-outline"></ion-icon>
           </ion-range>
@@ -42,7 +46,9 @@
            css-class="publisher-modal" mode="md">
   <ng-template>
     <ion-row>
-      <ion-range color="medium" [(ngModel)]="videoVolume">
+      <ion-range *ngIf="audioTrack"
+                 [(ngModel)]="audioVolume"
+                 color="medium">
         <ion-icon slot="start" name="volume-low-outline"></ion-icon>
         <ion-icon slot="end" name="volume-high-outline"></ion-icon>
       </ion-range>
@@ -54,9 +60,7 @@
     </ion-row>
 
     <video [id]="'modal-video-el-' + index"
-           [volume]="videoVolume / 100"
-           playsinline autoplay>
-    </video>
+           playsinline autoplay> </video>
 
     <app-shared-loader [loading]="modalLoading"
                        [background]="'var(--roomate-border-color)'">

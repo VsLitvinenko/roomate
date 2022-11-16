@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JanusJS } from '../janus.types';
-import { Janus } from '../janus.constants';
+import { doSimulcast, Janus } from '../janus.constants';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
@@ -56,8 +56,7 @@ export class JanusShareScreenService {
     this.shareScreenPublisherId$.next(message.id);
     this.screenPlugin.createOffer({
       tracks: [
-        { type: 'audio', capture: true },
-        { type: 'screen', capture: true }
+        { type: 'screen', capture: true, simulcast: doSimulcast }
       ],
       success: jsep => this.initialConfigure(jsep),
       error: error => Janus.error('WebRTC error:', error),
@@ -67,7 +66,7 @@ export class JanusShareScreenService {
   private initialConfigure(jsep): void {
     const request = {
       request: 'configure',
-      audio: true,
+      audio: false,
       video: true,
     };
     this.screenPlugin.send({

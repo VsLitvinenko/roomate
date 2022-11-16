@@ -12,7 +12,8 @@
        [class.mobile-container]="isMobile$ | async">
     <app-stream *ngFor="let item of remoteTracks; let i = index"
                 [display]="item.display"
-                [tracks]="item.tracks"
+                [audioTrack]="item.audioTrack"
+                [videoTrack]="item.videoTrack"
                 [index]="i">
     </app-stream>
   </div>
