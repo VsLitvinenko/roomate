@@ -4,11 +4,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
 import { Janus } from '../janus.constants';
 
+interface PublisherMid {
+  publisherId: number;
+  subMid: string;
+}
+
 @Injectable()
 export class JanusSubscribeService {
 
   public readonly remoteTracks: { [publisherId: number]: JanusJS.PublisherTracks } = {};
-  private readonly mids: { [mid: string]: number } = {};
+  private readonly mids: { [mid: string]: PublisherMid } = {};
 
   private pluginReady$ = new BehaviorSubject(false);
   private plugin: JanusJS.PluginHandle;
@@ -59,31 +64,22 @@ export class JanusSubscribeService {
       };
     }
     this.receivePluginReady.subscribe(() => {
-      const newSubscriptions = [];
-      publisher.streams.forEach(stream => {
-        if (stream.disabled) {
-          // newly disabled stream
-          if (this.mids[stream.mid]) {
-            switch (stream.type) {
-              case 'audio':
-                this.remoteTracks[publisher.id].audioTrack = null;
-                break;
-              case 'video':
-                this.remoteTracks[publisher.id].videoTrack = null;
-                break;
-            }
-          }
-        }
-        // literally new stream we want to subscribe
-        else if (!this.mids[stream.mid]) {
-          newSubscriptions.push({
-            feed: publisher.id,
-            mid: stream.mid
-          });
-        }
-      });
-      const message = this.getSubscribeRequestMessage(newSubscriptions);
-      this.plugin.send({ message });
+      const subs = this.getSubscriptionsLists(publisher);
+
+      console.warn(subs.new, 'SUB');
+      console.warn(subs.unsub, 'UNSUB');
+
+      if (subs.new.length) {
+        const message = this.getSubscribeRequestMessage(subs.new);
+        this.plugin.send({ message });
+      }
+      if (subs.unsub.length) {
+        const message = {
+          request: 'unsubscribe',
+          streams: subs.unsub
+        };
+        this.plugin.send({ message });
+      }
     });
   }
 
@@ -107,15 +103,29 @@ export class JanusSubscribeService {
 
   private onMessage(msg: JanusJS.Message, jsep: any): void {
     if (msg.streams) {
-      msg.streams
-        .filter(stream => stream.active && !stream.ready)
-        .forEach(stream => this.mids[stream.mid] = stream.feed_id);
+      console.warn(msg.streams, 'STREAMS');
+      msg.streams.forEach(stream => {
+        if (stream.active === false) {
+          // disabled stream
+          delete this.mids[stream.mid];
+        }
+        else {
+          // new stream
+          this.mids[stream.mid] = {
+            publisherId: stream.feed_id,
+            subMid: stream.feed_mid
+          };
+        }
+      });
     }
     if (jsep) {
       const stereo = (jsep.sdp.indexOf('stereo=1') !== -1);
+      const tracks = (msg as any).videoroom === 'attached' ?
+        [ { type: 'data' } ] : undefined;
+
       this.plugin.createAnswer({
         jsep,
-        tracks: [ { type: 'data' } ],
+        tracks,
         customizeSdp: currentJsep => {
           if (stereo && currentJsep.sdp.indexOf('stereo=1') === -1) {
             // Make sure that our offer contains stereo too
@@ -132,14 +142,11 @@ export class JanusSubscribeService {
   }
 
   private onRemoteTrack(track: MediaStreamTrack, mid: string, on: boolean): void {
-    const publisherId = this.mids[mid];
-    if (!on) {
-      // disabled stream
-      delete this.mids[mid];
-      return;
-    }
-    if (!track.muted) {
+    // if (on && !track.muted) {
+    if (on) {
       // new publisher
+      const publisherId = this.mids[mid].publisherId;
+      console.warn(publisherId, track.kind, this.remoteTracks[publisherId].display);
       switch (track.kind) {
         case 'audio':
           this.remoteTracks[publisherId].audioTrack = track;
@@ -149,6 +156,43 @@ export class JanusSubscribeService {
           break;
       }
     }
+  }
+
+  private getSubscriptionsLists(publisher: JanusJS.Publisher): { new; unsub } {
+    const midsValues = Object.values(this.mids)
+      .filter(item => item.publisherId === publisher.id);
+    const newSubscriptions = [];
+    const unsubscribe = [];
+
+    publisher.streams.forEach(stream => {
+      const existingStream = midsValues.some(item => item.subMid === stream.mid);
+      if (!existingStream && !stream.disabled) {
+        // literally new stream we want to subscribe
+        newSubscriptions.push({
+          feed: publisher.id,
+          mid: stream.mid
+        });
+      }
+      else if (stream.disabled && existingStream) {
+        // newly disabled stream
+        switch (stream.type) {
+          case 'audio':
+            this.remoteTracks[publisher.id].audioTrack = null;
+            break;
+          case 'video':
+            this.remoteTracks[publisher.id].videoTrack = null;
+            break;
+        }
+        unsubscribe.push({
+          feed: publisher.id,
+          mid: stream.mid
+        });
+      }
+    });
+    return {
+      new: newSubscriptions,
+      unsub: unsubscribe
+    };
   }
 
   private getSubscribeRequestMessage(subscription): any {
