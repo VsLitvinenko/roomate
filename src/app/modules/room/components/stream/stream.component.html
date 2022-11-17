@@ -6,6 +6,8 @@
          [volume]="audioVolume / 100"
          autoplay> </audio>
 
+  <div #speakerBorder class="audio-border"></div>
+
   <div *ngIf="!videoEl.srcObject" class="no-video">
     <ion-icon name="videocam-off-outline"></ion-icon>
   </div>
@@ -14,14 +16,14 @@
     {{display}}
   </div>
 
-  <ion-button [id]="'publisher-popover-' + index"
+  <ion-button [id]="popoverId"
               class="no-ion-hover popover-button"
               size="small" fill="clear">
     <ion-icon name="ellipsis-horizontal"></ion-icon>
   </ion-button>
 
   <ion-popover #popover
-               [trigger]="'publisher-popover-' + index"
+               [trigger]="popoverId"
                [showBackdrop]="false"
                mode="md" side="left">
     <ng-template>
@@ -30,8 +32,12 @@
                   button="" class="no-ion-hover">
           <ion-range [(ngModel)]="audioVolume"
                      color="roomate-green" >
-            <ion-icon slot="start" name="volume-low-outline"></ion-icon>
-            <ion-icon slot="end" name="volume-high-outline"></ion-icon>
+            <ion-icon (click)="setVolume(0)"
+                      slot="start" name="volume-low-outline">
+            </ion-icon>
+            <ion-icon (click)="setVolume(100)"
+                      slot="end" name="volume-high-outline">
+            </ion-icon>
           </ion-range>
         </ion-item>
 
@@ -63,7 +69,7 @@
       </ion-button>
     </ion-row>
 
-    <video [id]="'modal-video-el-' + index"
+    <video [id]="modalVideoElId"
            playsinline autoplay> </video>
 
     <app-shared-loader [loading]="modalLoading"

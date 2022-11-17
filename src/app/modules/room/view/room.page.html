@@ -12,6 +12,7 @@
        [class.mobile-container]="isMobile$ | async">
 
     <app-stream *ngFor="let item of localTracks; let i = index"
+                [localStream]="true"
                 [display]="item.display"
                 [audioTrack]="item.audioTrack"
                 [videoTrack]="item.videoTrack"
@@ -19,6 +20,7 @@
     </app-stream>
 
     <app-stream *ngFor="let item of remoteTracks; let i = index"
+                [localStream]="false"
                 [display]="item.display"
                 [audioTrack]="item.audioTrack"
                 [videoTrack]="item.videoTrack"
