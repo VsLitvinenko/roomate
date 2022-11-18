@@ -52,7 +52,8 @@
 
     <ion-content appScrollbarTheme>
       <ion-list lines="none">
-        <ion-radio-group [(ngModel)]="activeDevicesId.audioinput">
+        <ion-radio-group [(ngModel)]="activeDevicesId.audioinput"
+                         (ngModelChange)="deviceChanged($event, 'audio')">
           <ion-list-header>
             <ion-label> Audio input </ion-label>
           </ion-list-header>
@@ -67,7 +68,7 @@
 
       <ion-list lines="none">
         <ion-radio-group [(ngModel)]="activeDevicesId.videoinput"
-                         (ngModelChange)="videoDeviceChanged($event)">
+                         (ngModelChange)="deviceChanged($event, 'video')">
           <ion-list-header>
             <ion-label> Video input </ion-label>
           </ion-list-header>
@@ -81,7 +82,8 @@
       </ion-list>
 
       <ion-list lines="none">
-        <ion-radio-group [(ngModel)]="activeDevicesId.audiooutput">
+        <ion-radio-group [(ngModel)]="activeDevicesId.audiooutput"
+                         (ngModelChange)="audioOutputId.emit($event)">
           <ion-list-header>
             <ion-label> Audio output </ion-label>
           </ion-list-header>

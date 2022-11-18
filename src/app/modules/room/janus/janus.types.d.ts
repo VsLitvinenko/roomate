@@ -192,6 +192,7 @@ declare namespace JanusJS {
     getPlugin(): string;
     send(message: PluginMessage): void;
     createOffer(params: any): void;
+    replaceTracks(params: any): void;
     createAnswer(params: any): void;
     handleRemoteJsep(params: { jsep: JSEP }): void;
     dtmf(params: any): void;

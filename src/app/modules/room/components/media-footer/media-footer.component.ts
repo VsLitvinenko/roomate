@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
 import { map, take } from 'rxjs/operators';
 import { JanusMainService } from '../../janus/services/janus-main.service';
@@ -9,6 +9,8 @@ import { JanusMainService } from '../../janus/services/janus-main.service';
   styleUrls: ['./media-footer.component.scss'],
 })
 export class MediaFooterComponent implements OnInit {
+  @Output() public audioOutputId = new EventEmitter<string>();
+
   public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
     map(value => !value)
   );
@@ -30,7 +32,6 @@ export class MediaFooterComponent implements OnInit {
     videoinput: ''
   };
 
-
   constructor(
     private readonly appWidthService: SharedIsFullWidthService,
     private readonly janusService: JanusMainService,
@@ -39,12 +40,17 @@ export class MediaFooterComponent implements OnInit {
   ngOnInit(): void {
     this.janusService.roomConfigured.pipe(
       take(1)
-    ).subscribe(() => {
-      this.setMediaDevices();
-      this.roomConfigured = true;
-      this.isAudioMuted = !this.janusService.initialUseAudio;
-      this.isVideoMuted = !this.janusService.initialUseVideo;
-    });
+    ).subscribe(() =>
+      this.setMediaDevices().then(() => {
+        this.roomConfigured = true;
+        this.isAudioMuted = !this.janusService.initialUseAudio;
+        this.isVideoMuted = !this.janusService.initialUseVideo;
+      })
+    );
+  }
+
+  public deviceChanged(event: string, type: 'video' | 'audio'): void {
+    this.janusService.replaceDevice(event, type);
   }
 
   public toggleAudio(): void {
@@ -55,10 +61,6 @@ export class MediaFooterComponent implements OnInit {
   public toggleVideo(): void {
     this.isVideoMuted = !this.isVideoMuted;
     this.janusService.toggleVideo(this.isVideoMuted);
-  }
-
-  public videoDeviceChanged(event): void {
-    // this.janusService.replaceVideo(event);
   }
 
   public toggleScreen(): void {
@@ -73,17 +75,14 @@ export class MediaFooterComponent implements OnInit {
     }
   }
 
-  private setMediaDevices(): void {
+  private async setMediaDevices(): Promise<void> {
     // get user media request should be already done
-    navigator.mediaDevices.enumerateDevices()
-      .then(devices => {
-        devices
-          .filter(device => device.deviceId !== 'communications')
-          .forEach(device => this.devices[device.kind].push(device));
+    (await navigator.mediaDevices.enumerateDevices())
+      .filter(device => device.deviceId !== 'communications')
+      .forEach(device => this.devices[device.kind].push(device));
 
-        Object.keys(this.activeDevicesId)
-          .forEach(key => this.activeDevicesId[key] = this.devices[key][0].deviceId);
-      });
+    Object.keys(this.activeDevicesId)
+      .forEach(key => this.activeDevicesId[key] = this.devices[key][0].deviceId);
   }
 
 }

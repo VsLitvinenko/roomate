@@ -15,6 +15,7 @@
                 [display]="item.display"
                 [audioTrack]="item.audioTrack"
                 [videoTrack]="item.videoTrack"
+                [outputDeviceId]="audioOutputId"
                 [index]="i">
     </app-stream>
 
@@ -23,10 +24,12 @@
                 [display]="item.display"
                 [audioTrack]="item.audioTrack"
                 [videoTrack]="item.videoTrack"
+                [outputDeviceId]="audioOutputId"
                 [index]="i">
     </app-stream>
 
   </div>
 </ion-content>
 
-<app-media-footer></app-media-footer>
+<app-media-footer (audioOutputId)="setAudioOutputId($event)">
+</app-media-footer>

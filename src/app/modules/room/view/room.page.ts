@@ -20,6 +20,7 @@ export class RoomPage implements OnInit {
   );
 
   public readonly roomId = 1234;
+  public audioOutputId = 'default';
 
   constructor(
     private readonly janusService: JanusMainService,
@@ -39,6 +40,10 @@ export class RoomPage implements OnInit {
     // const res = confirm('use initial tracks?');
     const res = true;
     this.janusService.joinRoom(this.roomId, res, res);
+  }
+
+  public setAudioOutputId(event: string): void {
+    this.audioOutputId = event;
   }
 
   ionViewWillEnter(): void {

@@ -99,17 +99,14 @@ export class JanusMainService {
   }
 
 
-  public replaceVideo(deviceId: string): void {
-    this.mainPlugin.createOffer({
-      media: {
-        video: { deviceId },
-        replaceVideo: true
-      },
-      success: jsep => this.mainPlugin.send({
-        message: {audio: true, video: true},
-        jsep
-      })
-    });
+  public replaceDevice(deviceId: string, type: 'audio' | 'video'): void {
+    const currentStream = this.streams.find(item => !item.disabled && item.type === type);
+    const tracks = [{
+      type,
+      mid: currentStream.mid,
+      capture: { deviceId: { exact: deviceId } }
+    }];
+    this.mainPlugin.replaceTracks({ tracks });
   }
 
   public joinRoom(roomId: number, useAudio: boolean, useVideo: boolean): void {
@@ -178,7 +175,6 @@ export class JanusMainService {
       (msg as any).private,
       this.roomId
     );
-    this.roomConfigured$.next(true);
 
     if (!(this.initialUseVideo || this.initialUseAudio)) {
       return;
@@ -195,19 +191,23 @@ export class JanusMainService {
     if (this.initialUseAudio) {
       tracks.push({ type: 'audio', capture: true });
     }
-    this.createOffer(tracks, request);
+    this.createOffer(tracks, request, () => this.roomConfigured$.next(true));
   }
 
   private createOffer(
     tracks: any[],
     configureRequest: any,
+    successHandler = () => undefined
   ): void {
     this.mainPlugin.createOffer({
       tracks,
-      success: jsep => this.mainPlugin.send({
-        message: configureRequest,
-        jsep,
-      }),
+      success: jsep => {
+        this.mainPlugin.send({
+          message: configureRequest,
+          jsep,
+        });
+        successHandler();
+      },
       customizeSdp: jsep => {
         if (doDtx) {
           jsep.sdp = jsep.sdp.replace('useinbandfec=1', 'useinbandfec=1;usedtx=1');

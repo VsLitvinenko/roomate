@@ -26,10 +26,12 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() public audioTrack: MediaStreamTrack;
   @Input() public index: number;
   @Input() public localStream: boolean;
+  @Input() public outputDeviceId: string;
 
   @ViewChild('speakerBorder') private readonly speakerBorder: ElementRef<HTMLElement>;
-  @ViewChild('videoEl') private readonly videoEl: ElementRef<HTMLVideoElement>;
   @ViewChild('audioEl') private readonly audioEl: ElementRef<HTMLAudioElement>;
+  @ViewChild('videoEl') private readonly videoEl: ElementRef<HTMLVideoElement>;
+
   @ViewChild('modal') private readonly modal: IonModal;
   @ViewChild('popover') private readonly popover: IonPopover;
 
@@ -72,6 +74,9 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (changes.audioTrack) {
         this.trackHandler(this.audioTrack, 'audio');
       }
+      if (changes.outputDeviceId) {
+        (this.audioEl.nativeElement as any).setSinkId(this.outputDeviceId);
+      }
     });
   }
 
@@ -112,7 +117,7 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.videoEl.nativeElement.srcObject = this.remoteVideoStream;
   }
 
-  private trackHandler(track: MediaStreamTrack, kind: 'video' | 'audio'): void {
+  private trackHandler(track: MediaStreamTrack | null, kind: 'video' | 'audio'): void {
     const attachEl = (kind === 'video' ? this.videoEl : this.audioEl).nativeElement;
     let stream;
     if (track === null) {
@@ -139,6 +144,9 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private async audioTrackLevel(): Promise<void> {
+    // if track was replaced
+    this.audioTrackNode?.disconnect();
+
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     await audioContext.audioWorklet.addModule('/assets/vumeter/vumeter-processor.js');
     const node = new AudioWorkletNode(audioContext, 'vumeter');
