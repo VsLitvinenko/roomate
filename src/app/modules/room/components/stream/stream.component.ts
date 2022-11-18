@@ -13,6 +13,8 @@ import { IonModal, IonPopover } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
 
+const SIN_FUNC = x => 0.5 * ((Math.sin((x - 0.5) * Math.PI)) + 1);
+
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
@@ -156,18 +158,18 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (!event.data.volume) {
         return;
       }
-      const res = Math.round(
-        event.data.volume * 1000 / 2.5
-      ) / 100;
+      // const res = Math.round(
+      //   event.data.volume * 1000 / 2.5
+      // ) / 100;
+      const x = event.data.volume * 5;
+      const res = x > 1 ? 1 : SIN_FUNC(x);
       if (res > lastMaxRes || counter === maxCounter) {
         // max value during last 1.5 sec
+        counter = 0;
         lastMaxRes = res;
         this.speakerBorder.nativeElement.style.opacity = res.toString();
       }
       counter += 1;
-      if (counter > maxCounter) {
-        counter = 0;
-      }
     };
   }
 }
