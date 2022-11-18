@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, mapTo, take } from 'rxjs/operators';
-import { acodec, doDtx, Janus, vcodec } from '../janus.constants';
+import { doDtx, Janus } from '../janus.constants';
 import { JanusJS } from '../janus.types';
 import { JanusSubscribeService } from './janus-subscribe.service';
 import { JanusShareScreenService } from './janus-share-screen.service';
@@ -11,6 +11,9 @@ const server = 'http://localhost:8088/janus';
 
 @Injectable()
 export class JanusMainService {
+  public initialUseAudio: boolean;
+  public initialUseVideo: boolean;
+
   private janusReady$ = new BehaviorSubject<boolean>(false);
   private roomConfigured$ = new BehaviorSubject<boolean>(false);
 
@@ -104,8 +107,10 @@ export class JanusMainService {
     });
   }
 
-  public joinRoom(roomId: number): void {
+  public joinRoom(roomId: number, useAudio: boolean, useVideo: boolean): void {
     this.roomId = roomId;
+    this.initialUseAudio = useAudio;
+    this.initialUseVideo = useVideo;
     this.createSession();
   }
 
@@ -163,55 +168,50 @@ export class JanusMainService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
-    const request = {
-      request: 'configure',
-      audio: true,
-      video: true,
-      audiocodec: acodec || undefined,
-      videocodec: vcodec || undefined
-    };
-    const tracks = [
-      { type: 'audio', capture: true, recv: false },
-      { type: 'video', capture: true, recv: false }
-    ];
-    const handler = () => this.receiveService.attachPlugin(
+    this.receiveService.attachPlugin(
       this.janus.attach,
       (msg as any).private,
       this.roomId
     );
-    this.createOffer(tracks, request, handler, true);
+    this.roomConfigured$.next(true);
+    this.initialOffer();
+  }
+
+  private initialOffer(): void {
+    if (!(this.initialUseVideo || this.initialUseAudio)) {
+      return;
+    }
+    const request = {
+      request: 'configure',
+      audio: this.initialUseAudio,
+      video: this.initialUseVideo,
+    };
+    const tracks = [];
+    if (this.initialUseVideo) {
+      tracks.push({ type: 'video', capture: true, recv: false });
+    }
+    if (this.initialUseAudio) {
+      tracks.push({ type: 'audio', capture: true, recv: false });
+    }
+    this.createOffer(tracks, request);
   }
 
   private createOffer(
     tracks: any[],
     configureRequest: any,
-    successHandler = () => undefined,
-    initial = false
   ): void {
     this.mainPlugin.createOffer({
       tracks,
-      success: jsep => {
-        this.configure(jsep, configureRequest, initial);
-        successHandler();
-      },
-      error: error => Janus.error('WebRTC error:', error),
+      success: jsep => this.mainPlugin.send({
+        message: configureRequest,
+        jsep,
+      }),
       customizeSdp: jsep => {
         if (doDtx) {
           jsep.sdp = jsep.sdp.replace('useinbandfec=1', 'useinbandfec=1;usedtx=1');
         }
-      }
-    });
-  }
-
-  private configure(jsep, message, initial: boolean): void {
-    this.mainPlugin.send({
-      message,
-      jsep,
-      success: () => {
-        if (initial) {
-          this.roomConfigured$.next(true);
-        }
-      }
+      },
+      error: error => Janus.error('WebRTC error:', error),
     });
   }
 

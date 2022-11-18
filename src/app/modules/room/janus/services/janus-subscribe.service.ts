@@ -64,22 +64,42 @@ export class JanusSubscribeService {
       };
     }
     this.receivePluginReady.subscribe(() => {
-      const subs = this.getSubscriptionsLists(publisher);
+      const midsValues = Object.values(this.mids)
+        .filter(item => item.publisherId === publisher.id);
+      // streams for request
+      const subscribe = [];
+      const unsubscribe = [];
 
-      console.warn(subs.new, 'SUB');
-      console.warn(subs.unsub, 'UNSUB');
+      publisher.streams.forEach(stream => {
+        const existingStream = midsValues.some(item => item.subMid === stream.mid);
+        if (!existingStream && !stream.disabled) {
+          // literally new stream we want to subscribe
+          subscribe.push({
+            feed: publisher.id,
+            mid: stream.mid
+          });
+        }
+        else if (stream.disabled && existingStream) {
+          // newly disabled stream
+          switch (stream.type) {
+            case 'audio':
+              this.remoteTracks[publisher.id].audioTrack = null;
+              break;
+            case 'video':
+              this.remoteTracks[publisher.id].videoTrack = null;
+              break;
+          }
+          unsubscribe.push({
+            feed: publisher.id,
+            mid: stream.mid
+          });
+        }
+      });
 
-      if (subs.new.length) {
-        const message = this.getSubscribeRequestMessage(subs.new);
-        this.plugin.send({ message });
-      }
-      if (subs.unsub.length) {
-        const message = {
-          request: 'unsubscribe',
-          streams: subs.unsub
-        };
-        this.plugin.send({ message });
-      }
+      console.warn(subscribe, 'SUB');
+      console.warn(unsubscribe, 'UNSUB');
+
+      this.sendMessage(subscribe, unsubscribe);
     });
   }
 
@@ -141,6 +161,37 @@ export class JanusSubscribeService {
     }
   }
 
+  private sendMessage(subscribe: any[], unsubscribe: any[]): void {
+    if (subscribe.length === 0 && unsubscribe.length === 0) {
+      return;
+    }
+    let message: any;
+    if (this.firstSubscribeDone) {
+      // update request
+      message = { request: 'update' };
+      if (subscribe.length) {
+        message.subscribe = subscribe;
+      }
+      if (unsubscribe.length) {
+        message.unsubscribe = unsubscribe;
+      }
+    }
+    else {
+      // join request
+      this.firstSubscribeDone = true;
+      message = {
+        request: 'join',
+        room: this.roomId,
+        ptype: 'subscriber',
+        streams: subscribe,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        private_id: this.myPrivateId,
+      };
+    }
+
+    this.plugin.send({ message });
+  }
+
   private onRemoteTrack(track: MediaStreamTrack, mid: string, on: boolean): void {
     // if (on && !track.muted) {
     if (on) {
@@ -155,63 +206,6 @@ export class JanusSubscribeService {
           this.remoteTracks[publisherId].videoTrack = track;
           break;
       }
-    }
-  }
-
-  private getSubscriptionsLists(publisher: JanusJS.Publisher): { new; unsub } {
-    const midsValues = Object.values(this.mids)
-      .filter(item => item.publisherId === publisher.id);
-    const newSubscriptions = [];
-    const unsubscribe = [];
-
-    publisher.streams.forEach(stream => {
-      const existingStream = midsValues.some(item => item.subMid === stream.mid);
-      if (!existingStream && !stream.disabled) {
-        // literally new stream we want to subscribe
-        newSubscriptions.push({
-          feed: publisher.id,
-          mid: stream.mid
-        });
-      }
-      else if (stream.disabled && existingStream) {
-        // newly disabled stream
-        switch (stream.type) {
-          case 'audio':
-            this.remoteTracks[publisher.id].audioTrack = null;
-            break;
-          case 'video':
-            this.remoteTracks[publisher.id].videoTrack = null;
-            break;
-        }
-        unsubscribe.push({
-          feed: publisher.id,
-          mid: stream.mid
-        });
-      }
-    });
-    return {
-      new: newSubscriptions,
-      unsub: unsubscribe
-    };
-  }
-
-  private getSubscribeRequestMessage(subscription): any {
-    if (this.firstSubscribeDone) {
-      return {
-        request: 'subscribe',
-        streams: subscription
-      };
-    }
-    else {
-      this.firstSubscribeDone = true;
-      return {
-        request: 'join',
-        room: this.roomId,
-        ptype: 'subscriber',
-        streams: subscription,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        private_id: this.myPrivateId
-      };
     }
   }
 

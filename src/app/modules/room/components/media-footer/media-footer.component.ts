@@ -41,8 +41,9 @@ export class MediaFooterComponent implements OnInit {
       take(1)
     ).subscribe(() => {
       this.setMediaDevices();
-      this.toggleAudio();
       this.roomConfigured = true;
+      this.isAudioMuted = !this.janusService.initialUseAudio;
+      this.isVideoMuted = !this.janusService.initialUseVideo;
     });
   }
 

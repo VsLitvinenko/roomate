@@ -7,8 +7,7 @@
 </ion-header>
 
 <ion-content appScrollbarTheme>
-  <div *ngIf="roomConfigured"
-       class="streams-container ion-padding"
+  <div class="streams-container ion-padding"
        [class.mobile-container]="isMobile$ | async">
 
     <app-stream *ngFor="let item of localTracks; let i = index"

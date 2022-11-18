@@ -21,8 +21,6 @@ export class RoomPage implements OnInit {
 
   public readonly roomId = 1234;
 
-  public roomConfigured = true;
-
   constructor(
     private readonly janusService: JanusMainService,
     private readonly appWidthService: SharedIsFullWidthService,
@@ -38,7 +36,9 @@ export class RoomPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.janusService.joinRoom(this.roomId);
+    // const res = confirm('use initial tracks?');
+    const res = true;
+    this.janusService.joinRoom(this.roomId, res, res);
   }
 
   ionViewWillEnter(): void {
