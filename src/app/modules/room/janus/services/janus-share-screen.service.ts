@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { JanusJS } from '../janus.types';
 import { doSimulcast, Janus } from '../janus.constants';
-import { Observable, Subject } from 'rxjs';
+
+interface ScreenSharedEvent {
+  id: number;
+  sharingCanceled: Promise<void>;
+}
 
 @Injectable()
 export class JanusShareScreenService {
@@ -9,28 +13,32 @@ export class JanusShareScreenService {
 
   private roomId: number;
   private screenPlugin: JanusJS.PluginHandle;
-  private shareScreenPublisherId$ = new Subject<number>();
+
+  // init in attachPlugin(), resolve in onJoinedRoom()
+  private resolveJoinedRoomPromise: (event: ScreenSharedEvent) => void;
+  // init in onJoinedRoom(), resolve in destroyPlugin()
+  private resolveSharingCanceledPromise: () => void;
 
   constructor() { }
 
-  public attachPlugin(
+  public async attachPlugin(
     sessionAttach: (options: JanusJS.PluginOptions) => void,
     roomId: number
-  ): Observable<number> {
+  ): Promise<ScreenSharedEvent> {
     this.roomId = roomId;
     sessionAttach({
       plugin: 'janus.plugin.videoroom',
       success: pluginHandle => this.screenPluginHandling(pluginHandle),
       error: error => Janus.error('pluginAttaching error:', error),
       onmessage: (message, jsep) => this.onScreenMessage(message, jsep),
-      onlocaltrack: (track, on) => this.onLocalTrack(track),
+      onlocaltrack: (track, on) => this.onLocalTrack(track, on),
     });
-    return this.shareScreenPublisherId$.asObservable();
+    return new Promise(resolve => this.resolveJoinedRoomPromise = resolve);
   }
 
   public destroyPlugin(): void {
     this.localScreenPublisher = undefined;
-    this.shareScreenPublisherId$.next(undefined);
+    this.resolveSharingCanceledPromise();
     this.screenPlugin.detach({});
   }
 
@@ -55,13 +63,23 @@ export class JanusShareScreenService {
   }
 
   private onJoinedRoom(message: any): void {
-    this.shareScreenPublisherId$.next(message.id);
+    const sharingCanceled = new Promise<void>(
+      resolve => this.resolveSharingCanceledPromise = resolve
+    );
+    this.resolveJoinedRoomPromise({
+      id: message.id,
+      sharingCanceled
+    });
+
     this.screenPlugin.createOffer({
       tracks: [
         { type: 'screen', capture: true, simulcast: doSimulcast }
       ],
       success: jsep => this.initialConfigure(jsep),
-      error: error => Janus.error('WebRTC error:', error),
+      error: error => {
+        Janus.error('WebRTC error:', error);
+        this.destroyPlugin();
+      },
     });
   }
 
@@ -77,11 +95,16 @@ export class JanusShareScreenService {
     });
   }
 
-  private onLocalTrack(track): void {
-    this.localScreenPublisher = {
-      display: 'Your screen sharing',
-      videoTrack: track,
-      audioTrack: null
-    };
+  private onLocalTrack(track: MediaStreamTrack, on: boolean): void {
+    if (on) {
+      this.localScreenPublisher = {
+        display: 'Your screen sharing',
+        videoTrack: track,
+        audioTrack: null
+      };
+    }
+    else {
+      this.destroyPlugin();
+    }
   }
 }

@@ -86,16 +86,16 @@ export class JanusMainService {
     this.createOffer(tracks, request);
   }
 
-  public toggleScreen(share: boolean): void {
-    if (share) {
-      this.screenService.attachPlugin(this.janus.attach, this.roomId).pipe(
-        take(1)
-      ).subscribe(id => this.myScreenPublishId = id);
-    }
-    else {
-      this.myScreenPublishId = undefined;
-      this.screenService.destroyPlugin();
-    }
+  // promise will be completed when screen plugin destroyed
+  public async shareScreen(): Promise<void> {
+    const event = await this.screenService.attachPlugin(this.janus.attach, this.roomId);
+    this.myScreenPublishId = event.id;
+    return event.sharingCanceled
+      .then(() => this.myScreenPublishId = undefined);
+  }
+
+  public closeScreenSharing(): void {
+    this.screenService.destroyPlugin();
   }
 
 

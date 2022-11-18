@@ -62,8 +62,15 @@ export class MediaFooterComponent implements OnInit {
   }
 
   public toggleScreen(): void {
-    this.isScreenSharing = !this.isScreenSharing;
-    this.janusService.toggleScreen(this.isScreenSharing);
+    if (this.isScreenSharing) {
+      // closeScreenSharing will complete previous shareScreen promise
+      this.janusService.closeScreenSharing();
+    }
+    else {
+      this.isScreenSharing = true;
+      this.janusService.shareScreen()
+        .then(() => this.isScreenSharing = false);
+    }
   }
 
   private setMediaDevices(): void {
