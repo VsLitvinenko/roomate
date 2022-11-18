@@ -40,7 +40,7 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   private remoteAudioStream: MediaStream;
   private playerReady$ = new BehaviorSubject(false);
 
-  private vumeterNode: AudioWorkletNode;
+  private audioTrackNode: AudioNode = null;
 
   constructor() { }
 
@@ -117,6 +117,12 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
     let stream;
     if (track === null) {
       stream = null;
+      if (kind === 'audio' && this.audioTrackNode !== null) {
+        // reset speaker border control
+        this.audioTrackNode.disconnect();
+        this.audioTrackNode = null;
+        this.speakerBorder.nativeElement.style.opacity = '0';
+      }
     }
     else {
       stream = new MediaStream();
@@ -134,18 +140,12 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private async audioTrackLevel(): Promise<void> {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const microphone = audioContext.createMediaStreamSource(this.remoteAudioStream);
-    const node = await this.getVumeterNode(audioContext);
-    this.speakerBorderControl(node);
-    microphone.connect(node).connect(audioContext.destination);
-  }
+    await audioContext.audioWorklet.addModule('/assets/vumeter/vumeter-processor.js');
+    const node = new AudioWorkletNode(audioContext, 'vumeter');
 
-  private async getVumeterNode(context: AudioContext): Promise<AudioWorkletNode> {
-    if (!this.vumeterNode) {
-      await context.audioWorklet.addModule('/assets/vumeter/vumeter-processor.js');
-      this.vumeterNode = new AudioWorkletNode(context, 'vumeter');
-    }
-    return this.vumeterNode;
+    this.audioTrackNode = audioContext.createMediaStreamSource(this.remoteAudioStream);
+    this.audioTrackNode.connect(node).connect(audioContext.destination);
+    this.speakerBorderControl(node);
   }
 
   private speakerBorderControl(node: AudioWorkletNode) {
@@ -158,9 +158,6 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
       if (!event.data.volume) {
         return;
       }
-      // const res = Math.round(
-      //   event.data.volume * 1000 / 2.5
-      // ) / 100;
       const x = event.data.volume * 5;
       const res = x > 1 ? 1 : SIN_FUNC(x);
       if (res > lastMaxRes || counter === maxCounter) {

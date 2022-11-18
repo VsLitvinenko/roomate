@@ -61,11 +61,16 @@ export class JanusMainService {
   }
 
   public toggleAudio(muted: boolean): void {
+    const tracks = [];
+    const request = { request: 'configure', audio: true };
     if (muted) {
-      this.mainPlugin.muteAudio();
-    } else  {
-      this.mainPlugin.unmuteAudio();
+      const currentStream = this.streams.find(item => !item.disabled && item.type === 'audio');
+      tracks.push({ type: 'audio', mid: currentStream.mid, remove: true });
     }
+    else {
+      tracks.push({ type: 'audio', add: true, capture: true });
+    }
+    this.createOffer(tracks, request);
   }
 
   public toggleVideo(muted: boolean): void {
@@ -76,7 +81,7 @@ export class JanusMainService {
       tracks.push({ type: 'video', mid: currentStream.mid, remove: true });
     }
     else {
-      tracks.push({ type: 'video', add: true, capture: true, recv: false });
+      tracks.push({ type: 'video', add: true, capture: true });
     }
     this.createOffer(tracks, request);
   }
@@ -174,10 +179,7 @@ export class JanusMainService {
       this.roomId
     );
     this.roomConfigured$.next(true);
-    this.initialOffer();
-  }
 
-  private initialOffer(): void {
     if (!(this.initialUseVideo || this.initialUseAudio)) {
       return;
     }
@@ -188,10 +190,10 @@ export class JanusMainService {
     };
     const tracks = [];
     if (this.initialUseVideo) {
-      tracks.push({ type: 'video', capture: true, recv: false });
+      tracks.push({ type: 'video', capture: true });
     }
     if (this.initialUseAudio) {
-      tracks.push({ type: 'audio', capture: true, recv: false });
+      tracks.push({ type: 'audio', capture: true });
     }
     this.createOffer(tracks, request);
   }

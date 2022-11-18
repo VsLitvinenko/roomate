@@ -26,10 +26,16 @@
   .display {
     position: absolute;
     bottom: 10px;
-    left: 10px;
+    left: 15px;
     padding: 10px;
     border-radius: 10px;
     background: var(--roomate-border-color);
+    display: flex;
+    align-items: center;
+    ion-icon {
+      font-size: 18px;
+      margin-left: 5px;
+    }
   }
 
   .no-video {

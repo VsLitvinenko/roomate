@@ -13,7 +13,10 @@
   </div>
 
   <div class="display">
-    {{display}}
+    <span> {{display}} </span>
+    <ion-icon *ngIf="!audioEl.srcObject"
+              name="mic-off-outline" color="danger">
+    </ion-icon>
   </div>
 
   <ion-button [id]="popoverId"
