@@ -18,8 +18,17 @@ export class RoomEndSideComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  async ngAfterViewInit(): Promise<void> {
-    await this.chatContent.scrollToBottom(0);
+  ngAfterViewInit(): void {
+    const resizeContentObserver = new ResizeObserver(entries => {
+      const contentClientHeight = entries[0].target.clientHeight;
+      // ionContent truly initialized (end-side menu shown)
+      if (contentClientHeight !== 0) {
+        this.chatContent.scrollToBottom(0)
+          // we need only one emit
+          .then(() => resizeContentObserver.disconnect());
+      }
+    });
+    resizeContentObserver.observe((this.chatContent as any).el);
   }
 
 }
