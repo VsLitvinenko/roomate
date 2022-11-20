@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
 import { map, take } from 'rxjs/operators';
-import { JanusMainService } from '../../janus/services/janus-main.service';
+import { JanusMainService } from '../../janus/janus-main.service';
 
 @Component({
   selector: 'app-media-footer',

@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RoomPageRoutingModule } from './room-routing.module';
 import { RoomPage } from './view/room.page';
 import { SharedModule } from '../shared/shared.module';
-import { JanusMainService } from './janus/services/janus-main.service';
+import { JanusMainService } from './janus/janus-main.service';
 import { StreamComponent } from './components/stream/stream.component';
 import { RoomStartSideComponent } from './components/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from './components/room-end-side/room-end-side.component';

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { JanusMainService } from '../janus/services/janus-main.service';
+import { JanusMainService } from '../janus/janus-main.service';
 import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
