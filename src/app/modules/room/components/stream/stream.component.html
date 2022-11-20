@@ -8,13 +8,13 @@
 
   <div #speakerBorder class="audio-border"></div>
 
-  <div *ngIf="!videoEl.srcObject" class="no-video">
+  <div *ngIf="!videoTrack" class="no-video">
     <ion-icon name="videocam-off-outline"></ion-icon>
   </div>
 
   <div class="display">
     <span> {{display}} </span>
-    <ion-icon *ngIf="!audioEl.srcObject"
+    <ion-icon *ngIf="!audioTrack"
               name="mic-off-outline" color="danger">
     </ion-icon>
   </div>
@@ -75,7 +75,7 @@
     <video [id]="modalVideoElId"
            playsinline autoplay> </video>
 
-    <app-shared-loader [loading]="modalLoading"
+    <app-shared-loader [loading]="modalLoading$ | async"
                        [background]="'var(--roomate-border-color)'">
     </app-shared-loader>
   </ng-template>

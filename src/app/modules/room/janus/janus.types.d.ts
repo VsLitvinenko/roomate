@@ -70,8 +70,8 @@ declare namespace JanusJS {
 
   interface PublisherTracks {
     display: string;
-    videoTrack: MediaStreamTrack;
-    audioTrack: MediaStreamTrack;
+    video: MediaStreamTrack;
+    audio: MediaStreamTrack;
   }
 
   interface RemoteStream {

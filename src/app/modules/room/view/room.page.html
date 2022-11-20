@@ -10,22 +10,22 @@
   <div class="streams-container ion-padding"
        [class.mobile-container]="isMobile$ | async">
 
-    <app-stream *ngFor="let item of localTracks; let i = index"
+    <app-stream *ngFor="let item of (localTracks$ | async); let i = index; trackBy:streamsTrackBy"
                 [localStream]="true"
                 [display]="item.display"
-                [audioTrack]="item.audioTrack"
-                [videoTrack]="item.videoTrack"
+                [audioTrack]="item.audio"
+                [videoTrack]="item.video"
                 [outputDeviceId]="audioOutputId"
-                [index]="i">
+                [id]="i">
     </app-stream>
 
-    <app-stream *ngFor="let item of remoteTracks; let i = index"
+    <app-stream *ngFor="let item of ((remoteTracks$ | async) | keyvalue); trackBy:streamsTrackBy"
                 [localStream]="false"
-                [display]="item.display"
-                [audioTrack]="item.audioTrack"
-                [videoTrack]="item.videoTrack"
+                [display]="item.value.display"
+                [audioTrack]="item.value.audio"
+                [videoTrack]="item.value.video"
                 [outputDeviceId]="audioOutputId"
-                [index]="i">
+                [id]="item.key">
     </app-stream>
 
   </div>

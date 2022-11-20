@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
 import { map, take } from 'rxjs/operators';
 import { JanusMainService } from '../../janus/services/janus-main.service';
@@ -35,17 +35,20 @@ export class MediaFooterComponent implements OnInit {
   constructor(
     private readonly appWidthService: SharedIsFullWidthService,
     private readonly janusService: JanusMainService,
+    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
     this.janusService.roomConfigured.pipe(
       take(1)
-    ).subscribe(() =>
-      this.setMediaDevices().then(() => {
-        this.roomConfigured = true;
-        this.isAudioMuted = !this.janusService.initialUseAudio;
-        this.isVideoMuted = !this.janusService.initialUseVideo;
-      })
+    ).subscribe(() => {
+        this.setMediaDevices().then(() => {
+          this.roomConfigured = true;
+          this.isAudioMuted = !this.janusService.initialUseAudio;
+          this.isVideoMuted = !this.janusService.initialUseVideo;
+          this.cdr.detectChanges();
+        });
+      }
     );
   }
 

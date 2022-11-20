@@ -12,7 +12,7 @@ interface PublisherMid {
 @Injectable()
 export class JanusSubscribeService {
 
-  public readonly remoteTracks: { [publisherId: number]: JanusJS.PublisherTracks } = {};
+  public readonly remoteTracks$$ = new BehaviorSubject<{[p: number]: JanusJS.PublisherTracks}>({});
   private readonly mids: { [mid: string]: PublisherMid } = {};
 
   private pluginReady$ = new BehaviorSubject(false);
@@ -55,13 +55,18 @@ export class JanusSubscribeService {
 
   public onUpdatePublisher(publisher: JanusJS.Publisher): void {
     // new publisher
-    if (!this.remoteTracks[publisher.id]) {
-      this.remoteTracks[publisher.id] = {
+    const remoteTracks = this.remoteTracks$$.value;
+    if (!remoteTracks[publisher.id]) {
+      const newPublisher = {
         display: publisher.display,
         // would be attached in onRemoteTrack()
-        videoTrack: null,
-        audioTrack: null
+        video: null,
+        audio: null
       };
+      this.remoteTracks$$.next({
+        ...remoteTracks,
+        [publisher.id]: newPublisher
+      });
     }
     this.receivePluginReady.subscribe(() => {
       const midsValues = Object.values(this.mids)
@@ -81,14 +86,7 @@ export class JanusSubscribeService {
         }
         else if (stream.disabled && existingStream) {
           // newly disabled stream
-          switch (stream.type) {
-            case 'audio':
-              this.remoteTracks[publisher.id].audioTrack = null;
-              break;
-            case 'video':
-              this.remoteTracks[publisher.id].videoTrack = null;
-              break;
-          }
+          this.updatePublisherTrack(publisher.id, null, stream.type);
           unsubscribe.push({
             feed: publisher.id,
             mid: stream.mid
@@ -111,7 +109,11 @@ export class JanusSubscribeService {
       };
       this.plugin.send({
         message,
-        success: () => delete this.remoteTracks[publisherId]
+        success: () => {
+          const remoteTracks = this.remoteTracks$$.value;
+          delete remoteTracks[publisherId];
+          this.remoteTracks$$.next(remoteTracks);
+        }
       });
     });
   }
@@ -193,20 +195,27 @@ export class JanusSubscribeService {
   }
 
   private onRemoteTrack(track: MediaStreamTrack, mid: string, on: boolean): void {
-    // if (on && !track.muted) {
     if (on) {
       // new publisher
       const publisherId = this.mids[mid].publisherId;
-      console.warn(publisherId, track.kind, this.remoteTracks[publisherId].display);
-      switch (track.kind) {
-        case 'audio':
-          this.remoteTracks[publisherId].audioTrack = track;
-          break;
-        case 'video':
-          this.remoteTracks[publisherId].videoTrack = track;
-          break;
-      }
+      this.updatePublisherTrack(publisherId, track, track.kind);
     }
+  }
+
+  private updatePublisherTrack(
+    publisherId: number,
+    newValue: MediaStreamTrack | null,
+    trackKind: string
+  ): void {
+    const remoteTracks = this.remoteTracks$$.value;
+    const currentPublisher = remoteTracks[publisherId];
+    this.remoteTracks$$.next({
+      ...remoteTracks,
+      [publisherId]: {
+        ...currentPublisher,
+        [trackKind]: newValue
+      }
+    });
   }
 
 }

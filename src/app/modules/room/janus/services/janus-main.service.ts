@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, mapTo, take } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { filter, map, mapTo, take } from 'rxjs/operators';
 import { doDtx, Janus } from '../janus.constants';
 import { JanusJS } from '../janus.types';
 import { JanusSubscribeService } from './janus-subscribe.service';
@@ -23,15 +23,15 @@ export class JanusMainService {
   private roomId: number;
   private myScreenPublishId: number;
 
-  private localPublisher: JanusJS.PublisherTracks = {
-    display: 'You',
-    audioTrack: null,
-    videoTrack: null
-  };
   private streams: any[];
+  private localPublisher$$ = new BehaviorSubject<JanusJS.PublisherTracks>({
+    display: 'You',
+    audio: null,
+    video: null
+  });
 
   constructor(
-    private readonly receiveService: JanusSubscribeService,
+    private readonly subscribeService: JanusSubscribeService,
     private readonly screenService: JanusShareScreenService
   ) {
     Janus.init({
@@ -49,15 +49,19 @@ export class JanusMainService {
     );
   }
 
-  public get remoteTracks(): { [publisherId: number]: JanusJS.PublisherTracks } {
-    return this.receiveService.remoteTracks;
+  public get remoteTracks$(): Observable<ReadonlyMap<string, JanusJS.PublisherTracks>> {
+    return this.subscribeService.remoteTracks$$.pipe(
+      map(res => new Map(Object.entries(res)))
+    );
   }
 
-  public get localTracks(): JanusJS.PublisherTracks[] {
-    return [
-      this.localPublisher,
-      this.screenService.localScreenPublisher
-    ].filter(item => item);
+  public get localTracks$(): Observable<JanusJS.PublisherTracks[]> {
+    return combineLatest([
+      this.localPublisher$$,
+      this.screenService.localScreenPublisher$$
+    ]).pipe(
+      map(tracks => tracks.filter(item => item !== null))
+    );
   }
 
   public toggleAudio(muted: boolean): void {
@@ -156,10 +160,10 @@ export class JanusMainService {
     if (msg.publishers) {
       msg.publishers
         .filter(publisher => this.myScreenPublishId === undefined || publisher.id !== this.myScreenPublishId)
-        .forEach(publisher => this.receiveService.onUpdatePublisher(publisher));
+        .forEach(publisher => this.subscribeService.onUpdatePublisher(publisher));
     }
     if ((msg as any).leaving) {
-      this.receiveService.onDeletePublisher((msg as any).leaving);
+      this.subscribeService.onDeletePublisher((msg as any).leaving);
     }
     if (msg.streams) {
       this.streams = msg.streams;
@@ -170,7 +174,7 @@ export class JanusMainService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
-    this.receiveService.attachPlugin(
+    this.subscribeService.attachPlugin(
       this.janus.attach,
       (msg as any).private,
       this.roomId
@@ -218,13 +222,10 @@ export class JanusMainService {
   }
 
   private onLocalTrack(track: MediaStreamTrack, on: boolean): void {
-    switch (track.kind) {
-      case 'audio':
-        this.localPublisher.audioTrack = on ? track : null;
-        break;
-      case 'video':
-        this.localPublisher.videoTrack = on ? track : null;
-        break;
-    }
+    const localPublisher = this.localPublisher$$.value;
+    this.localPublisher$$.next({
+      ...localPublisher,
+      [track.kind]: on ? track : null
+    });
   }
 }

@@ -11,7 +11,7 @@ import {
 import { Janus } from '../../janus/janus.constants';
 import { IonModal, IonPopover } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, mapTo, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 const SIN_FUNC = x => 0.5 * ((Math.sin((x - 0.5) * Math.PI)) + 1);
 
@@ -24,7 +24,7 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() public display: string;
   @Input() public videoTrack: MediaStreamTrack;
   @Input() public audioTrack: MediaStreamTrack;
-  @Input() public index: number;
+  @Input() public id: string | number;
   @Input() public localStream: boolean;
   @Input() public outputDeviceId: string;
 
@@ -36,7 +36,7 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('popover') private readonly popover: IonPopover;
 
   public audioVolume: number;
-  public modalLoading = false;
+  public modalLoading$ = new BehaviorSubject<boolean>(false);
 
   private remoteVideoStream: MediaStream;
   private remoteAudioStream: MediaStream;
@@ -47,17 +47,16 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   constructor() { }
 
   public get popoverId(): string {
-    return `popover-${this.localStream ? 'local' : 'remote'}${this.index}`;
+    return `popover-${this.localStream ? 'local' : 'remote'}-${this.id}`;
   }
 
   public get modalVideoElId(): string {
-    return `modal-video-el-${this.localStream ? 'local' : 'remote'}${this.index}`;
+    return `modal-video-el-${this.localStream ? 'local' : 'remote'}-${this.id}`;
   }
 
-  private get playerReady(): Observable<void> {
+  private get playerReady(): Observable<boolean> {
     return this.playerReady$.pipe(
       filter(ready => ready),
-      mapTo(void 0),
       take(1)
     );
   }
@@ -98,15 +97,13 @@ export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   public openModal(): void {
-    this.modalLoading = true;
-    this.modal.present()
-      .then(() => {
-        const modalVideoEl = document.getElementById(this.modalVideoElId) as HTMLVideoElement;
-        this.videoEl.nativeElement.srcObject = null;
-
-        Janus.attachMediaStream(modalVideoEl, this.remoteVideoStream);
-        this.modalLoading = false;
-      });
+    this.modalLoading$.next(true);
+    this.modal.present().then(() => {
+      const modalVideoEl = document.getElementById(this.modalVideoElId) as HTMLVideoElement;
+      this.videoEl.nativeElement.srcObject = null;
+      Janus.attachMediaStream(modalVideoEl, this.remoteVideoStream);
+      this.modalLoading$.next(false);
+    });
   }
 
   public async closeModal(): Promise<boolean> {

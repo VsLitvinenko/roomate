@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JanusJS } from '../janus.types';
 import { doSimulcast, Janus } from '../janus.constants';
+import { BehaviorSubject } from 'rxjs';
 
 interface ScreenSharedEvent {
   id: number;
@@ -9,7 +10,7 @@ interface ScreenSharedEvent {
 
 @Injectable()
 export class JanusShareScreenService {
-  public localScreenPublisher: JanusJS.PublisherTracks;
+  public localScreenPublisher$$ = new BehaviorSubject<JanusJS.PublisherTracks>(null);
 
   private roomId: number;
   private screenPlugin: JanusJS.PluginHandle;
@@ -37,7 +38,7 @@ export class JanusShareScreenService {
   }
 
   public destroyPlugin(): void {
-    this.localScreenPublisher = undefined;
+    this.localScreenPublisher$$.next(null);
     this.resolveSharingCanceledPromise();
     this.screenPlugin.detach({});
   }
@@ -97,11 +98,11 @@ export class JanusShareScreenService {
 
   private onLocalTrack(track: MediaStreamTrack, on: boolean): void {
     if (on) {
-      this.localScreenPublisher = {
+      this.localScreenPublisher$$.next({
         display: 'Your screen sharing',
-        videoTrack: track,
-        audioTrack: null
-      };
+        video: track,
+        audio: null
+      });
     }
     else {
       this.destroyPlugin();
