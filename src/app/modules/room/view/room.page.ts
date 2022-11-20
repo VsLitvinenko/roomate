@@ -47,4 +47,8 @@ export class RoomPage implements OnInit {
     this.menuController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
   }
 
+  ionViewWillLeave(): void {
+    this.menuController.clearEndSideMenuTemplate();
+  }
+
 }

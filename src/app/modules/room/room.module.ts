@@ -12,6 +12,7 @@ import { RoomEndSideComponent } from './components/room-end-side/room-end-side.c
 import { JanusSubscribeService } from './janus/services/janus-subscribe.service';
 import { MediaFooterComponent } from './components/media-footer/media-footer.component';
 import { JanusShareScreenService } from './janus/services/janus-share-screen.service';
+import { JanusPublisherService } from './janus/services/janus-publisher.service';
 
 const commonComponents = [
   StreamComponent,
@@ -26,6 +27,7 @@ const pagesComponents = [
 
 const services = [
   JanusMainService,
+  JanusPublisherService,
   JanusSubscribeService,
   JanusShareScreenService,
 ];
