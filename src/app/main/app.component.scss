@@ -3,3 +3,11 @@ ion-split-pane {
   //--border: 2px solid var(--roomate-border-color);
   --border: none;
 }
+
+::ng-deep {
+  ion-header {
+    &:after {
+      display: none;
+    }
+  }
+}
