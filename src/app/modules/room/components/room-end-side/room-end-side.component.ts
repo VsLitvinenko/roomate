@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { testGroupMessages } from '../../../shared/test-data/data-source';
+import { testGroupMessages } from '../../../../api/data-source';
 import { IonContent } from '@ionic/angular';
 
 @Component({

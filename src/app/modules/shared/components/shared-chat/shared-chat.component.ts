@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { usersList } from '../../test-data/data-source';
+import { usersList } from '../../../../api/data-source';
 
 @Component({
   selector: 'app-shared-chat',

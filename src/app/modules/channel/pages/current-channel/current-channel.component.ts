@@ -5,7 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
-import { testGroupMessages } from '../../../shared/test-data/data-source';
+import { testGroupMessages } from '../../../../api/data-source';
 
 @UntilDestroy()
 @Component({
