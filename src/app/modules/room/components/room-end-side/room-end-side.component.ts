@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { testGroupMessages } from '../../../../api/data-source';
 import { IonContent } from '@ionic/angular';
 
 @Component({
@@ -11,7 +10,7 @@ export class RoomEndSideComponent implements OnInit, AfterViewInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 
-  public messages = testGroupMessages;
+  public messages = [];
 
   constructor() { }
 

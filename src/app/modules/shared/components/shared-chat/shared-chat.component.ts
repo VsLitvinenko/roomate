@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { usersList } from '../../../../api/data-source';
 
 @Component({
   selector: 'app-shared-chat',
@@ -18,7 +17,7 @@ export class SharedChatComponent implements OnInit {
     return this.splitMessagesIntoGroups().map(
       group => ({
         ...group,
-        user: usersList.find(user => user.id === group.from)
+        user: null
       })
     );
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { usersList } from './data-source';
 
 @Component({
   selector: 'app-room-start-side',
@@ -8,7 +7,7 @@ import { usersList } from './data-source';
 })
 export class RoomStartSideComponent implements OnInit {
 
-  public userList = usersList;
+  public userList = [];
 
   constructor() { }
 

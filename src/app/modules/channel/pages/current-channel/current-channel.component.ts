@@ -5,7 +5,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
-import { testGroupMessages } from '../../../../api/data-source';
 
 @UntilDestroy()
 @Component({
@@ -59,7 +58,8 @@ export class CurrentChannelComponent implements OnInit {
   private loadingData(): Promise<void> {
     return new Promise<void>(resolve =>
       setTimeout(() => {
-        this.messages.push(...testGroupMessages);
+        // this.messages.push(...testGroupMessages);
+        this.messages.push(...[]);
         resolve();
       }, 1000)
     );
