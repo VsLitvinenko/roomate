@@ -26,20 +26,25 @@ export interface Message {
   isRead: boolean;
 }
 
-export const getShortChannels = (): Observable<ShortChannel[]> =>
-  of(shortChannels).pipe(
+export const getShortChannels = (): Observable<ShortChannel[]> => {
+  console.warn('GET SHORT CHANNELS REQUEST');
+  return of(shortChannels).pipe(
     delay(1000)
   );
+};
 
-export const getChannel = (id: number): Observable<Channel> =>
-  of(channels.find(item => item.id === id)).pipe(
+export const getChannel = (id: number): Observable<Channel> => {
+  console.warn('GET CHANNEL REQUEST', id);
+  return of(channels.find(item => item.id === id)).pipe(
     delay(1000)
   );
+};
 
 export const getChannelsMessages = (
   id: number,
   startIndex: number
 ): Observable<Message[]> => {
+  console.warn('GET CHANNELS MESSAGE', id, startIndex);
   const time = Date.now() - startIndex * 100000;
   return of(
     testGroupMessages.map((item, index) => ({

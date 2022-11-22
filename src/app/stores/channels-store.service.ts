@@ -22,6 +22,8 @@ export interface FullChannel extends Channel {
 export class ChannelsStoreService {
 
   private readonly channels$ = new BehaviorSubject<{ [id: number]: FullChannel }>({});
+  // multiply init channel requests fix
+  private readonly loadingChannels: { [id: number]: boolean } = {};
   private shortChannelsInitialized = false;
 
   constructor() {
@@ -46,9 +48,14 @@ export class ChannelsStoreService {
   }
 
   public getChannel(id: number): Observable<FullChannel> {
-    if (!this.channels$.value[id]?.isFullyLoaded) {
+    if (
+      !this.channels$.value[id]?.isFullyLoaded &&
+      this.loadingChannels[id] !== true
+    ) {
+      this.loadingChannels[id] = true;
       this.loadChannel(id)
-        .then(() => this.loadChannelMessages(id));
+        .then(() => this.loadChannelMessages(id))
+        .then(() => this.loadingChannels[id] = false);
     }
     return this.channels$.pipe(
       map(value => value[id]),

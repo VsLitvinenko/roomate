@@ -11,8 +11,11 @@ export interface User {
   imageUrl: string;
 }
 
-export const getUsers = (ids: number[]): Observable<User[]> => of(
+export const getUsers = (ids: number[]): Observable<User[]> => {
+  console.warn('GET USERS REQUEST', ids);
+  return of(
     usersList.filter(item => ids.includes(item.id))
   ).pipe(
     delay(1000)
   );
+};
