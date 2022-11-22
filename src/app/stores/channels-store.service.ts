@@ -47,9 +47,8 @@ export class ChannelsStoreService {
 
   public getChannel(id: number): Observable<FullChannel> {
     if (!this.channels$.value[id]?.isFullyLoaded) {
-      this.loadChannel(id).then(
-        () => this.loadChannelMessages(id)
-      );
+      this.loadChannel(id)
+        .then(() => this.loadChannelMessages(id));
     }
     return this.channels$.pipe(
       map(value => value[id]),
@@ -58,13 +57,12 @@ export class ChannelsStoreService {
   }
 
   public async loadChannelMessages(id: number): Promise<void> {
-    const channels = this.channels$.value;
-    const currentChannel = channels[id];
+    const currentChannel = this.channels$.value[id];
     const newMsgs = await getChannelsMessages(id, currentChannel.messages.length).pipe(
       take(1)
     ).toPromise();
     this.channels$.next({
-      ...channels,
+      ...this.channels$.value,
       [id]: {
         ...currentChannel,
         messages: [...currentChannel.messages, ...newMsgs]
@@ -76,9 +74,8 @@ export class ChannelsStoreService {
     const shortChannels = await getShortChannels().pipe(
       take(1)
     ).toPromise();
-    const store = this.channels$.value;
     const channels = shortChannels
-      .filter(item => !store[item.id])
+      .filter(item => !this.channels$.value[item.id])
       .reduce((res: { [id: number]: FullChannel }, item) => {
         res[item.id] = {
           id: item.id,
@@ -92,7 +89,10 @@ export class ChannelsStoreService {
         };
         return res;
       }, {});
-    this.channels$.next(channels);
+    this.channels$.next({
+      ...this.channels$.value,
+      ...channels
+    });
   }
 
   private async loadChannel(id: number): Promise<void> {

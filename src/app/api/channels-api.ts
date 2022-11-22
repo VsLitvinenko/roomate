@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { channels, shortChannels, testGroupMessages } from './data-source';
-import { debounceTime } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 export interface ShortChannel {
   id: number;
@@ -28,12 +28,12 @@ export interface Message {
 
 export const getShortChannels = (): Observable<ShortChannel[]> =>
   of(shortChannels).pipe(
-    debounceTime(1000)
+    delay(1000)
   );
 
 export const getChannel = (id: number): Observable<Channel> =>
   of(channels.find(item => item.id === id)).pipe(
-    debounceTime(1000)
+    delay(1000)
   );
 
 export const getChannelsMessages = (
@@ -48,6 +48,6 @@ export const getChannelsMessages = (
       timestamp: (new Date(time - index * 100000)).toISOString()
     }))
   ).pipe(
-    debounceTime(1000),
+    delay(1000),
   );
 };
