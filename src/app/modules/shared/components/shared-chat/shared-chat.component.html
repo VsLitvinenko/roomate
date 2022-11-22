@@ -7,7 +7,7 @@
 </ion-infinite-scroll>
 
 <div class="msgs-container">
-  <app-shared-messages-group *ngFor="let group of messageGroups"
+  <app-shared-messages-group *ngFor="let group of messageGroups; trackBy:trackByGroup"
                              [messages]="group.messages"
                              [user]="group.user$ | async">
   </app-shared-messages-group>

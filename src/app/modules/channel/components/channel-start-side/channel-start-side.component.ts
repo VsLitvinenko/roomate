@@ -3,6 +3,14 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ShortChannel } from '../../../../api/channels-api';
 import { ChannelsSelectService } from '../../services/channels-select.service';
+import { partition } from 'lodash-es';
+
+interface ShortChannelsFolder {
+  value: string;
+  title: string;
+  icon: string;
+  channels: ShortChannel[];
+}
 
 @Component({
   selector: 'app-channel-start-side',
@@ -11,22 +19,35 @@ import { ChannelsSelectService } from '../../services/channels-select.service';
 })
 export class ChannelStartSideComponent implements OnInit {
 
-  public publicChannels$: Observable<ShortChannel[]>;
-  public privateChannels$: Observable<ShortChannel[]>;
+  public channelFolders$ = this.getChannelFolders();
 
   constructor(private readonly channelsSelect: ChannelsSelectService) { }
 
   ngOnInit(): void {
-    const hotChannels$ = this.channelsSelect.getShortChannels();
-    this.publicChannels$ = hotChannels$.pipe(
-      map(channels => channels.filter(item => !item.private))
-    );
-    this.privateChannels$ = hotChannels$.pipe(
-      map(channels => channels.filter(item => item.private))
-    );
+  }
+
+  public trackByValue(index: number, item: ShortChannelsFolder): string {
+    return item.value;
   }
 
   public trackById(index: number, item: ShortChannel): number {
     return item.id;
+  }
+
+  private getChannelFolders(): Observable<ShortChannelsFolder[]> {
+    return this.channelsSelect.getShortChannels().pipe(
+      map(channels =>
+        partition(channels, item => !item.private)
+          .map(folder => {
+            const isPrivate = folder[0]?.private;
+            return {
+              value: isPrivate ? 'private' : 'public',
+              title: isPrivate ? 'Private channels' : 'Public channels',
+              icon: isPrivate ? 'lock-closed-outline' : 'people-outline',
+              channels: folder,
+            };
+          })
+      )
+    );
   }
 }

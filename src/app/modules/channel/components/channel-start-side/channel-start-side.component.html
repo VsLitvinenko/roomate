@@ -1,41 +1,26 @@
 <ion-content appScrollbarTheme>
   <ion-accordion-group [value]="['public', 'private']"
                        [multiple]="true">
-
-    <ion-accordion value="public" mode="ios">
+    <ion-accordion *ngFor="let folder of (channelFolders$ | async); trackBy:trackByValue"
+                   [value]="folder.value"
+                   mode="ios">
       <ion-item slot="header" class="acc-header no-ion-hover">
-        <ion-icon name="people-outline"></ion-icon>
-        <ion-label> Public channels </ion-label>
+        <ion-icon [name]="folder.icon"></ion-icon>
+        <ion-label> {{ folder.title }} </ion-label>
       </ion-item>
+
       <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
-
-          <ng-container *ngFor="let item of (publicChannels$ | async); trackBy:trackById">
-            <ion-item class="no-ion-hover"
-                      [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'"
-                      [routerLink]="['/channel', 'current', item.id]"
-                      routerLinkActive="active">
-              <span class="tag"> # </span>
-              <ion-label> {{item.title}} </ion-label>
-            </ion-item>
-          </ng-container>
+          <ion-item class="no-ion-hover"
+                    *ngFor="let item of folder.channels; trackBy:trackById"
+                    [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'"
+                    [routerLink]="['/channel', 'current', item.id]"
+                    routerLinkActive="active">
+            <span class="tag"> # </span>
+            <ion-label> {{item.title}} </ion-label>
+          </ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-accordion>
-
-    <ion-accordion value="private" mode="ios">
-      <ion-item slot="header" class="acc-header no-ion-hover">
-        <ion-icon name="lock-closed-outline"></ion-icon>
-        <ion-label> Private channels </ion-label>
-      </ion-item>
-      <ion-list slot="content" lines="none" mode="md">
-        <ion-item *ngFor="let item of (privateChannels$ | async); trackBy:trackById"
-                  [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'">
-          <span class="tag"> # </span>
-          <ion-label> {{item.title}} </ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-accordion>
-
   </ion-accordion-group>
 </ion-content>
