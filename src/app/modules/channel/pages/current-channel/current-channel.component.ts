@@ -1,74 +1,69 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent } from '@ionic/angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
+import { switchMap, take, tap } from 'rxjs/operators';
+import { ChannelsSelectService } from '../../services/channels-select.service';
+import { Observable } from 'rxjs';
+import { Message } from '../../../../api/channels-api';
 
-@UntilDestroy()
 @Component({
   selector: 'app-current-chat',
   templateUrl: './current-channel.component.html',
   styleUrls: ['./current-channel.component.scss'],
 })
 export class CurrentChannelComponent implements OnInit {
-  @ViewChild('currentChatContent')
-  private readonly chatContent: IonContent;
+  @ViewChild('currentChatContent') private readonly chatContent: IonContent;
 
-  public channelId: string;
-  public messages = [];
-
-  private loadingCounter = 0;
+  public messages$ = this.getChannelMessagesFromStore();
+  public channelId: number;
+  public loading = false;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly menuController: MenuControllerService,
     private readonly inj: SharedInjectorService,
+    private readonly channelsSelect: ChannelsSelectService
   ) { }
 
-  get loading(): boolean {
-    return this.loadingCounter !== 0;
+  ngOnInit(): void {
   }
 
-  ngOnInit(): void {
-    this.activatedRoute.params.pipe(
-      untilDestroyed(this)
-    ).subscribe(params => {
-      this.channelId = params.id;
+  ionViewWillEnter(): void {
+    this.loading = true;
+    this.messages$.pipe(
+      take(1),
+    ).subscribe(() => {
       this.updateEndSideMenu(this.channelId);
-
-      this.messages = [];
-      this.loadingCounter += 1;
-      this.loadingData()
-        .then(() => this.chatContent.scrollToBottom(0))
-        .then(() => this.loadingCounter -= 1);
+      this.chatContent.scrollToBottom(0).then(
+        () => this.loading = false
+      );
     });
   }
 
   public infiniteScroll(event: any): void {
-    this.loadingData()
-      .then(() => event.target.complete());
+    this.channelsSelect.loadChannelMessages(this.channelId).then(
+      () => event.target.complete()
+    );
   }
 
   public messageSend(event: string): void {
     alert(event);
   }
 
-  private loadingData(): Promise<void> {
-    return new Promise<void>(resolve =>
-      setTimeout(() => {
-        // this.messages.push(...testGroupMessages);
-        this.messages.push(...[]);
-        resolve();
-      }, 1000)
+  private getChannelMessagesFromStore(): Observable<Message[]> {
+    return this.activatedRoute.params.pipe(
+      tap(params => this.channelId = params.id),
+      switchMap(params => this.channelsSelect.getChannelMessages(parseInt(params.id, 10))),
     );
   }
 
-  private updateEndSideMenu(id: string): void {
+  private updateEndSideMenu(id: number): void {
     this.menuController.setEndSideMenuTemplate({
       component: ChannelEndSideComponent,
-      injector: this.inj.createInjector<string>(id)
+      injector: this.inj.createInjector<number>(id)
     });
   }
 }

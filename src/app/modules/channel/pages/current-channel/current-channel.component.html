@@ -1,7 +1,7 @@
 <ion-header mode="md">
   <app-shared-header endSideButtonIcon="globe-sharp">
     <span class="roomate-header-title">
-      channel {{channelId}}
+      channel {{ channelId }}
     </span>
   </app-shared-header>
 </ion-header>
@@ -14,7 +14,7 @@
   </app-shared-loader>
 
   <app-shared-chat [scrollEnabled]="!loading"
-                   [messages]="messages"
+                   [messages]="messages$ | async"
                    (infiniteScroll)="infiniteScroll($event)">
   </app-shared-chat>
 

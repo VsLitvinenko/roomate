@@ -22,8 +22,13 @@ export class ChannelsSelectService {
 
   public getChannelMessages(id: number): Observable<Message[]> {
     return this.getChannel(id).pipe(
-      map(channel => channel.messages)
+      map(channel => channel.messages),
+      filter(messages => !!messages.length)
     );
+  }
+
+  public loadChannelMessages(id: number): Promise<void> {
+    return this.channelsStore.loadChannelMessages(id);
   }
 
   private getChannel(id: number): Observable<FullChannel> {
