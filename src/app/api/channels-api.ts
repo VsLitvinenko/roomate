@@ -45,12 +45,13 @@ export const getChannelsMessages = (
   startIndex: number
 ): Observable<Message[]> => {
   console.warn('GET CHANNELS MESSAGE', id, startIndex);
-  const time = Date.now() - startIndex * 100000;
+  const multiplier = 8000000;
+  const time = Date.now() - startIndex * multiplier;
   return of(
     testGroupMessages.map((item, index) => ({
       ...item,
       id: startIndex + index,
-      timestamp: (new Date(time - index * 100000)).toISOString()
+      timestamp: (new Date(time - index * multiplier)).toISOString()
     }))
   ).pipe(
     delay(1000),

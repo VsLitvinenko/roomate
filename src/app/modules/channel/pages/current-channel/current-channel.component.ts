@@ -4,7 +4,7 @@ import { IonContent } from '@ionic/angular';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsSelectService } from '../../services/channels-select.service';
 import { Observable } from 'rxjs';
 import { Message } from '../../../../api/channels-api';
@@ -61,6 +61,7 @@ export class CurrentChannelComponent implements OnInit {
         this.updateEndSideMenu(this.channelId);
       }),
       switchMap(params => this.channelsSelect.getChannelMessages(parseInt(params.id, 10))),
+      shareReplay(1)
     );
   }
 
