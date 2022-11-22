@@ -13,13 +13,11 @@ export class UsersStoreService {
   }
 
   public getUser(id: number): Observable<User> {
-    let user$ = this.users.get(id);
-    if (user$ === undefined) {
-      user$ = new BehaviorSubject<User>(null);
-      this.users.set(id, user$);
+    if (this.users.get(id) === undefined) {
+      this.users.set(id, new BehaviorSubject<User>(null));
       this.loadUsersList([id]).then();
     }
-    return user$.pipe(
+    return this.users.get(id).pipe(
       filter(user => user !== null)
     );
   }
@@ -30,7 +28,9 @@ export class UsersStoreService {
     newIds.forEach(
       id => this.users.set(id, new BehaviorSubject<User>(null))
     );
-    await this.loadUsersList(newIds);
+    if (newIds.length) {
+      await this.loadUsersList(newIds);
+    }
   }
 
   private async loadUsersList(ids: number[]): Promise<void> {

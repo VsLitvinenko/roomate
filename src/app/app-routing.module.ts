@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'room',
+    redirectTo: 'channel',
     pathMatch: 'full',
   }
 ];
