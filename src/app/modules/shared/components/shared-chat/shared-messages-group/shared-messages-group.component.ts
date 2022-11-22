@@ -9,15 +9,13 @@ import { User } from '../../../../../api/users-api';
 })
 export class SharedMessagesGroupComponent {
   @Input() public messages: Message[] = [];
-  @Input() public user: User = {
-    id: null,
-    fullName: '',
-    shortName: '',
-    username: '',
-    online: false,
-    imageUrl: '',
-  };
+  @Input() public user: User;
+  public imgLoaded = false;
 
   constructor() { }
+
+  public onLoadImage(): void {
+    this.imgLoaded = true;
+  }
 
 }

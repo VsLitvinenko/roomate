@@ -1,14 +1,30 @@
 <div *ngFor="let msg of messages; let first = first; let last = last"
      class="message">
+
   <div class="img-container">
     <ion-thumbnail *ngIf="first">
-      <img [src]="user.imageUrl" alt="">
+      <ion-img [src]="user?.imageUrl"
+               [style.height]="imgLoaded ? '' : '0'"
+               (ionImgDidLoad)="onLoadImage()">
+      </ion-img>
+      <ion-skeleton-text *ngIf="!imgLoaded"
+                         animated="true">
+      </ion-skeleton-text>
     </ion-thumbnail>
   </div>
+
   <div class="text-container">
-    <div class="name" *ngIf="last">
-      {{user.fullName}}
-    </div>
+    <ng-container *ngIf="last">
+      <div *ngIf="user; else skeletonName" class="name">
+        {{user?.fullName}}
+      </div>
+      <ng-template #skeletonName>
+        <ion-skeleton-text class="skeleton-name"
+                           animated="true">
+        </ion-skeleton-text>
+      </ng-template>
+    </ng-container>
+
     <div class="text"> {{msg.content}} </div>
     <div class="date"> {{ msg.timestamp | date:'hh:mm' }} </div>
   </div>
