@@ -20,6 +20,12 @@ export class ChannelsSelectService {
     );
   }
 
+  public getChannelTitle(id: number): Observable<string> {
+    return this.getChannel(id).pipe(
+      map(channel => channel.title)
+    );
+  }
+
   public getChannelMessages(id: number): Observable<Message[]> {
     return this.getChannel(id).pipe(
       map(channel => channel.messages),

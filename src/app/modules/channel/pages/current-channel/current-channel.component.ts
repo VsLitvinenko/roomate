@@ -17,9 +17,11 @@ import { Message } from '../../../../api/channels-api';
 export class CurrentChannelComponent implements OnInit {
   @ViewChild('currentChatContent') private readonly chatContent: IonContent;
 
-  public messages$ = this.getChannelMessagesFromStore();
-  public channelId: number;
+  public readonly messages$ = this.getChannelMessagesFromStore();
+  public title$: Observable<string>;
   public loading = false;
+
+  private channelId: number;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -35,12 +37,10 @@ export class CurrentChannelComponent implements OnInit {
     this.loading = true;
     this.messages$.pipe(
       take(1),
-    ).subscribe(() => {
-      this.updateEndSideMenu(this.channelId);
-      this.chatContent.scrollToBottom(0).then(
-        () => this.loading = false
-      );
-    });
+    ).subscribe(
+      () => this.chatContent.scrollToBottom(0)
+        .then(() => this.loading = false)
+    );
   }
 
   public infiniteScroll(event: any): void {
@@ -55,7 +55,11 @@ export class CurrentChannelComponent implements OnInit {
 
   private getChannelMessagesFromStore(): Observable<Message[]> {
     return this.activatedRoute.params.pipe(
-      tap(params => this.channelId = params.id),
+      tap(params => {
+        this.channelId = parseInt(params.id, 10);
+        this.title$ = this.channelsSelect.getChannelTitle(this.channelId);
+        this.updateEndSideMenu(this.channelId);
+      }),
       switchMap(params => this.channelsSelect.getChannelMessages(parseInt(params.id, 10))),
     );
   }

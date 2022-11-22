@@ -1,8 +1,14 @@
 <ion-header mode="md">
   <app-shared-header endSideButtonIcon="globe-sharp">
-    <span class="roomate-header-title">
-      channel {{ channelId }}
+    <span *ngIf="(title$ | async) as title; else skeletonTitle"
+          class="roomate-header-title">
+      {{ title }}
     </span>
+    <ng-template #skeletonTitle>
+      <ion-skeleton-text class="roomate-header-title-skeleton"
+                         animated="true">
+      </ion-skeleton-text>
+    </ng-template>
   </app-shared-header>
 </ion-header>
 
