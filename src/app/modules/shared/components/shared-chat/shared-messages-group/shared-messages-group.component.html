@@ -1,17 +1,15 @@
-<div *ngFor="let msg of groupMessages.messages; let i = index"
+<div *ngFor="let msg of messages; let first = first; let last = last"
      class="message">
   <div class="img-container">
-<!--    avatar for first message-->
-    <ion-thumbnail *ngIf="i === 0">
-      <img [src]="groupMessages.user.smallImg" alt="">
+    <ion-thumbnail *ngIf="first">
+      <img [src]="user.imageUrl" alt="">
     </ion-thumbnail>
   </div>
   <div class="text-container">
-<!--    name for last message-->
-    <div class="name" *ngIf="i === groupMessages.messages.length - 1">
-      {{groupMessages.user.fullName}}
+    <div class="name" *ngIf="last">
+      {{user.fullName}}
     </div>
-    <div class="text"> {{msg.msg}} </div>
-    <div class="date"> {{ msg.date | date:'hh:mm' }} </div>
+    <div class="text"> {{msg.content}} </div>
+    <div class="date"> {{ msg.timestamp | date:'hh:mm' }} </div>
   </div>
 </div>

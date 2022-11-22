@@ -1,38 +1,47 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Message } from '../../../../api/channels-api';
+import { UsersStoreService } from '../../../../stores/users-store.service';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/api/users-api';
 
 @Component({
   selector: 'app-shared-chat',
   templateUrl: './shared-chat.component.html',
   styleUrls: ['./shared-chat.component.scss'],
 })
-export class SharedChatComponent implements OnInit {
+export class SharedChatComponent implements OnChanges {
   @Input() public scrollEnabled: boolean;
-  @Input() public messages: any[];
+  @Input() public messages: Message[];
 
   @Output() public infiniteScroll = new EventEmitter();
+  public messageGroups: {
+    messages: Message[];
+    user$: Observable<User>;
+  }[];
 
-  constructor() { }
-
-  public get messageGroups(): any[] {
-    return this.splitMessagesIntoGroups().map(
-      group => ({
-        ...group,
-        user: null
-      })
-    );
+  constructor(private readonly usersStore: UsersStoreService) {
   }
 
-  ngOnInit(): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.messages && this.messages) {
+      this.messageGroups = this.splitMessagesIntoGroups().map(
+        group => ({
+          ...group,
+          user$: this.usersStore.getUser(group.senderId)
+        })
+      );
+    }
+  }
 
-  private splitMessagesIntoGroups(): any[] {
+  private splitMessagesIntoGroups(): { senderId: number; messages: Message[] }[] {
     return this.messages.reduce((res, item, index, arr) => {
       if (
         (index === 0) ||
-        (item.from !== arr[index - 1].from)
+        (item.senderId !== arr[index - 1].senderId)
       ) {
         res.push({
           messages: [item],
-          from: item.from
+          senderId: item.senderId
         });
       }
       else {

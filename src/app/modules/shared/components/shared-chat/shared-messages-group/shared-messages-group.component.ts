@@ -1,18 +1,23 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Message } from '../../../../../api/channels-api';
+import { User } from '../../../../../api/users-api';
 
 @Component({
   selector: 'app-shared-messages-group',
   templateUrl: './shared-messages-group.component.html',
   styleUrls: ['./shared-messages-group.component.scss'],
 })
-export class SharedMessagesGroupComponent implements OnInit {
-  @Input() public groupMessages: {
-    messages: any[];
-    user: any;
+export class SharedMessagesGroupComponent {
+  @Input() public messages: Message[] = [];
+  @Input() public user: User = {
+    id: null,
+    fullName: '',
+    shortName: '',
+    username: '',
+    online: false,
+    imageUrl: '',
   };
 
   constructor() { }
-
-  ngOnInit() {}
 
 }
