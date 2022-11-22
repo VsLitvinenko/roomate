@@ -10,9 +10,9 @@ import { rooms } from './data-source';
 export class ChannelEndSideComponent implements OnInit {
 
   public readonly rooms = rooms;
-  public channelId: string;
+  public channelId: number;
 
-  constructor(private item: InjectableDataClass<string>) {
+  constructor(private item: InjectableDataClass<number>) {
     this.channelId = item.injectedItem;
   }
 

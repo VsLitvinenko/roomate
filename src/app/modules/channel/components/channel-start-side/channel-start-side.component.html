@@ -10,9 +10,9 @@
       <ion-list slot="content" lines="none" mode="md">
         <ion-menu-toggle [autoHide]="false">
 
-          <ng-container *ngFor="let item of publicChannels">
+          <ng-container *ngFor="let item of (publicChannels$ | async); trackBy:trackById">
             <ion-item class="no-ion-hover"
-                      [ngClass]="item.unread ? 'unread' : 'read'"
+                      [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'"
                       [routerLink]="['/channel', 'current', item.id]"
                       routerLinkActive="active">
               <span class="tag"> # </span>
@@ -29,8 +29,8 @@
         <ion-label> Private channels </ion-label>
       </ion-item>
       <ion-list slot="content" lines="none" mode="md">
-        <ion-item *ngFor="let item of privateChannels"
-                  [ngClass]="item.unread ? 'unread' : 'read'">
+        <ion-item *ngFor="let item of (privateChannels$ | async); trackBy:trackById"
+                  [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'">
           <span class="tag"> # </span>
           <ion-label> {{item.title}} </ion-label>
         </ion-item>

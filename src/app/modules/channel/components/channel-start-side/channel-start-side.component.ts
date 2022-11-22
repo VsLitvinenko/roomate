@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ShortChannel } from '../../../../api/channels-api';
+import { ChannelsSelectService } from '../../services/channels-select.service';
 
 @Component({
   selector: 'app-channel-start-side',
@@ -7,20 +11,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChannelStartSideComponent implements OnInit {
 
-  publicChannels = [
-    { title: 'public 1', id: 1, unread: false },
-    { title: 'public 2', id: 2, unread: true },
-    { title: 'public 3', id: 3, unread: false },
-  ];
-  privateChannels = [
-    { title: 'private 1', id: 1, unread: false },
-    { title: 'private 2', id: 2, unread: false },
-    { title: 'private 3', id: 3, unread: true },
-    { title: 'private 4', id: 4, unread: true },
-  ];
+  public publicChannels$: Observable<ShortChannel[]>;
+  public privateChannels$: Observable<ShortChannel[]>;
 
-  constructor() { }
+  constructor(private readonly channelsSelect: ChannelsSelectService) { }
 
   ngOnInit(): void {
+    const hotChannels$ = this.channelsSelect.getShortChannels();
+    this.publicChannels$ = hotChannels$.pipe(
+      map(channels => channels.filter(item => !item.private))
+    );
+    this.privateChannels$ = hotChannels$.pipe(
+      map(channels => channels.filter(item => item.private))
+    );
+  }
+
+  public trackById(index: number, item: ShortChannel): number {
+    return item.id;
   }
 }
