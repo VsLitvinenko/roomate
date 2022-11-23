@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { Message } from '../../../../api/channels-api';
 import { UsersStoreService } from '../../../../stores/users-store.service';
 import { Observable } from 'rxjs';
@@ -12,6 +20,7 @@ interface MesGroup {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-shared-chat',
   templateUrl: './shared-chat.component.html',
   styleUrls: ['./shared-chat.component.scss'],
