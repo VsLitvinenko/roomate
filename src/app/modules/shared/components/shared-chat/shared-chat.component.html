@@ -9,7 +9,7 @@
 <div class="msgs-container">
   <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
        class="reverse">
-    <app-shared-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
+    <app-shared-messages-group *ngFor="let group of day.value;"
                                [messages]="group.messages"
                                [user]="group.user$ | async">
     </app-shared-messages-group>
