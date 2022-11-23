@@ -8,6 +8,25 @@
 
 .msgs-container {
   padding: 2px 12px;
+
+  .date {
+    margin-top: 12px;
+    position: sticky;
+    top: 5px;
+
+    display: flex;
+    justify-content: center;
+
+    span {
+      background-color: var(--ion-background-color);
+      color: var(--ion-color-medium);
+      padding: 8px;
+      border-radius: 8px;
+    }
+  }
+}
+
+.reverse {
   display: flex;
   flex-direction: column-reverse;
 }

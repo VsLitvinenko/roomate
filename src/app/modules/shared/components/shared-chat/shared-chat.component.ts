@@ -3,6 +3,13 @@ import { Message } from '../../../../api/channels-api';
 import { UsersStoreService } from '../../../../stores/users-store.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/api/users-api';
+import { isSameDay, startOfDay } from 'date-fns';
+import groupBy from 'lodash-es/groupBy';
+
+interface MesGroup {
+  messages: Message[];
+  user$: Observable<User>;
+}
 
 @Component({
   selector: 'app-shared-chat',
@@ -14,38 +21,42 @@ export class SharedChatComponent implements OnChanges {
   @Input() public messages: Message[];
 
   @Output() public infiniteScroll = new EventEmitter();
-  public messageGroups: {
-    messages: Message[];
-    user$: Observable<User>;
-  }[];
+  // type fix for understanding by IDE
+  public messageDays: { [time: number]: MesGroup[] } | ReadonlyMap<number, MesGroup[]>;
 
   constructor(private readonly usersStore: UsersStoreService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.messages && this.messages) {
-      this.messageGroups = this.splitMessagesIntoGroups().map(
-        group => ({
-          ...group,
-          user$: this.usersStore.getUser(group.senderId)
-        })
+      this.messageDays = groupBy(
+        this.splitMessagesIntoGroups(),
+        group =>  startOfDay(new Date(group.messages[0].timestamp)).getTime()
       );
     }
   }
 
-  public trackByGroup(index, item): string {
-    return item.messages[0].id + item.messages.at(-1).id;
+  public trackByDay(index, item: { key; value }): number {
+    return item.key;
   }
 
-  private splitMessagesIntoGroups(): { senderId: number; messages: Message[] }[] {
+  public trackByGroup(index, item: MesGroup): string {
+    return `${item.messages[0].id}${item.messages[item.messages.length - 1].id}`;
+  }
+
+  private splitMessagesIntoGroups(): MesGroup[] {
     return this.messages.reduce((res, item, index, arr) => {
       if (
         (index === 0) ||
-        (item.senderId !== arr[index - 1].senderId)
+        (item.senderId !== arr[index - 1].senderId) ||
+        !isSameDay(
+          new Date(item.timestamp),
+          new Date(arr[index - 1].timestamp),
+        )
       ) {
         res.push({
           messages: [item],
-          senderId: item.senderId
+          user$: this.usersStore.getUser(item.senderId)
         });
       }
       else {
