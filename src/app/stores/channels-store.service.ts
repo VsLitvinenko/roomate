@@ -42,14 +42,19 @@ export class ChannelsStoreService {
   }
 
   public getChannel(id: number): Observable<FullChannel> {
-    if (!this.channels.has(id)) {
-      this.channels.set(id, new BehaviorSubject<FullChannel>(null));
+    if (
+      !this.channels.has(id) ||
+      !this.channels.get(id).value.isFullyLoaded
+    ) {
+      const pseudoLoad = { isFullyLoaded: true } as FullChannel;
+      this.channels.set(id, new BehaviorSubject<FullChannel>(pseudoLoad));
       this.loadChannel(id).then(
         () => this.loadChannelMessages(id)
       );
     }
     return this.channels.get(id).pipe(
-      filter(channel => channel !== null)
+      filter(channel => channel.hasOwnProperty('id')),
+      filter(channel => channel.isFullyLoaded)
     );
   }
 

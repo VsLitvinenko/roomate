@@ -35,7 +35,7 @@ export class ChannelStartSideComponent implements OnInit {
   }
 
   private getChannelFolders(): Observable<ShortChannelsFolder[]> {
-    return this.channelsSelect.getShortChannels().pipe(
+    return this.channelsSelect.shortChannels$.pipe(
       map(channels =>
         partition(channels, item => !item.private)
           .map(folder => {

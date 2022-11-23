@@ -2,22 +2,19 @@ import { Injectable } from '@angular/core';
 import { ChannelsStoreService, FullChannel } from '../../../stores/channels-store.service';
 import { UsersStoreService } from '../../../stores/users-store.service';
 import { Observable } from 'rxjs';
-import { Message, ShortChannel } from '../../../api/channels-api';
+import { Message } from '../../../api/channels-api';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelsSelectService {
+  public shortChannels$ = this.channelsStore.getShortChannels().pipe(
+    shareReplay(1)
+  );
 
   constructor(private readonly channelsStore: ChannelsStoreService,
               private readonly usersStore: UsersStoreService) {
-  }
-
-  public getShortChannels(): Observable<ShortChannel[]> {
-    return this.channelsStore.getShortChannels().pipe(
-      shareReplay(1)
-    );
   }
 
   public getChannelTitle(id: number): Observable<string> {
@@ -39,7 +36,6 @@ export class ChannelsSelectService {
 
   private getChannel(id: number): Observable<FullChannel> {
     return this.channelsStore.getChannel(id).pipe(
-      filter(channel => channel.isFullyLoaded),
       tap(channel => this.usersStore.storeListOfUsers(channel.members))
     );
   }
