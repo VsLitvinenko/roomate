@@ -9,11 +9,10 @@ import { getUsers, User } from '../api/users-api';
 export class UsersStoreService {
   private readonly users = new Map<number, BehaviorSubject<User>>();
 
-  constructor() {
-  }
+  constructor() { }
 
   public getUser(id: number): Observable<User> {
-    if (this.users.get(id) === undefined) {
+    if (!this.users.has(id)) {
       this.users.set(id, new BehaviorSubject<User>(null));
       this.loadUsersList([id]).then();
     }
@@ -24,11 +23,9 @@ export class UsersStoreService {
 
   // update array of users in state by one request
   public async storeListOfUsers(ids: number[]): Promise<void> {
-    const newIds = ids.filter(id => this.users.get(id) === undefined);
-    newIds.forEach(
-      id => this.users.set(id, new BehaviorSubject<User>(null))
-    );
+    const newIds = ids.filter(id => !this.users.has(id));
     if (newIds.length) {
+      newIds.forEach(id => this.users.set(id, new BehaviorSubject<User>(null)));
       await this.loadUsersList(newIds);
     }
   }

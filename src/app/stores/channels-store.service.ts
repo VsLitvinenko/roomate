@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, from, Observable } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import {
   Channel,
   getChannel,
@@ -20,22 +20,16 @@ export interface FullChannel extends Channel {
   providedIn: 'root'
 })
 export class ChannelsStoreService {
+  private readonly channels = new Map<number, BehaviorSubject<FullChannel>>();
 
-  private readonly channels$ = new BehaviorSubject<{ [id: number]: FullChannel }>({});
-  // multiply init channel requests fix
-  private readonly loadingChannels: { [id: number]: boolean } = {};
-  private shortChannelsInitialized = false;
-
-  constructor() {
-  }
+  constructor() { }
 
   public getShortChannels(): Observable<ShortChannel[]> {
-    if (!this.shortChannelsInitialized) {
-      this.loadShortChannels().then(
-        () => this.shortChannelsInitialized = true
-      );
-    }
-    return this.channels$.pipe(
+    // this method calls just ones
+    return from(
+      this.loadShortChannels()
+    ).pipe(
+      switchMap(() => combineLatest([...this.channels.values()])),
       map(
         value => Object.values(value).map(channel => ({
           id: channel.id,
@@ -43,37 +37,30 @@ export class ChannelsStoreService {
           private: channel.private,
           unreadMessagesCount: channel.unreadMessagesCount,
         }))
-      ),
+      )
     );
   }
 
   public getChannel(id: number): Observable<FullChannel> {
-    if (
-      !this.channels$.value[id]?.isFullyLoaded &&
-      this.loadingChannels[id] !== true
-    ) {
-      this.loadingChannels[id] = true;
-      this.loadChannel(id)
-        .then(() => this.loadChannelMessages(id))
-        .then(() => this.loadingChannels[id] = false);
+    if (!this.channels.has(id)) {
+      this.channels.set(id, new BehaviorSubject<FullChannel>(null));
+      this.loadChannel(id).then(
+        () => this.loadChannelMessages(id)
+      );
     }
-    return this.channels$.pipe(
-      map(value => value[id]),
-      filter(channel => !!channel)
+    return this.channels.get(id).pipe(
+      filter(channel => channel !== null)
     );
   }
 
   public async loadChannelMessages(id: number): Promise<void> {
-    const currentChannel = this.channels$.value[id];
-    const newMsgs = await getChannelsMessages(id, currentChannel.messages.length).pipe(
+    const channel$ = this.channels.get(id);
+    const newMsgs = await getChannelsMessages(id, channel$.value.messages.length).pipe(
       take(1)
     ).toPromise();
-    this.channels$.next({
-      ...this.channels$.value,
-      [id]: {
-        ...currentChannel,
-        messages: [...currentChannel.messages, ...newMsgs]
-      }
+    channel$.next({
+      ...channel$.value,
+      messages: [...channel$.value.messages, ...newMsgs]
     });
   }
 
@@ -81,40 +68,33 @@ export class ChannelsStoreService {
     const shortChannels = await getShortChannels().pipe(
       take(1)
     ).toPromise();
-    const channels = shortChannels
-      .filter(item => !this.channels$.value[item.id])
-      .reduce((res: { [id: number]: FullChannel }, item) => {
-        res[item.id] = {
-          id: item.id,
-          title: item.title,
-          private: item.private,
-          unreadMessagesCount: item.unreadMessagesCount,
+    shortChannels
+      .filter(channel => !this.channels.has(channel.id))
+      .forEach(channel => {
+        const res = {
+          id: channel.id,
+          title: channel.title,
+          private: channel.private,
+          unreadMessagesCount: channel.unreadMessagesCount,
           videorooms: [],
           messages: [],
           members: [],
           isFullyLoaded: false
         };
-        return res;
-      }, {});
-    this.channels$.next({
-      ...this.channels$.value,
-      ...channels
-    });
+        this.channels.set(channel.id, new BehaviorSubject<FullChannel>(res));
+      });
   }
 
   private async loadChannel(id: number): Promise<void> {
     const newChannel = await getChannel(id).pipe(
       take(1)
     ).toPromise();
-    const channels = this.channels$.value;
-    this.channels$.next({
-      ...channels,
-      [id]: {
-        ...newChannel,
-        isFullyLoaded: true,
-        unreadMessagesCount: channels[id]?.unreadMessagesCount,
-        messages: channels[id]?.messages ?? []
-      }
+    const channel$ = this.channels.get(id);
+    channel$.next({
+      ...newChannel,
+      isFullyLoaded: true,
+      unreadMessagesCount: channel$.value?.unreadMessagesCount,
+      messages: channel$.value?.messages ?? []
     });
   }
 }
