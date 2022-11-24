@@ -18,8 +18,8 @@ export class ChannelsSelectService {
   }
 
   public getChannelTitle(id: number): Observable<string> {
-    return this.channelsStore.getChannel(id).pipe(
-      map(channel => channel.title)
+    return this.shortChannels$.pipe(
+      map(shorts => shorts.find(channel => channel.id === id)?.title)
     );
   }
 
