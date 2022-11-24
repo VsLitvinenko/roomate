@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChannelsStoreService, FullChannel } from '../../../stores/channels-store.service';
+import { ChannelsStoreService } from '../../../stores/channels-store.service';
 import { UsersStoreService } from '../../../stores/users-store.service';
 import { Observable } from 'rxjs';
 import { Message } from '../../../api/channels-api';
@@ -18,13 +18,14 @@ export class ChannelsSelectService {
   }
 
   public getChannelTitle(id: number): Observable<string> {
-    return this.getChannel(id).pipe(
+    return this.channelsStore.getChannel(id).pipe(
       map(channel => channel.title)
     );
   }
 
   public getChannelMessages(id: number): Observable<Message[]> {
-    return this.getChannel(id).pipe(
+    return this.channelsStore.getChannel(id).pipe(
+      tap(channel => this.usersStore.updateListOfUsers(channel.members)),
       map(channel => channel.messages),
       filter(messages => !!messages.length)
     );
@@ -32,11 +33,5 @@ export class ChannelsSelectService {
 
   public loadChannelMessages(id: number): Promise<void> {
     return this.channelsStore.loadChannelMessages(id);
-  }
-
-  private getChannel(id: number): Observable<FullChannel> {
-    return this.channelsStore.getChannel(id).pipe(
-      tap(channel => this.usersStore.storeListOfUsers(channel.members))
-    );
   }
 }

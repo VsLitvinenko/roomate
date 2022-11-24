@@ -10,7 +10,7 @@ import {
   ShortChannel
 } from '../api/channels-api';
 
-export interface FullChannel extends Channel {
+export interface StoreChannel extends Channel {
   messages: Message[];
   isFullyLoaded: boolean;
   unreadMessagesCount: number;
@@ -20,12 +20,12 @@ export interface FullChannel extends Channel {
   providedIn: 'root'
 })
 export class ChannelsStoreService {
-  private readonly channels = new Map<number, BehaviorSubject<FullChannel>>();
+  private readonly channels = new Map<number, BehaviorSubject<StoreChannel>>();
 
   constructor() { }
 
   public getShortChannels(): Observable<ShortChannel[]> {
-    // this method calls just ones
+    // this method should be called just ones
     return from(
       this.loadShortChannels()
     ).pipe(
@@ -41,13 +41,13 @@ export class ChannelsStoreService {
     );
   }
 
-  public getChannel(id: number): Observable<FullChannel> {
+  public getChannel(id: number): Observable<StoreChannel> {
     if (
       !this.channels.has(id) ||
       !this.channels.get(id).value.isFullyLoaded
     ) {
-      const pseudoLoad = { isFullyLoaded: true } as FullChannel;
-      this.channels.set(id, new BehaviorSubject<FullChannel>(pseudoLoad));
+      const pseudoLoad = { isFullyLoaded: true } as StoreChannel;
+      this.channels.set(id, new BehaviorSubject<StoreChannel>(pseudoLoad));
       this.loadChannel(id).then(
         () => this.loadChannelMessages(id)
       );
@@ -86,7 +86,7 @@ export class ChannelsStoreService {
           members: [],
           isFullyLoaded: false
         };
-        this.channels.set(channel.id, new BehaviorSubject<FullChannel>(res));
+        this.channels.set(channel.id, new BehaviorSubject<StoreChannel>(res));
       });
   }
 

@@ -22,7 +22,7 @@ export class UsersStoreService {
   }
 
   // update array of users in state by one request
-  public async storeListOfUsers(ids: number[]): Promise<void> {
+  public async updateListOfUsers(ids: number[]): Promise<void> {
     const newIds = ids.filter(id => !this.users.has(id));
     if (newIds.length) {
       newIds.forEach(id => this.users.set(id, new BehaviorSubject<User>(null)));
