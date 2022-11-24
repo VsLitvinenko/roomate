@@ -1,5 +1,5 @@
 ion-content {
-  height: calc(100vh - 115px);
+  height: 100%;
 
   ion-accordion.accordion-expanding ion-item[slot="header"],
   ion-accordion.accordion-expanded ion-item[slot="header"] {
@@ -55,6 +55,19 @@ ion-content {
         font-weight: bolder;
         --color: var(--roomate-color-green);
       }
+    }
+  }
+
+  .skeleton {
+    margin-top: 15px;
+    margin-right: 30px;
+    ion-skeleton-text {
+      height: 50%;
+      border-radius: 10px;
+    }
+    ion-list {
+      margin-left: 35px;
+      padding: 0;
     }
   }
 }

@@ -1,7 +1,9 @@
 <ion-content appScrollbarTheme>
-  <ion-accordion-group [value]="['public', 'private']"
+
+  <ion-accordion-group *ngIf="(channelFolders$ | async) as folders; else skeletonList"
+                       [value]="['public', 'private']"
                        [multiple]="true">
-    <ion-accordion *ngFor="let folder of (channelFolders$ | async); trackBy:trackByValue"
+    <ion-accordion *ngFor="let folder of folders; trackBy:trackByValue"
                    [value]="folder.value"
                    mode="ios">
       <ion-item slot="header" class="acc-header no-ion-hover">
@@ -23,4 +25,18 @@
       </ion-list>
     </ion-accordion>
   </ion-accordion-group>
+
+  <ng-template #skeletonList>
+    <div class="skeleton" *ngFor="let i of [1, 2]">
+      <ion-item lines="none">
+        <ion-skeleton-text animated="true"></ion-skeleton-text>
+      </ion-item>
+      <ion-list lines="none">
+        <ion-item lines="none" *ngFor="let i of [1, 2, 3, 4]">
+          <ion-skeleton-text animated="true"></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ng-template>
+
 </ion-content>
