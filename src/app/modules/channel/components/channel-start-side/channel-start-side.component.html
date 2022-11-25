@@ -6,7 +6,7 @@
     <ion-accordion *ngFor="let folder of folders; trackBy:trackByValue"
                    [value]="folder.value"
                    mode="ios">
-      <ion-item slot="header" class="acc-header no-ion-hover">
+      <ion-item slot="header" class="acc-header no-ion-hover" lines="none">
         <ion-icon [name]="folder.icon"></ion-icon>
         <ion-label> {{ folder.title }} </ion-label>
       </ion-item>
@@ -20,6 +20,8 @@
                     routerLinkActive="active">
             <span class="tag"> # </span>
             <ion-label> {{item.title}} </ion-label>
+            <ion-badge *ngIf="item.unreadMessagesCount"
+                       color="medium"> {{item.unreadMessagesCount}} </ion-badge>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
