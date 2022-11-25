@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { getUsers, User } from '../api/users-api';
 
 @Injectable({
@@ -31,9 +31,7 @@ export class UsersStoreService {
   }
 
   private async loadUsersList(ids: number[]): Promise<void> {
-    const newUsers = await getUsers(ids).pipe(
-      take(1)
-    ).toPromise();
+    const newUsers = await firstValueFrom(getUsers(ids));
     newUsers.forEach(user => this.users.get(user.id).next(user));
   }
 }

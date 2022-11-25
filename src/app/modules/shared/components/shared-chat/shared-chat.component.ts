@@ -50,7 +50,7 @@ export class SharedChatComponent implements OnChanges {
   }
 
   public trackByGroup(index, item: MesGroup): string {
-    return `${item.messages[0].id}${item.messages[item.messages.length - 1].id}`;
+    return `${item.messages[0].id}${item.messages.at(-1).id}`;
   }
 
   private splitMessagesIntoGroups(): MesGroup[] {
@@ -69,7 +69,7 @@ export class SharedChatComponent implements OnChanges {
         });
       }
       else {
-        res[res.length - 1].messages.push(item);
+        res.at(-1).messages.push(item);
       }
       return res;
     }, []);

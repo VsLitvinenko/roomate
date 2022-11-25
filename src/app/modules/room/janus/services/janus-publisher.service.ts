@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { doDtx, Janus } from '../janus.constants';
 import { JanusJS } from '../janus.types';
@@ -87,9 +87,7 @@ export class JanusPublisherService {
       onlocaltrack: (track, on) => this.onLocalTrack(track, on),
     });
 
-    return this.myPrivateId$.pipe(
-      take(1)
-    ).toPromise();
+    return firstValueFrom(this.myPrivateId$);
   }
 
   private mainPluginHandling(plugin: JanusJS.PluginHandle): void {

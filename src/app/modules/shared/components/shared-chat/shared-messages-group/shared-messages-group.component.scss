@@ -30,12 +30,13 @@
     border-radius: 10px;
 
     .name {
+      height: 1.1rem;
       margin-bottom: 5px;
       font-weight: bolder;
       color: var(--roomate-color-green);
     }
     .skeleton-name {
-      height: 18.4px;
+      height: 1.1rem;
       margin: 0 0 5px;
     }
     .date {

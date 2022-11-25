@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, from, Observable } from 'rxjs';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
   Channel,
   getChannel,
@@ -60,9 +60,9 @@ export class ChannelsStoreService {
 
   public async loadChannelMessages(id: number): Promise<void> {
     const channel$ = this.channels.get(id);
-    const newMsgs = await getChannelsMessages(id, channel$.value.messages.length).pipe(
-      take(1)
-    ).toPromise();
+    const newMsgs = await firstValueFrom(
+      getChannelsMessages(id, channel$.value.messages.length)
+    );
     channel$.next({
       ...channel$.value,
       messages: [...channel$.value.messages, ...newMsgs]
@@ -70,9 +70,7 @@ export class ChannelsStoreService {
   }
 
   private async loadShortChannels(): Promise<void> {
-    const shortChannels = await getShortChannels().pipe(
-      take(1)
-    ).toPromise();
+    const shortChannels = await firstValueFrom(getShortChannels());
     shortChannels
       .filter(channel => !this.channels.has(channel.id))
       .forEach(channel => {
@@ -91,9 +89,7 @@ export class ChannelsStoreService {
   }
 
   private async loadChannel(id: number): Promise<void> {
-    const newChannel = await getChannel(id).pipe(
-      take(1)
-    ).toPromise();
+    const newChannel = await firstValueFrom(getChannel(id));
     const channel$ = this.channels.get(id);
     channel$.next({
       ...newChannel,
