@@ -14,7 +14,6 @@ import { MenuControllerService } from './main/services/menu-controller.service';
     TabsComponent,
     ProfileHeaderComponent
   ],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
