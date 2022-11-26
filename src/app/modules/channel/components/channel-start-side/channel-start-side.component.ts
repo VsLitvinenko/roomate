@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ShortChannel } from '../../../../api/channels-api';
-import { ChannelsSelectService } from '../../services/channels-select.service';
+import { ChannelsDataService } from '../../services/channels-data.service';
 import { partition } from 'lodash-es';
 
 interface ShortChannelsFolder {
@@ -21,7 +21,7 @@ export class ChannelStartSideComponent implements OnInit {
 
   public channelFolders$ = this.getChannelFolders();
 
-  constructor(private readonly channelsSelect: ChannelsSelectService) { }
+  constructor(private readonly channelsData: ChannelsDataService) { }
 
   ngOnInit(): void {
   }
@@ -35,7 +35,7 @@ export class ChannelStartSideComponent implements OnInit {
   }
 
   private getChannelFolders(): Observable<ShortChannelsFolder[]> {
-    return this.channelsSelect.shortChannels$.pipe(
+    return this.channelsData.shortChannels$.pipe(
       map(channels =>
         partition(channels, item => !item.private)
           .map(folder => {

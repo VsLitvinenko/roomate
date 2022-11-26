@@ -5,7 +5,7 @@ import { MenuControllerService } from '../../../../main/services/menu-controller
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
 import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
 import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { ChannelsSelectService } from '../../services/channels-select.service';
+import { ChannelsDataService } from '../../services/channels-data.service';
 import { Observable } from 'rxjs';
 import { Message } from '../../../../api/channels-api';
 
@@ -27,7 +27,7 @@ export class CurrentChannelComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly menuController: MenuControllerService,
     private readonly inj: SharedInjectorService,
-    private readonly channelsSelect: ChannelsSelectService
+    private readonly channelsSelect: ChannelsDataService
   ) { }
 
   ngOnInit(): void {

@@ -13,7 +13,7 @@ import { filter, map, shareReplay, tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ChannelsSelectService {
+export class ChannelsDataService {
 
   public readonly shortChannels$ = this.getShortsChannels();
 

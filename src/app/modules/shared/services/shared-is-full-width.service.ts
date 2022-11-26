@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
-import {map, shareReplay, startWith} from 'rxjs/operators';
+import { map, shareReplay, startWith } from 'rxjs/operators';
 import { splitPaneBreakPoint } from '../constants';
 
 const minWidth = splitPaneBreakPoint.minWidth;
