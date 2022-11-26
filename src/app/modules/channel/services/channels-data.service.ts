@@ -24,9 +24,9 @@ export class ChannelsDataService {
 
   public getChannelMessages(id: number): Observable<Message[]> {
     return this.getChannel(id).pipe(
+      filter(channel => !!channel.messages.length),
       tap(channel => this.usersStore.updateListOfUsers(channel.members)),
       map(channel => channel.messages),
-      filter(messages => !!messages.length)
     );
   }
 

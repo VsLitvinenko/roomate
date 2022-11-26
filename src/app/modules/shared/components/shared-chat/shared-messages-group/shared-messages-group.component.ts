@@ -13,4 +13,8 @@ export class SharedMessagesGroupComponent {
 
   constructor() { }
 
+  public openUser(): void {
+    alert(this.user.id);
+  }
+
 }

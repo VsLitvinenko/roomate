@@ -4,7 +4,8 @@
   <div class="img-container">
     <ion-thumbnail *ngIf="first">
       <img *ngIf="user; else skeletonAvatar"
-           [src]="user.imageUrl" alt="">
+           [src]="user.imageUrl" alt=""
+           (click)="openUser()">
       <ng-template #skeletonAvatar>
         <ion-skeleton-text animated="true">
         </ion-skeleton-text>
@@ -15,7 +16,7 @@
   <div class="text-container">
     <ng-container *ngIf="last">
       <div *ngIf="user; else skeletonName" class="name">
-        {{user?.fullName}}
+        <span (click)="openUser()"> {{user?.fullName}} </span>
       </div>
       <ng-template #skeletonName>
         <ion-skeleton-text class="skeleton-name"
