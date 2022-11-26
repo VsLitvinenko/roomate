@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
-import {
-  Channel,
-  getChannel,
-  getChannelsMessages,
-  getShortChannels,
-  Message,
-  ShortChannel
-} from '../api/channels-api';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { Channel, Message, ShortChannel } from '../api/channels-api';
 
 export interface StoreChannel extends Channel {
   messages: Message[];
@@ -25,11 +18,7 @@ export class ChannelsStoreService {
   constructor() { }
 
   public getShortChannels(): Observable<ShortChannel[]> {
-    // this method should be called just ones
-    return from(
-      this.loadShortChannels()
-    ).pipe(
-      switchMap(() => combineLatest([...this.channels.values()])),
+    return combineLatest([...this.channels.values()]).pipe(
       map(
         value => Object.values(value).map(channel => ({
           id: channel.id,
@@ -41,37 +30,10 @@ export class ChannelsStoreService {
     );
   }
 
-  public getChannel(id: number): Observable<StoreChannel> {
-    if (
-      !this.channels.has(id) ||
-      !this.channels.get(id).value.isFullyLoaded
-    ) {
-      const pseudoLoad = { isFullyLoaded: true } as StoreChannel;
-      this.channels.set(id, new BehaviorSubject<StoreChannel>(pseudoLoad));
-      this.loadChannel(id).then(
-        () => this.loadChannelMessages(id)
-      );
-    }
-    return this.channels.get(id).pipe(
-      filter(channel => channel.hasOwnProperty('id')),
-      filter(channel => channel.isFullyLoaded)
-    );
-  }
-
-  public async loadChannelMessages(id: number): Promise<void> {
-    const channel$ = this.channels.get(id);
-    const newMsgs = await firstValueFrom(
-      getChannelsMessages(id, channel$.value.messages.length)
-    );
-    channel$.next({
-      ...channel$.value,
-      messages: [...channel$.value.messages, ...newMsgs]
-    });
-  }
-
-  private async loadShortChannels(): Promise<void> {
-    const shortChannels = await firstValueFrom(getShortChannels());
-    shortChannels
+  public async setShortChannels(
+    shortChannels: ShortChannel[] | Promise<ShortChannel[]>
+  ): Promise<void> {
+    (await shortChannels)
       .filter(channel => !this.channels.has(channel.id))
       .forEach(channel => {
         const res = {
@@ -88,14 +50,62 @@ export class ChannelsStoreService {
       });
   }
 
-  private async loadChannel(id: number): Promise<void> {
-    const newChannel = await firstValueFrom(getChannel(id));
-    const channel$ = this.channels.get(id);
+  public getChannel(id: number): Observable<StoreChannel> {
+    return this.channels.get(id).pipe(
+      filter(channel => channel.hasOwnProperty('id')),
+      filter(channel => channel.isFullyLoaded)
+    );
+  }
+
+  public isChannelFullyLoad(id: number): boolean {
+    return this.channels.has(id) && this.channels.get(id).value.isFullyLoaded;
+  }
+
+  public lastChannelMessage(id: number): number {
+    return this.channels.get(id).value.messages.length;
+  }
+
+  public async setChannel(
+    id: number,
+    newChannel: Channel | Promise<Channel>
+  ): Promise<void> {
+    let channel$: BehaviorSubject<StoreChannel>;
+    if (this.channels.has(id)) {
+      // fully load short channel or update existing channel
+      channel$ = this.channels.get(id);
+      channel$.value.isFullyLoaded = true;
+    }
+    else {
+      const pseudoLoad = { isFullyLoaded: true } as StoreChannel;
+      channel$ = this.channels.get(id) ?? new BehaviorSubject<StoreChannel>(pseudoLoad);
+      this.channels.set(id, channel$);
+    }
     channel$.next({
-      ...newChannel,
+      ...(await newChannel),
       isFullyLoaded: true,
-      unreadMessagesCount: channel$.value?.unreadMessagesCount,
+      unreadMessagesCount: channel$.value?.unreadMessagesCount ?? 0,
       messages: channel$.value?.messages ?? []
+    });
+  }
+
+  public async updateChannelMessages(
+    id: number,
+    newMessages: Message[] | Promise<Message[]>,
+    position: 'start' | 'end'
+  ): Promise<void> {
+    const channel$ = this.channels.get(id);
+    let messages: Message[];
+    switch (position) {
+      case 'start':
+        messages = [...(await newMessages), ...channel$.value.messages];
+        break;
+      case 'end':
+        messages = [...channel$.value.messages, ...(await newMessages)];
+        break;
+    }
+    channel$.next({
+      ...channel$.value,
+      messages
     });
   }
 }
