@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ChannelsStoreService, StoreChannel } from '../../../stores/channels-store.service';
+import { ChannelsStore, StoreChannel, StoreShortChannel } from '../../../stores/channels.store';
 import { UsersStoreService } from '../../../stores/users-store.service';
 import { firstValueFrom, from, Observable, switchMap } from 'rxjs';
-import {
-  getChannel,
-  getChannelsMessages,
-  getShortChannels,
-  Message,
-  ShortChannel
-} from '../../../api/channels-api';
+import { getChannel, getChannelsMessages, getShortChannels, Message } from '../../../api/channels-api';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +12,7 @@ export class ChannelsDataService {
 
   public readonly shortChannels$ = this.getShortsChannels();
 
-  constructor(private readonly channelsStore: ChannelsStoreService,
+  constructor(private readonly channelsStore: ChannelsStore,
               private readonly usersStore: UsersStoreService) {
   }
 
@@ -37,27 +32,27 @@ export class ChannelsDataService {
 
   public async loadChannelMessages(id: number): Promise<void> {
     const newMessages = firstValueFrom(
-      getChannelsMessages(id, this.channelsStore.lastChannelMessage(id))
+      getChannelsMessages(id, this.channelsStore.lastChatMessage(id))
     );
-    await this.channelsStore.updateChannelMessages(id, newMessages, 'end');
+    await this.channelsStore.updateChatMessages(id, newMessages, 'end');
   }
 
   private getChannel(id: number): Observable<StoreChannel> {
-    if (this.channelsStore.isChannelFullyLoad(id)) {
-      return this.channelsStore.getChannel(id);
+    if (this.channelsStore.isChatFullyLoaded(id)) {
+      return this.channelsStore.getChat(id);
     }
     return from(
-      this.channelsStore.setChannel(id, firstValueFrom(getChannel(id)))
+      this.channelsStore.setChat(id, firstValueFrom(getChannel(id)))
     ).pipe(
       tap(() => this.loadChannelMessages(id)),
-      switchMap(() => this.channelsStore.getChannel(id))
+      switchMap(() => this.channelsStore.getChat(id))
     );
   }
 
-  private getShortsChannels(): Observable<ShortChannel[]> {
+  private getShortsChannels(): Observable<StoreShortChannel[]> {
     return getShortChannels().pipe(
-      switchMap(shorts => from(this.channelsStore.setShortChannels(shorts))),
-      switchMap(() => this.channelsStore.getShortChannels()),
+      switchMap(shorts => from(this.channelsStore.setShorts(shorts))),
+      switchMap(() => this.channelsStore.getShorts()),
       shareReplay(1)
     );
   }

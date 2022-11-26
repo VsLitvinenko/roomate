@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ShortChannel } from '../../../../api/channels-api';
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { partition } from 'lodash-es';
+import { StoreShortChannel } from '../../../../stores/channels.store';
 
 interface ShortChannelsFolder {
   value: string;
   title: string;
   icon: string;
-  channels: ShortChannel[];
+  channels: StoreShortChannel[];
 }
 
 @Component({
@@ -30,7 +30,7 @@ export class ChannelStartSideComponent implements OnInit {
     return item.value;
   }
 
-  public trackById(index: number, item: ShortChannel): number {
+  public trackById(index: number, item: StoreShortChannel): number {
     return item.id;
   }
 
