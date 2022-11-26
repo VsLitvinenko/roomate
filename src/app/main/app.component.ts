@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { SharedDarkModeService } from '../modules/shared/services/shared-dark-mode.service';
+import { DarkThemeService } from '../modules/shared/services/dark-theme.service';
 import { splitPaneBreakPoint } from '../modules/shared/constants';
-import { SharedIsFullWidthService } from '../modules/shared/services/shared-is-full-width.service';
+import { IsFullWidthService } from '../modules/shared/services/is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from './services/menu-controller.service';
 
@@ -25,8 +25,8 @@ export class AppComponent {
   public isTabsShowing = false;
 
   constructor(
-    private readonly darkMode: SharedDarkModeService,
-    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly darkTheme: DarkThemeService,
+    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService
   ) { }
 

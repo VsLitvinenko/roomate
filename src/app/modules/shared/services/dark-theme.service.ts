@@ -5,7 +5,7 @@ const localStorageKey = 'roomate.theme';
 @Injectable({
   providedIn: 'root'
 })
-export class SharedDarkModeService {
+export class DarkThemeService {
 
   private darkMode = this.getStorage();
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ChannelsStore, StoreChannel, StoreShortChannel } from '../../../stores/channels.store';
-import { UsersStoreService } from '../../../stores/users-store.service';
+import { UsersService } from '../../shared/services/users.service';
 import { firstValueFrom, from, Observable, switchMap } from 'rxjs';
 import { getChannel, getChannelsMessages, getShortChannels, Message } from '../../../api/channels-api';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ export class ChannelsDataService {
   public readonly shortChannels$ = this.getShortsChannels();
 
   constructor(private readonly channelsStore: ChannelsStore,
-              private readonly usersStore: UsersStoreService) {
+              private readonly usersStore: UsersService) {
   }
 
   public getChannelTitle(id: number): Observable<string> {

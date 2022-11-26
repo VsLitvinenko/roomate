@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { sharedMenuLinks } from 'src/app/modules/shared/constants';
-import { SharedDarkModeService } from '../../../modules/shared/services/shared-dark-mode.service';
+import { DarkThemeService } from '../../../modules/shared/services/dark-theme.service';
 
 @Component({
   selector: 'app-tabs',
@@ -10,14 +10,14 @@ import { SharedDarkModeService } from '../../../modules/shared/services/shared-d
 export class TabsComponent implements OnInit {
   @Input() isTabsShowing: boolean;
   public readonly menuLinks = sharedMenuLinks;
-  constructor(private readonly darkMode: SharedDarkModeService) {
+  constructor(private readonly darkTheme: DarkThemeService) {
   }
 
   ngOnInit(): void {
   }
 
   public changeDarkMode(): void {
-    this.darkMode.changeDarkMode();
+    this.darkTheme.changeDarkMode();
   }
 
 }

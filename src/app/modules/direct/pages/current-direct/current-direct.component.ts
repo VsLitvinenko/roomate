@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { testMessages, userData } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
+import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
-import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
+import { InjectorService } from '../../../shared/services/injector.service';
 import { DirectEndSideComponent } from '../../components/direct-end-side/direct-end-side.component';
 
 @UntilDestroy()
@@ -28,9 +28,9 @@ export class CurrentDirectComponent implements OnInit {
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService,
-    protected readonly inj: SharedInjectorService,
+    protected readonly inj: InjectorService,
   ) { }
 
   get loading(): boolean {

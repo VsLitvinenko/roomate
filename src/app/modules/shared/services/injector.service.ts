@@ -12,7 +12,7 @@ export class InjectableDataClass<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class SharedInjectorService {
+export class InjectorService {
 
   constructor(private readonly inj: Injector) { }
 

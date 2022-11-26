@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { userData } from './data-source';
-import { InjectableDataClass } from '../../../shared/services/shared-injector.service';
+import { InjectableDataClass } from '../../../shared/services/injector.service';
 
 @Component({
   selector: 'app-end-side-menu',

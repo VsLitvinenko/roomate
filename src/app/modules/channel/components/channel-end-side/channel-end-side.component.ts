@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InjectableDataClass } from 'src/app/modules/shared/services/shared-injector.service';
+import { InjectableDataClass } from 'src/app/modules/shared/services/injector.service';
 import { rooms } from './data-source';
 
 @Component({

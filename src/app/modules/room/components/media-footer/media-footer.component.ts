@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { SharedIsFullWidthService } from '../../../shared/services/shared-is-full-width.service';
+import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
 import { map, take } from 'rxjs/operators';
 import { JanusMainService } from '../../janus/janus-main.service';
 
@@ -33,7 +33,7 @@ export class MediaFooterComponent implements OnInit {
   };
 
   constructor(
-    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly appWidthService: IsFullWidthService,
     private readonly janusService: JanusMainService,
     private readonly cdr: ChangeDetectorRef,
   ) { }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { SharedDarkModeService } from '../../services/shared-dark-mode.service';
-import { SharedIsFullWidthService } from '../../services/shared-is-full-width.service';
+import { DarkThemeService } from '../../services/dark-theme.service';
+import { IsFullWidthService } from '../../services/is-full-width.service';
 import { sharedMenuLinks } from '../../constants';
 
 @Component({
@@ -16,14 +16,14 @@ export class SharedHeaderComponent implements OnInit {
   public readonly menuLinks = sharedMenuLinks;
 
   constructor(
-    private readonly darkMode: SharedDarkModeService,
-    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly darkTheme: DarkThemeService,
+    private readonly appWidthService: IsFullWidthService,
   ) { }
 
   ngOnInit(): void {
   }
 
   public changeDarkMode(): void {
-    this.darkMode.changeDarkMode();
+    this.darkTheme.changeDarkMode();
   }
 }

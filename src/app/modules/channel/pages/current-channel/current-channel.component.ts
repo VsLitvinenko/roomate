@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IonContent } from '@ionic/angular';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
-import { SharedInjectorService } from '../../../shared/services/shared-injector.service';
+import { InjectorService } from '../../../shared/services/injector.service';
 import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { Observable } from 'rxjs';
@@ -26,7 +26,7 @@ export class CurrentChannelComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly menuController: MenuControllerService,
-    private readonly inj: SharedInjectorService,
+    private readonly inj: InjectorService,
     private readonly channelsSelect: ChannelsDataService
   ) { }
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { JanusMainService } from '../janus/janus-main.service';
-import { SharedIsFullWidthService } from '../../shared/services/shared-is-full-width.service';
+import { IsFullWidthService } from '../../shared/services/is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
@@ -24,7 +24,7 @@ export class RoomPage implements OnInit {
 
   constructor(
     private readonly janusService: JanusMainService,
-    private readonly appWidthService: SharedIsFullWidthService,
+    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService,
   ) {}
 

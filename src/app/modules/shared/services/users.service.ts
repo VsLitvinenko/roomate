@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { getUsers, User } from '../api/users-api';
+import { getUsers, User } from '../../../api/users-api';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsersStoreService {
+export class UsersService {
   private readonly users = new Map<number, BehaviorSubject<User>>();
 
   constructor() { }

@@ -8,7 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { Message } from '../../../../api/channels-api';
-import { UsersStoreService } from '../../../../stores/users-store.service';
+import { UsersService } from '../../services/users.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/api/users-api';
 import { isSameDay, startOfDay } from 'date-fns';
@@ -33,7 +33,7 @@ export class SharedChatComponent implements OnChanges {
   // type fix for understanding by IDE
   public messageDays: { [time: number]: MesGroup[] } | ReadonlyMap<number, MesGroup[]>;
 
-  constructor(private readonly usersStore: UsersStoreService) {
+  constructor(private readonly users: UsersService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,7 +65,7 @@ export class SharedChatComponent implements OnChanges {
       ) {
         res.push({
           messages: [item],
-          user$: this.usersStore.getUser(item.senderId)
+          user$: this.users.getUser(item.senderId)
         });
       }
       else {
