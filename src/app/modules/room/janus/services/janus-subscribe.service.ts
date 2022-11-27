@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JanusJS } from '../janus.types';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, mapTo, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { Janus } from '../janus.constants';
 
 interface PublisherMid {
@@ -24,10 +24,9 @@ export class JanusSubscribeService {
 
   constructor() { }
 
-  private get receivePluginReady(): Observable<void> {
+  private get receivePluginReady(): Observable<boolean> {
     return this.pluginReady$.pipe(
       filter(ready => ready),
-      mapTo(void 0),
       take(1)
     );
   }
