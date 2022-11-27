@@ -26,7 +26,7 @@ ion-list {
 }
 
 .actions {
-  margin: 10px 0;
+  margin-top: 10px;
 
   ion-item {
     cursor: pointer;
@@ -38,23 +38,26 @@ ion-list {
 
 .users {
   .header {
-    ion-icon, ion-label {
+    ion-icon, h2 {
       color: var(--roomate-color-green);
     }
-    ion-label {
+    h2 {
       font-weight: bolder;
     }
   }
 
-  .current-user {
-    cursor: pointer;
+  .current-user, .skeleton-user {
     padding: 8px 2px;
     margin: 4px 0 5px -12px;
 
     ion-thumbnail {
       --border-radius: 100%;
-      margin-right: 15px;
+      margin-right: 20px;
     }
+  }
+
+  .current-user {
+    cursor: pointer;
 
     .online {
       border: 2px solid var(--ion-background-color);
@@ -68,25 +71,29 @@ ion-list {
       left: 35px;
     }
 
-    ion-col {
-      padding-bottom: 2px;
-      padding-right: 0;
-      .name {
-        color: var(--ion-text-color);
+    ion-label {
+      h2 {
         font-weight: bolder;
-        font-size: 15px;
-        margin-bottom: 4px;
-      }
-
-      .msg {
-        color: var(--ion-color-medium);
-        font-size: 12.5px;
       }
     }
 
     &:hover {
-      ion-thumbnail, .online, ion-col {
+      ion-thumbnail, ion-label {
         opacity: 0.8;
+      }
+    }
+  }
+
+  .skeleton-user {
+    ion-label {
+      width: 200px;
+      ion-skeleton-text {
+        border-radius: 6px;
+      }
+      h2 {
+        ion-skeleton-text {
+          height: 15px;
+        }
       }
     }
   }

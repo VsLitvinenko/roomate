@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { StoreChannel } from '../../../../stores/channels.store';
 import { IonModal } from '@ionic/angular';
@@ -29,8 +29,14 @@ export class ChannelInfoComponent implements OnInit {
     this.isNotify = !this.isNotify;
   }
 
-  public getUser(id: number): Observable<User> {
-    return this.users.getUser(id);
+  public getChannelUsers(members: number[]): Observable<User[]> {
+    return combineLatest(
+      members.map(id => this.users.getUser(id))
+    );
+  }
+
+  public getOnlineUsersCount(users: User[]): number {
+    return users.filter(user => user.online).length;
   }
 
 }
