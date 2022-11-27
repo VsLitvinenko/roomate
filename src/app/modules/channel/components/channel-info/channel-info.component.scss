@@ -1,0 +1,93 @@
+:host {
+  height: 100%;
+}
+
+.roomate-header-title {
+  margin-left: 16px;
+}
+
+.info-header {
+  margin-top: 15px;
+  ion-label {
+    font-size: 18px;
+    font-weight: bolder;
+  }
+  span {
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-list {
+  padding-left: 12px;
+  padding-right: 6px;
+  ion-icon {
+    font-size: 1.6rem;
+  }
+}
+
+.actions {
+  margin: 10px 0;
+
+  ion-item {
+    cursor: pointer;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.users {
+  .header {
+    ion-icon, ion-label {
+      color: var(--roomate-color-green);
+    }
+    ion-label {
+      font-weight: bolder;
+    }
+  }
+
+  .current-user {
+    cursor: pointer;
+    padding: 8px 2px;
+    margin: 4px 0 5px -12px;
+
+    ion-thumbnail {
+      --border-radius: 100%;
+      margin-right: 15px;
+    }
+
+    .online {
+      border: 2px solid var(--ion-background-color);
+      background: var(--roomate-color-green);
+      border-radius: 100%;
+
+      height: 14px;
+      width: 14px;
+      position: absolute;
+      bottom: 0;
+      left: 35px;
+    }
+
+    ion-col {
+      padding-bottom: 2px;
+      padding-right: 0;
+      .name {
+        color: var(--ion-text-color);
+        font-weight: bolder;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+
+      .msg {
+        color: var(--ion-color-medium);
+        font-size: 12.5px;
+      }
+    }
+
+    &:hover {
+      ion-thumbnail, .online, ion-col {
+        opacity: 0.8;
+      }
+    }
+  }
+}

@@ -37,7 +37,7 @@ export class ChannelsDataService {
     await this.channelsStore.updateChatMessages(id, newMessages, 'end');
   }
 
-  private getChannel(id: number): Observable<StoreChannel> {
+  public getChannel(id: number): Observable<StoreChannel> {
     if (this.channelsStore.isChatFullyLoaded(id)) {
       return this.channelsStore.getChat(id);
     }

@@ -1,6 +1,7 @@
 <ion-header mode="md">
   <app-shared-header endSideButtonIcon="globe-sharp">
     <span *ngIf="(title$ | async) as title; else skeletonTitle"
+          (click)="openInfoModal(infoModal)"
           class="roomate-header-title">
       {{ title }}
     </span>
@@ -30,3 +31,11 @@
   <app-shared-textarea-footer (messageSend)="messageSend($event)">
   </app-shared-textarea-footer>
 </ion-footer>
+
+<ion-modal #infoModal>
+  <ng-template>
+    <app-channel-info [channelId]="channelId"
+                      [selfModal]="infoModal">
+    </app-channel-info>
+  </ng-template>
+</ion-modal>

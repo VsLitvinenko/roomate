@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent } from '@ionic/angular';
+import { IonContent, IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/menus/channel-end-side/channel-end-side.component';
 import { InjectorService } from '../../../shared/services/injector.service';
@@ -21,13 +21,13 @@ export class CurrentChannelComponent implements OnInit {
   public title$: Observable<string>;
   public loading = false;
 
-  private channelId: number;
+  public channelId: number;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly menuController: MenuControllerService,
     private readonly inj: InjectorService,
-    private readonly channelsSelect: ChannelsDataService
+    private readonly channelsData: ChannelsDataService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class CurrentChannelComponent implements OnInit {
   }
 
   public infiniteScroll(event: any): void {
-    this.channelsSelect.loadChannelMessages(this.channelId).then(
+    this.channelsData.loadChannelMessages(this.channelId).then(
       () => event.target.complete()
     );
   }
@@ -53,14 +53,18 @@ export class CurrentChannelComponent implements OnInit {
     alert(event);
   }
 
+  public async openInfoModal(modal: IonModal): Promise<void> {
+    await modal.present();
+  }
+
   private getChannelMessagesFromStore(): Observable<Message[]> {
     return this.activatedRoute.params.pipe(
       tap(params => {
         this.channelId = parseInt(params.id, 10);
-        this.title$ = this.channelsSelect.getChannelTitle(this.channelId);
+        this.title$ = this.channelsData.getChannelTitle(this.channelId);
         this.updateEndSideMenu(this.channelId);
       }),
-      switchMap(params => this.channelsSelect.getChannelMessages(parseInt(params.id, 10))),
+      switchMap(params => this.channelsData.getChannelMessages(parseInt(params.id, 10))),
       shareReplay(1)
     );
   }
