@@ -1,38 +1,86 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import { Directive, Host, OnInit } from '@angular/core';
+import { IonContent } from '@ionic/angular';
+import { fromEvent, mergeWith, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-const stylesheet = `
+const defaultStyle = `
   ::-webkit-scrollbar {
-    width: 3px;
+    width: 4px;
   }
   ::-webkit-scrollbar-track {
     background: none;
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 1rem;
-    background: var(--roomate-color-green);
     border: none;
-  }
-  ::-webkit-scrollbar-thumb:hover {
   }
 `;
 
+const visibleStyle = `
+  ::-webkit-scrollbar-thumb {
+    background: var(--roomate-color-green);
+  }
+`;
+
+const invisibleStyle = `
+  ::-webkit-scrollbar-thumb {
+    background: none;
+  }
+`;
+
+@UntilDestroy()
 @Directive({
   selector: '[appScrollbarTheme]'
 })
 export class ScrollbarThemeDirective implements OnInit {
-  constructor(private readonly el: ElementRef) {
+  private barStyle: HTMLStyleElement;
+
+  constructor(@Host() private readonly content: IonContent) {
   }
 
   ngOnInit(): void {
-    const styleElmt = this.el.nativeElement.shadowRoot.querySelector('style');
+    this.barStyle = document.createElement('style');
+    (this.content as any).el.shadowRoot.appendChild(this.barStyle);
+    this.toggleStyle(false);
 
-    if (styleElmt) {
-      styleElmt.append(stylesheet);
+    setTimeout(() => this.mouseEvents(), 100);
+  }
+
+  private mouseEvents(): void {
+    const isMobile = window.matchMedia('(any-pointer:coarse)').matches;
+
+    let show$: Observable<boolean>;
+    let hide$: Observable<boolean>;
+    if (isMobile) {
+      this.content.scrollEvents = true;
+      show$ = this.content.ionScrollStart.pipe(
+        map(() => true)
+      );
+      hide$ = this.content.ionScrollEnd.pipe(
+        map(() => false)
+      );
     }
     else {
-      const barStyle = document.createElement('style');
-      barStyle.append(stylesheet);
-      this.el.nativeElement.shadowRoot.appendChild(barStyle);
+      const scrollArea = [
+        ...(this.content as any).el.shadowRoot.children
+      ].find(
+        item => item.className === 'inner-scroll scroll-y'
+      );
+      show$ = fromEvent(scrollArea, 'mouseenter').pipe(
+        map(() => true)
+      );
+      hide$ = fromEvent(scrollArea, 'mouseleave').pipe(
+        map(() => false)
+      );
     }
+    show$.pipe(
+      mergeWith(hide$),
+      untilDestroyed(this)
+    ).subscribe(value => this.toggleStyle(value));
+  }
+
+  private toggleStyle(visible: boolean): void {
+    this.barStyle.innerText = defaultStyle + (visible ? visibleStyle : invisibleStyle);
   }
 }
