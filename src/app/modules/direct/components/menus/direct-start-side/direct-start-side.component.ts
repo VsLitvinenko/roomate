@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { usersList } from './data-source';
-import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
+import { IsFullWidthService } from '../../../../shared/services/is-full-width.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ChannelsDataService } from '../../services/channels-data.service';
+import { ChannelsDataService } from '../../../services/channels-data.service';
 import { partition } from 'lodash-es';
-import { StoreShortChannel } from '../../../../stores/channels.store';
+import { StoreShortChannel } from '../../../../../stores/channels.store';
 
 interface ShortChannelsFolder {
   value: string;

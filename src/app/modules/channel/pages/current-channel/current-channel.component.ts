@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent } from '@ionic/angular';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
-import { ChannelEndSideComponent } from '../../components/channel-end-side/channel-end-side.component';
+import { ChannelEndSideComponent } from '../../components/menus/channel-end-side/channel-end-side.component';
 import { InjectorService } from '../../../shared/services/injector.service';
 import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services/channels-data.service';

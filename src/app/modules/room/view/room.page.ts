@@ -3,8 +3,8 @@ import { JanusMainService } from '../janus/janus-main.service';
 import { IsFullWidthService } from '../../shared/services/is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
-import { RoomStartSideComponent } from '../components/room-start-side/room-start-side.component';
-import { RoomEndSideComponent } from '../components/room-end-side/room-end-side.component';
+import { RoomStartSideComponent } from '../components/menus/room-start-side/room-start-side.component';
+import { RoomEndSideComponent } from '../components/menus/room-end-side/room-end-side.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

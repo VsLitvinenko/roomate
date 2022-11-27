@@ -7,8 +7,8 @@ import { ChannelPage } from './view/channel.page';
 import { SharedModule } from '../shared/shared.module';
 import { NoChannelComponent } from './pages/no-channel/no-channel.component';
 import { CurrentChannelComponent } from './pages/current-channel/current-channel.component';
-import { ChannelStartSideComponent } from './components/channel-start-side/channel-start-side.component';
-import { ChannelEndSideComponent } from './components/channel-end-side/channel-end-side.component';
+import { ChannelStartSideComponent } from './components/menus/channel-start-side/channel-start-side.component';
+import { ChannelEndSideComponent } from './components/menus/channel-end-side/channel-end-side.component';
 
 const commonComponents = [
   ChannelEndSideComponent,

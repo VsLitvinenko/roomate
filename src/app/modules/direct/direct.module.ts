@@ -7,8 +7,8 @@ import { DirectPage } from './view/direct.page';
 import { SharedModule } from '../shared/shared.module';
 import { NoDirectComponent } from './pages/no-direct/no-direct.component';
 import { CurrentDirectComponent } from './pages/current-direct/current-direct.component';
-import { DirectStartSideComponent } from './components/direct-start-side/direct-start-side.component';
-import { DirectEndSideComponent } from './components/direct-end-side/direct-end-side.component';
+import { DirectStartSideComponent } from './components/menus/direct-start-side/direct-start-side.component';
+import { DirectEndSideComponent } from './components/menus/direct-end-side/direct-end-side.component';
 
 const commonComponents = [
   DirectEndSideComponent,

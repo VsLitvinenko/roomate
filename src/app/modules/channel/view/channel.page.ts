@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { splitPaneBreakPoint } from '../../shared/constants';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
-import { ChannelStartSideComponent } from '../components/channel-start-side/channel-start-side.component';
+import { ChannelStartSideComponent } from '../components/menus/channel-start-side/channel-start-side.component';
 
 @Component({
   selector: 'app-channel',

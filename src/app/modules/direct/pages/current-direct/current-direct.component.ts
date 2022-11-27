@@ -6,7 +6,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { InjectorService } from '../../../shared/services/injector.service';
-import { DirectEndSideComponent } from '../../components/direct-end-side/direct-end-side.component';
+import { DirectEndSideComponent } from '../../components/menus/direct-end-side/direct-end-side.component';
 
 @UntilDestroy()
 @Component({
