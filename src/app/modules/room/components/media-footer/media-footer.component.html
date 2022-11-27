@@ -50,7 +50,8 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content appScrollbarTheme>
+    <ion-content appScrollbarTheme
+                 scrollAlwaysVisible="true">
       <ion-list lines="none">
         <ion-radio-group [(ngModel)]="activeDevicesId.audioinput"
                          (ngModelChange)="deviceChanged($event, 'audio')">

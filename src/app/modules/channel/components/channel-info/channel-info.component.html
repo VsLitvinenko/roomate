@@ -8,13 +8,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ng-container *ngIf="(channel$ | async) as channel">
+<ng-container *ngIf="(channel$ | async) as channel">
 
-    <ion-item class="info-header" lines="full">
-      <ion-label> {{ channel.title }} </ion-label>
-      <span> {{ channel.members.length }} members </span>
-    </ion-item>
+  <ion-item class="info-header" lines="full">
+    <ion-label> {{ channel.title }} </ion-label>
+    <span> {{ channel.members.length }} members </span>
+  </ion-item>
+
+  <ion-content appScrollbarTheme
+               scrollAlwaysVisible="true">
 
     <ion-list lines="none" mode="md" class="actions">
 
@@ -77,5 +79,6 @@
       </ion-list>
     </ng-template>
 
-  </ng-container>
-</ion-content>
+  </ion-content>
+
+</ng-container>

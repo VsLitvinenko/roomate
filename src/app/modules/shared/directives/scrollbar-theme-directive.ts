@@ -1,4 +1,4 @@
-import { Directive, Host, OnInit } from '@angular/core';
+import { Directive, Host, Input, OnInit } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { fromEvent, mergeWith, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -34,6 +34,7 @@ const invisibleStyle = `
   selector: '[appScrollbarTheme]'
 })
 export class ScrollbarThemeDirective implements OnInit {
+  @Input() scrollAlwaysVisible = false;
   private barStyle: HTMLStyleElement;
 
   constructor(@Host() private readonly content: IonContent) {
@@ -42,9 +43,11 @@ export class ScrollbarThemeDirective implements OnInit {
   ngOnInit(): void {
     this.barStyle = document.createElement('style');
     (this.content as any).el.shadowRoot.appendChild(this.barStyle);
-    this.toggleStyle(false);
+    this.toggleStyle(this.scrollAlwaysVisible);
 
-    setTimeout(() => this.mouseEvents(), 100);
+    if (!this.scrollAlwaysVisible) {
+      setTimeout(() => this.mouseEvents(), 100);
+    }
   }
 
   private mouseEvents(): void {
