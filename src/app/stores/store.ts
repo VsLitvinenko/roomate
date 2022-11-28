@@ -64,7 +64,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   public async setChat(id: number, newChat: Full | Promise<Full>): Promise<void> {
     let chat$: BehaviorSubject<Full>;
     if (this.store.has(id)) {
-      // fully load short channel or update existing channel
+      // fully load short chat or update existing chat
       chat$ = this.store.get(id);
       chat$.value.isFullyLoaded = true;
     }

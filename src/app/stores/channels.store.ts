@@ -8,7 +8,7 @@ export interface StoreShortChannel extends ShortChannel, ShortChat { }
 @Injectable({
   providedIn: 'root'
 })
-export class ChannelsStore extends Store<StoreChannel, StoreShortChannel>{
+export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
 
   constructor() {
     const fullToShort: (x: StoreChannel) => StoreShortChannel =

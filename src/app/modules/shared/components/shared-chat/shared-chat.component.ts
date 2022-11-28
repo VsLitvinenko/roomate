@@ -45,7 +45,7 @@ export class SharedChatComponent implements OnChanges {
     }
   }
 
-  public trackByDay(index, item: { key; value }): number {
+  public trackByDay(index, item: { key: string; value: MesGroup[] }): string {
     return item.key;
   }
 

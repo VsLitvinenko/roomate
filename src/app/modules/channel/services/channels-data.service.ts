@@ -30,6 +30,10 @@ export class ChannelsDataService {
     );
   }
 
+  public async sendMessageToChannel(id: number, message: Message): Promise<void> {
+    await this.channelsStore.updateChatMessages(id, [message], 'start');
+  }
+
   public async loadChannelMessages(id: number): Promise<void> {
     const newMessages = firstValueFrom(
       getChannelsMessages(id, this.channelsStore.lastChatMessage(id))
