@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DarkThemeService } from '../modules/shared/services/dark-theme.service';
-import { splitPaneBreakPoint } from '../modules/shared/constants';
-import { IsFullWidthService } from '../modules/shared/services/is-full-width.service';
+import { isAppFullWidth$, splitPaneBreakPoint } from '../modules/shared/constants';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from './services/menu-controller.service';
 
@@ -18,7 +17,7 @@ export class AppComponent {
   public readonly splitPaneSize = splitPaneBreakPoint.size;
   public readonly menuEdgeStart = splitPaneBreakPoint.menuEdgeStart;
 
-  public readonly isMobile = this.appWidthService.isAppFullWidth$.pipe(
+  public readonly isMobile = isAppFullWidth$.pipe(
     map(value => !value)
   );
 
@@ -26,7 +25,6 @@ export class AppComponent {
 
   constructor(
     private readonly darkTheme: DarkThemeService,
-    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService
   ) { }
 

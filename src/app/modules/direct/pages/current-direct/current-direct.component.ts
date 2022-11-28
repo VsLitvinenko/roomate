@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { testMessages, userData } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { InjectorService } from '../../../shared/services/injector.service';
 import { DirectEndSideComponent } from '../../components/menus/direct-end-side/direct-end-side.component';
+import { isAppFullWidth$ } from 'src/app/modules/shared/constants';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +18,7 @@ export class CurrentDirectComponent implements OnInit {
   @ViewChild('currentChatContent')
   private readonly chatContent: IonContent;
 
-  public isFull$ = this.appWidthService.isAppFullWidth$;
+  public readonly isFull$ = isAppFullWidth$;
 
   public directId: string;
   public dataSource = [];
@@ -28,7 +28,6 @@ export class CurrentDirectComponent implements OnInit {
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService,
     protected readonly inj: InjectorService,
   ) { }

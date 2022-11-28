@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { JanusMainService } from '../janus/janus-main.service';
-import { IsFullWidthService } from '../../shared/services/is-full-width.service';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../main/services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/menus/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from '../components/menus/room-end-side/room-end-side.component';
+import { isAppFullWidth$ } from '../../shared/constants';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +13,7 @@ import { RoomEndSideComponent } from '../components/menus/room-end-side/room-end
   styleUrls: ['./room.page.scss'],
 })
 export class RoomPage implements OnInit {
-  public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
+  public readonly isMobile$ = isAppFullWidth$.pipe(
     map(value => !value)
   );
   public readonly remoteTracks$ = this.janusService.remoteTracks$;
@@ -24,7 +24,6 @@ export class RoomPage implements OnInit {
 
   constructor(
     private readonly janusService: JanusMainService,
-    private readonly appWidthService: IsFullWidthService,
     private readonly menuController: MenuControllerService,
   ) {}
 

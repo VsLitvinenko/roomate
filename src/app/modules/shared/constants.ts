@@ -1,3 +1,6 @@
+import { fromEvent, Observable } from 'rxjs';
+import { map, shareReplay, startWith } from 'rxjs/operators';
+
 // https://ionicframework.com/docs/api/split-pane
 export const splitPaneBreakPoint = {
   size: 'xl',
@@ -18,4 +21,11 @@ export const sharedMenuLinks: MenuHeaderLink[] = [
 ];
 
 export const isTouchDevice = window.matchMedia('(any-pointer:coarse)').matches;
+
+export const isAppFullWidth$: Observable<boolean> = fromEvent(window, 'resize')
+  .pipe(
+    map((event: any) => event.target.innerWidth > splitPaneBreakPoint.minWidth ),
+    startWith(window.innerWidth > splitPaneBreakPoint.minWidth),
+    shareReplay(1),
+  );
 

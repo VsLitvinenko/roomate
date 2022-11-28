@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IsFullWidthService } from '../../../shared/services/is-full-width.service';
 import { map, take } from 'rxjs/operators';
 import { JanusMainService } from '../../janus/janus-main.service';
-import { isTouchDevice } from '../../../shared/constants';
+import { isAppFullWidth$, isTouchDevice } from '../../../shared/constants';
 
 @Component({
   selector: 'app-media-footer',
@@ -13,7 +12,7 @@ export class MediaFooterComponent implements OnInit {
   @Output() public audioOutputId = new EventEmitter<string>();
 
   public readonly isTouchDevise = isTouchDevice;
-  public readonly isMobile$ = this.appWidthService.isAppFullWidth$.pipe(
+  public readonly isMobile$ = isAppFullWidth$.pipe(
     map(value => !value)
   );
 
@@ -35,7 +34,6 @@ export class MediaFooterComponent implements OnInit {
   };
 
   constructor(
-    private readonly appWidthService: IsFullWidthService,
     private readonly janusService: JanusMainService,
     private readonly cdr: ChangeDetectorRef,
   ) { }
