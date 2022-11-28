@@ -4,6 +4,7 @@
     <ion-icon name="document-outline"></ion-icon>
 
     <ion-textarea #textarea
+                  (keyup.enter)="sendMessage(textarea)"
                   class="message-input"
                   spellcheck="true" autofocus="true"
                   autoGrow="true" rows="1"
@@ -11,7 +12,7 @@
     </ion-textarea>
 
     <ion-icon name="send-outline"
-              (click)="sendMessage(textarea.value)">
+              (click)="sendMessage(textarea)">
     </ion-icon>
   </div>
 </ion-toolbar>

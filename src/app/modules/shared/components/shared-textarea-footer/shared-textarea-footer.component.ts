@@ -1,22 +1,23 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { IonTextarea } from '@ionic/angular';
 
 @Component({
   selector: 'app-shared-textarea-footer',
   templateUrl: './shared-textarea-footer.component.html',
   styleUrls: ['./shared-textarea-footer.component.scss'],
 })
-export class SharedTextareaFooterComponent implements OnInit {
-  @Output() messageSend = new EventEmitter();
-
-  public textMessage: string;
+export class SharedTextareaFooterComponent {
+  @Output() public messageSend = new EventEmitter();
 
   constructor() { }
 
-  public sendMessage(message: string): void {
-    this.messageSend.next(message);
-  }
-
-  ngOnInit(): void {
+  public sendMessage(textarea: IonTextarea): void {
+    const message = textarea.value.trimEnd().trimStart();
+    if (message) {
+      console.log(message);
+      this.messageSend.next(message);
+      textarea.value = '';
+    }
   }
 
 }
