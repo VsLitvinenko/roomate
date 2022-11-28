@@ -32,7 +32,9 @@
   </app-shared-textarea-footer>
 </ion-footer>
 
-<ion-modal #infoModal>
+<ion-modal #infoModal
+           [breakpoints]="isTouchDevise ? [0.5, 0.75, 1] : undefined"
+           [initialBreakpoint]="isTouchDevise ? 0.5 : undefined">
   <ng-template>
     <app-channel-info [channelId]="channelId"
                       [selfModal]="infoModal">

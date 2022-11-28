@@ -36,7 +36,9 @@
 </ion-footer>
 
 <!--settings modal-->
-<ion-modal #modal>
+<ion-modal #modal
+           [breakpoints]="isTouchDevise ? [0.5, 0.75, 1] : undefined"
+           [initialBreakpoint]="isTouchDevise ? 0.5 : undefined">
   <ng-template>
     <ion-header mode="md">
       <ion-toolbar>

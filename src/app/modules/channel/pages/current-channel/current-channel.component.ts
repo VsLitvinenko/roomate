@@ -8,6 +8,7 @@ import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { Observable } from 'rxjs';
 import { Message } from '../../../../api/channels-api';
+import { isTouchDevice } from '../../../shared/constants';
 
 @Component({
   selector: 'app-current-chat',
@@ -17,6 +18,7 @@ import { Message } from '../../../../api/channels-api';
 export class CurrentChannelComponent implements OnInit {
   @ViewChild('currentChatContent') private readonly chatContent: IonContent;
 
+  public readonly isTouchDevise = isTouchDevice;
   public readonly messages$ = this.getChannelMessagesFromStore();
   public title$: Observable<string>;
   public loading = false;
