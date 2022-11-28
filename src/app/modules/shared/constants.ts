@@ -17,3 +17,5 @@ export const sharedMenuLinks: MenuHeaderLink[] = [
   { url: '/room', title: 'room', icon: 'flash' },
 ];
 
+export const isTouchDevice = window.matchMedia('(any-pointer:coarse)').matches;
+

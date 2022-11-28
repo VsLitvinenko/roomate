@@ -3,6 +3,7 @@ import { IonContent } from '@ionic/angular';
 import { fromEvent, mergeWith, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isTouchDevice } from '../constants';
 
 const defaultStyle = `
   ::-webkit-scrollbar {
@@ -51,18 +52,12 @@ export class ScrollbarThemeDirective implements OnInit {
   }
 
   private mouseEvents(): void {
-    const isMobile = window.matchMedia('(any-pointer:coarse)').matches;
-
-    let show$: Observable<boolean>;
-    let hide$: Observable<boolean>;
-    if (isMobile) {
+    let show$: Observable<unknown>;
+    let hide$: Observable<unknown>;
+    if (isTouchDevice) {
       this.content.scrollEvents = true;
-      show$ = this.content.ionScrollStart.pipe(
-        map(() => true)
-      );
-      hide$ = this.content.ionScrollEnd.pipe(
-        map(() => false)
-      );
+      show$ = this.content.ionScrollStart;
+      hide$ = this.content.ionScrollEnd;
     }
     else {
       const scrollArea = [
@@ -70,15 +65,16 @@ export class ScrollbarThemeDirective implements OnInit {
       ].find(
         item => item.className === 'inner-scroll scroll-y'
       );
-      show$ = fromEvent(scrollArea, 'mouseenter').pipe(
-        map(() => true)
-      );
-      hide$ = fromEvent(scrollArea, 'mouseleave').pipe(
-        map(() => false)
-      );
+      show$ = fromEvent(scrollArea, 'mouseenter');
+      hide$ = fromEvent(scrollArea, 'mouseleave');
     }
     show$.pipe(
-      mergeWith(hide$),
+      map(() => true),
+      mergeWith(
+        hide$.pipe(
+          map(() => false)
+        )
+      ),
       untilDestroyed(this)
     ).subscribe(value => this.toggleStyle(value));
   }
