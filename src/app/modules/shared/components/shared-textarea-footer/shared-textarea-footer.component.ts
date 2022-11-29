@@ -14,7 +14,6 @@ export class SharedTextareaFooterComponent {
   public sendMessage(textarea: IonTextarea): void {
     const message = textarea.value.trimEnd().trimStart();
     if (message) {
-      console.log(message);
       this.messageSend.next(message);
       textarea.value = '';
     }

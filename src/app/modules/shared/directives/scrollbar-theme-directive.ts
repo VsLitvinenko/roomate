@@ -47,11 +47,11 @@ export class ScrollbarThemeDirective implements OnInit {
     this.toggleStyle(this.scrollAlwaysVisible);
 
     if (!this.scrollAlwaysVisible) {
-      setTimeout(() => this.mouseEvents(), 100);
+      this.mouseEvents().then();
     }
   }
 
-  private mouseEvents(): void {
+  private async mouseEvents(): Promise<void> {
     let show$: Observable<unknown>;
     let hide$: Observable<unknown>;
     if (isTouchDevice) {
@@ -60,11 +60,7 @@ export class ScrollbarThemeDirective implements OnInit {
       hide$ = this.content.ionScrollEnd;
     }
     else {
-      const scrollArea = [
-        ...(this.content as any).el.shadowRoot.children
-      ].find(
-        item => item.className === 'inner-scroll scroll-y'
-      );
+      const scrollArea = await this.content.getScrollElement();
       show$ = fromEvent(scrollArea, 'mouseenter');
       hide$ = fromEvent(scrollArea, 'mouseleave');
     }

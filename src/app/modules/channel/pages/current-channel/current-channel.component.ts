@@ -4,12 +4,15 @@ import { IonContent, IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../main/services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/menus/channel-end-side/channel-end-side.component';
 import { InjectorService } from '../../../shared/services/injector.service';
-import { shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { delay, filter, shareReplay, skip, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services/channels-data.service';
-import { Observable } from 'rxjs';
+import { combineLatest, from, Observable } from 'rxjs';
 import { Message } from '../../../../api/channels-api';
 import { isTouchDevice } from '../../../shared/constants';
+import { promiseDelay } from '../../../shared/functions';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-current-chat',
   templateUrl: './current-channel.component.html',
@@ -37,12 +40,29 @@ export class CurrentChannelComponent implements OnInit {
 
   ionViewWillEnter(): void {
     this.loading = true;
+    // init messages update
     this.messages$.pipe(
       take(1),
-    ).subscribe(
-      () => this.chatContent.scrollToBottom(0)
+    ).subscribe(() =>
+      this.chatContent.scrollToBottom(0)
+        .then(() => promiseDelay(200))
         .then(() => this.loading = false)
     );
+    // other messages updates
+    combineLatest([
+      from(this.chatContent.getScrollElement()),
+      this.messages$.pipe(
+        skip(1)
+      )
+    ]).pipe(
+      filter(
+        ([el, messages]) =>
+          messages[0].senderId === 1 || // todo update message when your message is last condition
+          el.scrollHeight - (el.scrollTop + el.clientHeight) < 10
+      ),
+      delay(10), // rerender time
+      untilDestroyed(this),
+    ).subscribe(() => this.chatContent.scrollToBottom(200));
   }
 
   public infiniteScroll(event: any): void {
@@ -60,7 +80,6 @@ export class CurrentChannelComponent implements OnInit {
       isRead: true,
       content
     });
-    await this.chatContent.scrollToBottom(150);
   }
 
   public async openInfoModal(modal: IonModal): Promise<void> {
