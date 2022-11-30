@@ -19,12 +19,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   styleUrls: ['./current-channel.component.scss'],
 })
 export class CurrentChannelComponent implements OnInit {
-  @ViewChild('currentChatContent') private readonly chatContent: IonContent;
+  @ViewChild('currentChatContent', { static: true })
+  private readonly chatContent: IonContent;
 
   public readonly isTouchDevise = isTouchDevice;
   public readonly messages$ = this.getChannelMessagesFromStore();
   public title$: Observable<string>;
-  public loading = false;
+  public loading: boolean;
 
   public channelId: number;
 
@@ -36,16 +37,12 @@ export class CurrentChannelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-  }
-
-  ionViewWillEnter(): void {
     this.loading = true;
     // init messages update
     this.messages$.pipe(
       take(1),
     ).subscribe(() =>
       this.chatContent.scrollToBottom(0)
-        .then(() => promiseDelay(200))
         .then(() => this.loading = false)
     );
     // other messages updates
@@ -63,6 +60,14 @@ export class CurrentChannelComponent implements OnInit {
       delay(10), // rerender time
       untilDestroyed(this),
     ).subscribe(() => this.chatContent.scrollToBottom(200));
+  }
+
+  ionViewWillEnter(): void {
+    if (!this.loading) {
+      this.loading = true;
+      // for smooth animation
+      promiseDelay(100).then(() => this.loading = false);
+    }
   }
 
   public infiniteScroll(event: any): void {

@@ -1,6 +1,7 @@
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Message } from '../api/channels-api';
+import { cloneDeep } from 'lodash-es';
 
 export interface FullChat {
   id: number;
@@ -33,7 +34,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     return combineLatest(
       [...this.store.values()]
     ).pipe(
-      map(value => Object.values(value).map(full => this.fullToShort(full)))
+      map(res => res.map(full => this.fullToShort(full)))
     );
   }
 
@@ -49,7 +50,8 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   public getChat(id: number): Observable<Full> {
     return this.store.get(id).pipe(
       filter(full => full.hasOwnProperty('id')),
-      filter(full => full.isFullyLoaded)
+      filter(full => full.isFullyLoaded),
+      map(full => cloneDeep(full)) // immutable
     );
   }
 
@@ -69,15 +71,19 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       chat$.value.isFullyLoaded = true;
     }
     else {
-      const pseudoLoad = { isFullyLoaded: true } as Full;
+      const pseudoLoad = {
+        messages: [],
+        unreadMessagesCount: 0,
+        isFullyLoaded: true,
+      } as Full;
       chat$ = this.store.get(id) ?? new BehaviorSubject<Full>(pseudoLoad);
       this.store.set(id, chat$);
     }
     chat$.next({
       ...(await newChat),
       isFullyLoaded: true,
-      unreadMessagesCount: chat$.value?.unreadMessagesCount ?? 0,
-      messages: chat$.value?.messages ?? []
+      unreadMessagesCount: chat$.value.unreadMessagesCount,
+      messages: chat$.value.messages
     });
   }
 
