@@ -59,5 +59,8 @@
 
   .self {
     background-color: var(--roomate-my-message) !important;
+    .name {
+      display: none;
+    }
   }
 }

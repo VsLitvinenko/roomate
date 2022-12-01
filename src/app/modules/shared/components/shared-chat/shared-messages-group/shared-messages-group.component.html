@@ -17,7 +17,7 @@
        [class.self]="self">
     <ng-container *ngIf="last">
       <div *ngIf="user; else skeletonName" class="name">
-        <span (click)="openUser()"> {{user?.fullName}} </span>
+        <span (click)="openUser()"> {{user.fullName}} </span>
       </div>
       <ng-template #skeletonName>
         <ion-skeleton-text class="skeleton-name"
