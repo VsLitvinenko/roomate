@@ -3,24 +3,9 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'channel',
-    loadChildren: () => import('./modules/channel/channel.module')
-      .then(m => m.ChannelPageModule),
-  },
-  {
-    path: 'direct',
-      loadChildren: () => import('./modules/direct/direct.module')
-        .then(m => m.DirectModule),
-  },
-  {
-    path: 'room',
-    loadChildren: () => import('./modules/room/room.module')
-      .then(m => m.RoomPageModule),
-  },
-  {
-    path: '**',
-    redirectTo: 'channel',
-    pathMatch: 'full',
+    path: '',
+    loadChildren: () => import('./modules/main/main.module')
+      .then(m => m.MainModule)
   }
 ];
 

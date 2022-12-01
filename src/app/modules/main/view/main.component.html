@@ -1,0 +1,39 @@
+<ion-split-pane content-id="menu-content" [when]="splitPaneSize">
+
+  <ion-menu content-id="menu-content"
+            menuId="start-menu"
+            side="start" type="reveal"
+            (ionDidOpen)="toggleMenu(true)"
+            (ionDidClose)="toggleMenu(false)"
+            [maxEdgeStart]="menuEdgeStart">
+
+    <app-profile-header></app-profile-header>
+    <div class="start-container"
+         [style.padding-bottom.px]="isTabsShowing ? 65 : 0">
+      <ng-container *ngComponentOutlet="startSideMenuComponent | async">
+      </ng-container>
+    </div>
+  </ion-menu>
+
+  <ion-menu content-id="menu-content"
+            menuId="end-menu"
+            side="end" type="reveal"
+            [swipeGesture]="(endSideMenuTemplate | async) !== null"
+            [maxEdgeStart]="menuEdgeStart">
+    <ng-container *ngIf="(endSideMenuTemplate | async) as template">
+      <ng-container *ngComponentOutlet="template.component;
+                    injector: template.injector"></ng-container>
+    </ng-container>
+  </ion-menu>
+
+  <!--    content-routing-->
+  <ion-router-outlet id="menu-content"
+                     animated="false">
+  </ion-router-outlet>
+
+</ion-split-pane>
+
+<app-tabs *ngIf="isMobile | async"
+          [isTabsShowing]="isTabsShowing">
+</app-tabs>
+
