@@ -16,7 +16,7 @@
           <ion-item class="no-ion-hover"
                     *ngFor="let item of folder.channels; trackBy:trackById"
                     [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'"
-                    [routerLink]="['/channel', 'current', item.id]"
+                    [routerLink]="['/app', 'channel', 'current', item.id]"
                     routerLinkActive="active">
             <span class="tag"> # </span>
             <ion-label> {{item.title}} </ion-label>

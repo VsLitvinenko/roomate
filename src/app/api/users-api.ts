@@ -32,7 +32,7 @@ export const login = (): Observable<AuthData> => {
   return of({
     accessToken: tokensList[id],
     refreshToken: '',
-    selfUser: usersList.find(item => item.id === id)
+    selfUser: usersList[id]
   }).pipe(
     delay(1000)
   );

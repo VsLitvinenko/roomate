@@ -15,9 +15,9 @@ export interface MenuHeaderLink {
 }
 
 export const sharedMenuLinks: MenuHeaderLink[] = [
-  { url: '/channel', title: 'channel', icon: 'people' },
-  { url: '/direct', title: 'direct', icon: 'person' },
-  { url: '/room', title: 'room', icon: 'flash' },
+  { url: '/app/channel', title: 'channel', icon: 'people' },
+  { url: '/app/direct', title: 'direct', icon: 'person' },
+  { url: '/app/room', title: 'room', icon: 'flash' },
 ];
 
 export const isTouchDevice = window.matchMedia('(any-pointer:coarse)').matches;

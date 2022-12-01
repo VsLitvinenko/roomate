@@ -19,6 +19,12 @@ export class UsersService {
       filter(data => data !== null),
       switchMap(data => this.getUser(data.selfUser.id))
     );
+
+    const storage = localStorage.getItem(localStorageKey);
+    if (storage) {
+      const authData: AuthData = JSON.parse(storage);
+      this.setAuthData(authData);
+    }
   }
 
   public get isAuth$(): Observable<boolean> {
@@ -36,20 +42,9 @@ export class UsersService {
   }
 
   public async login(): Promise<void> {
-    const storage = localStorage.getItem(localStorageKey);
-    let authData: AuthData;
-    if (storage) {
-      authData = JSON.parse(storage);
-    }
-    else {
-      authData = await firstValueFrom(login());
-      localStorage.setItem(localStorageKey, JSON.stringify(authData));
-    }
-    this.authData$.next(authData);
-    this.users.set(
-      authData.selfUser.id,
-      new BehaviorSubject<User>(authData.selfUser)
-    );
+    const authData = await firstValueFrom(login());
+    localStorage.setItem(localStorageKey, JSON.stringify(authData));
+    this.setAuthData(authData);
   }
 
   public getUser(id: number): Observable<User> {
@@ -74,5 +69,13 @@ export class UsersService {
   private async loadUsersList(ids: number[]): Promise<void> {
     const newUsers = await firstValueFrom(getUsers(ids));
     newUsers.forEach(user => this.users.get(user.id).next(user));
+  }
+
+  private setAuthData(authData: AuthData): void {
+    this.authData$.next(authData);
+    this.users.set(
+      authData.selfUser.id,
+      new BehaviorSubject<User>(authData.selfUser)
+    );
   }
 }

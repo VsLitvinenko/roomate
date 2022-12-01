@@ -1,0 +1,26 @@
+<ion-content>
+  <form>
+    <div class="logo unselectable">
+      <span> roomate </span>
+      <span class="shadow"> roomate </span>
+    </div>
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating"
+                   color="roomate-green"> login </ion-label>
+        <ion-input placeholder="Enter login"
+                   type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating"
+                   color="roomate-green"> password </ion-label>
+        <ion-input placeholder="Enter password"
+                   type="password">
+        </ion-input>
+      </ion-item>
+      <ion-button color="roomate-green" fill="outline"
+                  (click)="login()"> Login </ion-button>
+    </ion-list>
+  </form>
+</ion-content>
