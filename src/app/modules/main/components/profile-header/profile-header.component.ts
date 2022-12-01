@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { user } from './data-source';
+import { Component } from '@angular/core';
+import { UsersService } from '../../../shared/services/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-header',
   templateUrl: './profile-header.component.html',
   styleUrls: ['./profile-header.component.scss'],
 })
-export class ProfileHeaderComponent implements OnInit {
+export class ProfileHeaderComponent {
 
-  public user = user;
+  public readonly user$ = this.users.selfUser$;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private readonly users: UsersService,
+              private readonly router: Router) {
   }
 
-  public userId(): void {
-    alert(`current user id: ${user.id}`);
+  public async logout(): Promise<void> {
+    this.users.logout();
+    await this.router.navigate(['login']);
   }
 
 }

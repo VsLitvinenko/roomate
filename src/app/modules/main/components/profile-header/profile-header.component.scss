@@ -2,14 +2,14 @@
   padding: 25px 15px;
 
   ion-row {
+    cursor: pointer;
     ion-thumbnail {
       --size: 65px;
       --border-radius: 100%;
-      border: 2px solid var(--roomate-color-green);
     }
 
     ion-col {
-      margin-left: 12px;
+      margin-left: 8px;
 
       .full-name {
         font-size: 17px;
@@ -22,11 +22,11 @@
         color: var(--ion-color-medium);
       }
     }
+  }
 
-    ion-icon {
-      cursor: pointer;
-      font-size: 24px;
-      padding: 4px;
-    }
+  .invisible-button {
+    height: 0;
+    width: 0;
+    visibility: hidden;
   }
 }

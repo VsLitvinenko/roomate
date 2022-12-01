@@ -47,6 +47,11 @@ export class UsersService {
     this.setAuthData(authData);
   }
 
+  public logout(): void {
+    this.authData$.next(null);
+    localStorage.removeItem(localStorageKey);
+  }
+
   public getUser(id: number): Observable<User> {
     if (!this.users.has(id)) {
       this.users.set(id, new BehaviorSubject<User>(null));

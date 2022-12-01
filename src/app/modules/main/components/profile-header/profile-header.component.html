@@ -1,13 +1,37 @@
 <div class="profile-header">
-  <ion-row class="ion-align-items-end">
+  <ion-row *ngIf="(user$ | async) as user"
+           (click)="invisibleButton.click()"
+           class="ion-align-items-end">
     <ion-thumbnail>
-      <img [src]="user.smallImg" alt="">
+      <img [src]="user.imageUrl" alt="">
     </ion-thumbnail>
 
     <ion-col>
       <div class="full-name"> {{ user.fullName }} </div>
-      <div class="screen-name"> @{{ user.screenName }} </div>
+      <div class="screen-name"> @{{ user.username }} </div>
     </ion-col>
 
+    <button #invisibleButton
+            class="invisible-button"
+            id="profile-item">
+    </button>
   </ion-row>
+
+  <ion-popover trigger="profile-item"
+               dismissOnSelect="true"
+               side="left"
+               mode="md">
+    <ng-template>
+      <ion-list lines="none">
+        <ion-item button="" class="no-ion-hover">
+          <ion-label> profile settings </ion-label>
+          <ion-icon name="cog-outline"></ion-icon>
+        </ion-item>
+        <ion-item button="" class="no-ion-hover" (click)="logout()">
+          <ion-label color="danger"> logout </ion-label>
+          <ion-icon color="danger" name="log-out-outline"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ion-popover>
 </div>
