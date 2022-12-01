@@ -11,7 +11,8 @@
        class="reverse">
     <app-shared-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
                                [messages]="group.messages"
-                               [user]="group.user$ | async">
+                               [user]="group.user$ | async"
+                               [self]="group.self">
     </app-shared-messages-group>
     <div class="date">
       <span> {{day.key | date: 'd MMMM'}} </span>

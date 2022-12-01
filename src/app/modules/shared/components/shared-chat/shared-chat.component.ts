@@ -17,6 +17,7 @@ import groupBy from 'lodash-es/groupBy';
 interface MesGroup {
   messages: Message[];
   user$: Observable<User>;
+  self: boolean;
 }
 
 @Component({
@@ -65,14 +66,15 @@ export class SharedChatComponent implements OnChanges {
       ) {
         res.push({
           messages: [item],
-          user$: this.users.getUser(item.senderId)
+          self: this.users.isUserMe(item.senderId),
+          user$: this.users.getUser(item.senderId),
         });
       }
       else {
         res.at(-1).messages.push(item);
       }
       return res;
-    }, []);
+    }, [] as MesGroup[]);
   }
 
 }

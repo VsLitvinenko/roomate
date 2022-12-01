@@ -13,7 +13,8 @@
     </ion-thumbnail>
   </div>
 
-  <div class="text-container">
+  <div class="text-container"
+       [class.self]="self">
     <ng-container *ngIf="last">
       <div *ngIf="user; else skeletonName" class="name">
         <span (click)="openUser()"> {{user?.fullName}} </span>

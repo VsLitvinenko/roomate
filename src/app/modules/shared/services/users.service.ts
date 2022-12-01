@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { AuthData, getUsers, login, User } from '../../../api/users-api';
 
 const localStorageKey = 'roomate.auth';
@@ -17,7 +17,7 @@ export class UsersService {
   constructor() {
     this.selfUser$ = this.authData$.pipe(
       filter(data => data !== null),
-      switchMap(data => this.getUser(data.selfUser.id))
+      map(data => data.selfUser)
     );
 
     const storage = localStorage.getItem(localStorageKey);

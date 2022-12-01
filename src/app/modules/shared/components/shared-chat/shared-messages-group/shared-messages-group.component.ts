@@ -10,6 +10,7 @@ import { User } from '../../../../../api/users-api';
 export class SharedMessagesGroupComponent {
   @Input() public messages: Message[] = [];
   @Input() public user: User;
+  @Input() public self: boolean;
 
   constructor() { }
 
