@@ -66,7 +66,7 @@ export class SharedChatComponent implements OnChanges {
       ) {
         res.push({
           messages: [item],
-          self: this.users.isUserMe(item.senderId),
+          self: this.users.selfId === item.senderId,
           user$: this.users.getUser(item.senderId),
         });
       }

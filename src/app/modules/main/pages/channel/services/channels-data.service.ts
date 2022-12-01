@@ -13,7 +13,7 @@ export class ChannelsDataService {
   public readonly shortChannels$ = this.getShortsChannels();
 
   constructor(private readonly channelsStore: ChannelsStore,
-              private readonly usersStore: UsersService) {
+              private readonly users: UsersService) {
   }
 
   public getChannelTitle(id: number): Observable<string> {
@@ -25,12 +25,13 @@ export class ChannelsDataService {
   public getChannelMessages(id: number): Observable<Message[]> {
     return this.getChannel(id).pipe(
       filter(channel => !!channel.messages.length),
-      tap(channel => this.usersStore.updateListOfUsers(channel.members)),
+      tap(channel => this.users.updateListOfUsers(channel.members)),
       map(channel => channel.messages),
     );
   }
 
   public async sendMessageToChannel(id: number, message: Message): Promise<void> {
+    message.senderId = this.users.selfId;
     await this.channelsStore.updateChatMessages(id, [message], 'start');
   }
 

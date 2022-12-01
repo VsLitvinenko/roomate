@@ -79,7 +79,7 @@ export class CurrentChannelComponent implements OnInit {
   public async messageSend(content: string): Promise<void> {
     await this.channelsData.sendMessageToChannel(this.channelId, {
       id: Date.now(),
-      senderId: 1,
+      senderId: null,
       timestamp: (new Date()).toISOString(),
       attachments: [],
       isRead: true,

@@ -37,8 +37,8 @@ export class UsersService {
     return this.authData$.value !== null;
   }
 
-  public isUserMe(id: number): boolean {
-    return this.authData$.value.selfUser.id === id;
+  public get selfId(): number {
+    return this.authData$.value.selfUser.id;
   }
 
   public async login(): Promise<void> {
