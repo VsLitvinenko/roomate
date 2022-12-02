@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuControllerService } from '../../services/menu-controller.service';
-import { DirectStartSideComponent } from './components/menus/direct-start-side/direct-start-side.component';
+import { DirectStartSideComponent } from './components';
 
 @Component({
   selector: 'app-direct',

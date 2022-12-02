@@ -5,7 +5,7 @@ import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { InjectorService } from '../../../../../core';
-import { DirectEndSideComponent } from '../../components/menus/direct-end-side/direct-end-side.component';
+import { DirectEndSideComponent } from '../../components';
 import { isAppFullWidth$ } from 'src/app/shared/common/constants';
 
 @UntilDestroy()

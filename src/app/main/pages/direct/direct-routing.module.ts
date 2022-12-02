@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DirectPage } from './direct.page';
-import { CurrentDirectComponent } from './pages/current-direct/current-direct.component';
-import { NoDirectComponent } from './pages/no-direct/no-direct.component';
+import { CurrentDirectComponent, NoDirectComponent } from './pages';
 
 const routes: Routes = [
   {
