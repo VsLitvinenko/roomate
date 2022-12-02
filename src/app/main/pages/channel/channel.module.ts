@@ -5,11 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { ChannelPageRoutingModule } from './channel-routing.module';
 import { ChannelPage } from './channel.page';
 import { SharedModule } from '../../../shared';
-import { NoChannelComponent } from './pages/no-channel/no-channel.component';
-import { CurrentChannelComponent } from './pages/current-channel/current-channel.component';
-import { ChannelStartSideComponent } from './components/menus/channel-start-side/channel-start-side.component';
-import { ChannelEndSideComponent } from './components/menus/channel-end-side/channel-end-side.component';
-import { ChannelInfoComponent } from './components/channel-info/channel-info.component';
+import { NoChannelComponent, CurrentChannelComponent } from './pages';
+import { ChannelStartSideComponent, ChannelEndSideComponent, ChannelInfoComponent } from './components';
 
 const commonComponents = [
   ChannelEndSideComponent,
