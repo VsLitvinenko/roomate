@@ -41,6 +41,10 @@ export class UsersService {
     return this.authData$.value.selfUser.id;
   }
 
+  public get accessToken(): string {
+    return this.authData$.value.accessToken;
+  }
+
   public async login(): Promise<void> {
     const authData = await firstValueFrom(login());
     localStorage.setItem(localStorageKey, JSON.stringify(authData));
