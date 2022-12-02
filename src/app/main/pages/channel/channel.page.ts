@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { splitPaneBreakPoint } from '../../../shared/common/constants';
+import { splitPaneBreakPoint } from '../../../shared';
 import { MenuControllerService } from '../../services/menu-controller.service';
 import { ChannelStartSideComponent } from './components/menus/channel-start-side/channel-start-side.component';
 

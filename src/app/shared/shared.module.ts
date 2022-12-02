@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { SharedHeaderComponent } from './components/shared-header/shared-header.component';
-import { ScrollbarThemeDirective } from './directives/scrollbar-theme-directive';
-import { SharedLoaderComponent } from './components/shared-loader/shared-loader.component';
-import { SharedTextareaFooterComponent } from './components/shared-textarea-footer/shared-textarea-footer.component';
-import { SharedMessagesGroupComponent } from './components/shared-chat/shared-messages-group/shared-messages-group.component';
-import { SharedChatComponent } from './components/shared-chat/shared-chat.component';
+import { ScrollbarThemeDirective } from './directives';
+import {
+  SharedHeaderComponent,
+  SharedChatComponent,
+  SharedTextareaFooterComponent,
+  SharedLoaderComponent,
+  SharedMessagesGroupComponent
+} from './components';
 
 const directives = [
   ScrollbarThemeDirective,

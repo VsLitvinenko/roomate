@@ -7,8 +7,7 @@ import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { combineLatest, from, Observable } from 'rxjs';
 import { Message, InjectorService } from '../../../../../core';
-import { isTouchDevice } from '../../../../../shared/common/constants';
-import { promiseDelay } from '../../../../../shared/common/functions';
+import { isTouchDevice, promiseDelay } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()

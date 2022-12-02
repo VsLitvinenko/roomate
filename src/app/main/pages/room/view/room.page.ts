@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../services/menu-controller.service';
 import { RoomStartSideComponent } from '../components/menus/room-start-side/room-start-side.component';
 import { RoomEndSideComponent } from '../components/menus/room-end-side/room-end-side.component';
-import { isAppFullWidth$ } from '../../../../shared/common/constants';
+import { isAppFullWidth$ } from '../../../../shared';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

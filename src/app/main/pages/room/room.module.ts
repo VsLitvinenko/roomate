@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RoomPageRoutingModule } from './room-routing.module';
 import { RoomPage } from './view/room.page';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '../../../shared';
 import { JanusMainService } from './janus/janus-main.service';
 import { StreamComponent } from './components/stream/stream.component';
 import { RoomStartSideComponent } from './components/menus/room-start-side/room-start-side.component';

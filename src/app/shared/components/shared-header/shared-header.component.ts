@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { DarkThemeService } from '../../../core';
-import { isAppFullWidth$, sharedMenuLinks } from '../../common/constants';
+import { isAppFullWidth$, sharedMenuLinks } from '../../common';
 
 @Component({
   selector: 'app-shared-header',

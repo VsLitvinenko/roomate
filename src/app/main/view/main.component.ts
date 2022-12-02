@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { isAppFullWidth$, splitPaneBreakPoint } from '../../shared/common/constants';
+import { isAppFullWidth$, splitPaneBreakPoint } from '../../shared';
 import { MenuControllerService } from '../services/menu-controller.service';
 
 @Component({
