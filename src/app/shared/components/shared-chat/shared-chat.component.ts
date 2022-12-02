@@ -7,8 +7,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { Message } from '../../../core/api/channels-api';
-import { UsersService } from '../../../core/services/users.service';
+import { UsersService, Message } from '../../../core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/core/api/users-api';
 import { isSameDay, startOfDay } from 'date-fns';

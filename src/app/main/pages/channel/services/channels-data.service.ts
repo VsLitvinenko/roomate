@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ChannelsStore, StoreChannel, StoreShortChannel } from '../../../../core/stores/channels.store';
-import { UsersService } from '../../../../core/services/users.service';
+import {
+  ChannelsStore,
+  StoreChannel,
+  StoreShortChannel,
+  UsersService,
+  Message,
+  getChannel,
+  getChannelsMessages,
+  getShortChannels
+} from '../../../../core';
 import { firstValueFrom, from, Observable, switchMap } from 'rxjs';
-import { getChannel, getChannelsMessages, getShortChannels, Message } from '../../../../core/api/channels-api';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({

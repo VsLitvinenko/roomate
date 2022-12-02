@@ -1,6 +1,6 @@
 import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UsersService } from '../services/users.service';
+import { UsersService } from '../services';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 

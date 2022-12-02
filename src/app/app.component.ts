@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DarkThemeService } from './core/services/dark-theme.service';
+import { DarkThemeService } from './core';
 
 @Component({
   selector: 'app-root',

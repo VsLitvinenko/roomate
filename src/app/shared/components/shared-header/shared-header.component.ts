@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { DarkThemeService } from '../../../core/services/dark-theme.service';
+import { DarkThemeService } from '../../../core';
 import { isAppFullWidth$, sharedMenuLinks } from '../../common/constants';
 
 @Component({

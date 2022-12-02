@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { AuthData, getUsers, login, User } from '../api/users-api';
+import { AuthData, getUsers, login, User } from '../api';
 
 const localStorageKey = 'roomate.auth';
 

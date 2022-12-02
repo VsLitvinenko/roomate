@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Message } from '../../../../core/api/channels-api';
-import { User } from '../../../../core/api/users-api';
+import { Message, User } from '../../../../core';
 
 @Component({
   selector: 'app-shared-messages-group',

@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ChannelsDataService } from '../../../services/channels-data.service';
 import { partition } from 'lodash-es';
-import { StoreShortChannel } from '../../../../../../core/stores/channels.store';
+import { StoreShortChannel } from '../../../../../../core';
 
 interface ShortChannelsFolder {
   value: string;

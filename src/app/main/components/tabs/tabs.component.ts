@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { sharedMenuLinks } from 'src/app/shared/common/constants';
-import { DarkThemeService } from '../../../core/services/dark-theme.service';
+import { DarkThemeService } from '../../../core';
 
 @Component({
   selector: 'app-tabs',

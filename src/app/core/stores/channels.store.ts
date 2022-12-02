@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Channel, ShortChannel } from '../api/channels-api';
+import { Channel, ShortChannel } from '../api';
 import { FullChat, ShortChat, Store } from './store';
 
 export interface StoreChannel extends Channel, FullChat { }
