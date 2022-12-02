@@ -27,6 +27,10 @@
     </ng-container>
 
     <div class="text"> {{msg.content}} </div>
-    <div class="date"> {{ msg.timestamp | date:'H:mm' }} </div>
+    <div class="date">
+      <ion-icon *ngIf="msg.id === null"
+                name="time-outline"></ion-icon>
+      <span> {{ msg.timestamp | date:'H:mm' }} </span>
+    </div>
   </div>
 </div>

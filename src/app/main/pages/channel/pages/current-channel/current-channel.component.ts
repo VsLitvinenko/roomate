@@ -61,14 +61,7 @@ export class CurrentChannelComponent implements OnInit {
   }
 
   public async messageSend(content: string): Promise<void> {
-    await this.channelsData.sendMessageToChannel(this.channelId, {
-      id: Date.now(),
-      senderId: null,
-      timestamp: (new Date()).toISOString(),
-      attachments: [],
-      isRead: true,
-      content
-    });
+    await this.channelsData.sendMessageToChannel(this.channelId, content);
   }
 
   public async openInfoModal(modal: IonModal): Promise<void> {

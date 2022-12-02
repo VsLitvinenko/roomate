@@ -50,7 +50,9 @@ export class SharedChatComponent implements OnChanges {
   }
 
   public trackByGroup(index, item: MesGroup): string {
-    return `${item.messages[0].id}${item.messages.at(-1).id}`;
+    return item.messages.reduce(
+      (res, mes) => res += mes.content, ''
+    ) + item.messages.at(-1).id;
   }
 
   private splitMessagesIntoGroups(): MesGroup[] {

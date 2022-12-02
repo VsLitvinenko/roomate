@@ -57,20 +57,25 @@ export class ChannelsDataService {
     );
   }
 
-  public async sendMessageToChannel(id: number, message: Message): Promise<void> {
-    message.senderId = this.users.selfId;
+  public async sendMessageToChannel(id: number, content: string): Promise<void> {
     // add temp message
-    this.temporaryMessages$.next([
-      message, ...this.temporaryMessages$.value
-    ]);
+    const tempMessage: Message = {
+      id: null,
+      senderId: this.users.selfId,
+      timestamp: (new Date()).toISOString(),
+      attachments: [],
+      isRead: true,
+      content
+    };
+    this.temporaryMessages$.next([tempMessage, ...this.temporaryMessages$.value]);
     // send to signalr
     await this.signalr.sendChannelMessage({
-      message: message.content,
+      message: content,
       channelId: id
     });
     // remove after it was sent (self message will be received as other ones)
     const temp = this.temporaryMessages$.value;
-    temp.splice(temp.findIndex(item => item.content === message.content), 1);
+    temp.splice(temp.findIndex(item => item.content === content), 1);
     this.temporaryMessages$.next(temp);
   }
 
