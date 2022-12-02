@@ -4,7 +4,7 @@ import { IonContent, IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components/menus/channel-end-side/channel-end-side.component';
 import { InjectorService } from '../../../../../shared/services/injector.service';
-import { delay, filter, shareReplay, skip, switchMap, take, tap } from 'rxjs/operators';
+import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services/channels-data.service';
 import { combineLatest, from, Observable } from 'rxjs';
 import { Message } from '../../../../../../api/channels-api';
@@ -46,20 +46,7 @@ export class CurrentChannelComponent implements OnInit {
         .then(() => this.loading = false)
     );
     // other messages updates
-    combineLatest([
-      from(this.chatContent.getScrollElement()),
-      this.messages$.pipe(
-        skip(1)
-      )
-    ]).pipe(
-      filter(
-        ([el, messages]) =>
-          messages[0].senderId === 1 || // todo update message when your message is last condition
-          el.scrollHeight - (el.scrollTop + el.clientHeight) < 10
-      ),
-      delay(10), // rerender time
-      untilDestroyed(this),
-    ).subscribe(() => this.chatContent.scrollToBottom(200));
+    this.scrollToBottomOnNewMessageSubscribe();
   }
 
   ionViewWillEnter(): void {
@@ -108,5 +95,24 @@ export class CurrentChannelComponent implements OnInit {
       component: ChannelEndSideComponent,
       injector: this.inj.createInjector<number>(id)
     });
+  }
+
+  private scrollToBottomOnNewMessageSubscribe(): void {
+    let prevMessagesLength = 0;
+    combineLatest([
+      from(this.chatContent.getScrollElement()),
+      this.messages$
+    ]).pipe(
+      filter(([el, messages]) => {
+        const oneNewMessage = messages.length - prevMessagesLength === 1;
+        prevMessagesLength = messages.length;
+        return oneNewMessage && (
+          messages[0].senderId === 1 ||
+          el.scrollHeight - (el.scrollTop + el.clientHeight) < 10
+        );
+      }),
+      delay(10), // rerender time
+      untilDestroyed(this)
+    ).subscribe(() => this.chatContent.scrollToBottom(200));
   }
 }

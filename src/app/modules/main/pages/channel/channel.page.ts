@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { splitPaneBreakPoint } from '../../../../shared/constants';
-import { MenuControllerService } from '../../../services/menu-controller.service';
-import { ChannelStartSideComponent } from '../components/menus/channel-start-side/channel-start-side.component';
+import { splitPaneBreakPoint } from '../../../shared/constants';
+import { MenuControllerService } from '../../services/menu-controller.service';
+import { ChannelStartSideComponent } from './components/menus/channel-start-side/channel-start-side.component';
 
 @Component({
   selector: 'app-channel',
-  templateUrl: './channel.page.html',
-  styleUrls: ['./channel.page.scss'],
+  template: `
+    <ion-router-outlet id="menu-content"
+                       animated="false">
+    </ion-router-outlet>
+  `,
 })
 export class ChannelPage implements OnInit {
   public readonly splitPaneSize = splitPaneBreakPoint.size;

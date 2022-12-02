@@ -5,7 +5,7 @@ import { map, shareReplay, startWith } from 'rxjs/operators';
 export const splitPaneBreakPoint = {
   size: 'xl',
   minWidth: 1200,
-  menuEdgeStart: 125,
+  menuEdgeStart: 140,
 };
 
 export interface MenuHeaderLink {

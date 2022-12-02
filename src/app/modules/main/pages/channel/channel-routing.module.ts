@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ChannelPage } from './view/channel.page';
+import { ChannelPage } from './channel.page';
 import { CurrentChannelComponent } from './pages/current-channel/current-channel.component';
 import { NoChannelComponent } from './pages/no-channel/no-channel.component';
 
