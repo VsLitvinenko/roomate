@@ -6,12 +6,12 @@ import { ChannelPageRoutingModule } from './channel-routing.module';
 import { ChannelPage } from './channel.page';
 import { SharedModule } from '../../../shared';
 import { NoChannelComponent, CurrentChannelComponent } from './pages';
-import { ChannelStartSideComponent, ChannelEndSideComponent, ChannelInfoComponent } from './components';
+import { ChannelStartSideComponent, ChannelEndSideComponent, ChannelInfoModalComponent } from './components';
 
 const commonComponents = [
   ChannelEndSideComponent,
   ChannelStartSideComponent,
-  ChannelInfoComponent,
+  ChannelInfoModalComponent,
 ];
 
 const pagesComponents = [

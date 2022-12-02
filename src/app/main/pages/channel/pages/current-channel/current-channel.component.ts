@@ -7,7 +7,7 @@ import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators
 import { ChannelsDataService } from '../../services';
 import { combineLatest, from, Observable } from 'rxjs';
 import { Message, InjectorService } from '../../../../../core';
-import { isTouchDevice, promiseDelay } from '../../../../../shared';
+import { promiseDelay } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -20,7 +20,6 @@ export class CurrentChannelComponent implements OnInit {
   @ViewChild('currentChatContent', { static: true })
   private readonly chatContent: IonContent;
 
-  public readonly isTouchDevise = isTouchDevice;
   public readonly messages$ = this.getChannelMessagesFromStore();
   public title$: Observable<string>;
   public loading: boolean;
