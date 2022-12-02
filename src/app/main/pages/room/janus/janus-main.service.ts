@@ -3,9 +3,7 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { Janus } from './janus.constants';
 import { JanusJS } from './janus.types';
-import { JanusSubscribeService } from './services/janus-subscribe.service';
-import { JanusShareScreenService } from './services/janus-share-screen.service';
-import { JanusPublisherService } from './services/janus-publisher.service';
+import { JanusSubscribeService, JanusShareScreenService, JanusPublisherService } from './services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';

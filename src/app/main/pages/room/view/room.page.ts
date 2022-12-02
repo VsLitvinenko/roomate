@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { JanusMainService } from '../janus/janus-main.service';
+import { JanusMainService } from '../janus';
 import { map } from 'rxjs/operators';
 import { MenuControllerService } from '../../../services/menu-controller.service';
-import { RoomStartSideComponent } from '../components/menus/room-start-side/room-start-side.component';
-import { RoomEndSideComponent } from '../components/menus/room-end-side/room-end-side.component';
+import { RoomStartSideComponent, RoomEndSideComponent } from '../components';
 import { isAppFullWidth$ } from '../../../../shared';
 
 @Component({

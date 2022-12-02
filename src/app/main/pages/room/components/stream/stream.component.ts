@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { Janus } from '../../janus/janus.constants';
+import { Janus } from '../../janus';
 import { IonModal, IonPopover } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, take } from 'rxjs/operators';

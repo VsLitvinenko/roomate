@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { map, take } from 'rxjs/operators';
-import { JanusMainService } from '../../janus/janus-main.service';
+import { JanusMainService } from '../../janus';
 import { isAppFullWidth$, isTouchDevice } from '../../../../../shared';
 
 @Component({

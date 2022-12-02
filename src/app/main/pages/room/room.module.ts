@@ -5,14 +5,18 @@ import { IonicModule } from '@ionic/angular';
 import { RoomPageRoutingModule } from './room-routing.module';
 import { RoomPage } from './view/room.page';
 import { SharedModule } from '../../../shared';
-import { JanusMainService } from './janus/janus-main.service';
-import { StreamComponent } from './components/stream/stream.component';
-import { RoomStartSideComponent } from './components/menus/room-start-side/room-start-side.component';
-import { RoomEndSideComponent } from './components/menus/room-end-side/room-end-side.component';
-import { JanusSubscribeService } from './janus/services/janus-subscribe.service';
-import { MediaFooterComponent } from './components/media-footer/media-footer.component';
-import { JanusShareScreenService } from './janus/services/janus-share-screen.service';
-import { JanusPublisherService } from './janus/services/janus-publisher.service';
+import {
+  JanusMainService,
+  JanusSubscribeService,
+  JanusShareScreenService,
+  JanusPublisherService
+} from './janus';
+import {
+  RoomStartSideComponent,
+  RoomEndSideComponent,
+  StreamComponent,
+  MediaFooterComponent
+} from './components';
 
 const commonComponents = [
   StreamComponent,
