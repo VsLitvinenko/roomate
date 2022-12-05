@@ -21,6 +21,11 @@ import {
   switchMap
 } from 'rxjs';
 
+interface TempMes {
+  message: Message;
+  channelId: number;
+}
+
 @UntilDestroy()
 @Injectable({
   providedIn: 'root'
@@ -28,7 +33,7 @@ import {
 export class ChannelsDataService {
 
   public readonly shortChannels$ = this.getShortsChannels();
-  private readonly temporaryMessages$ = new BehaviorSubject<Message[]>([]);
+  private readonly temporaryMessages$ = new BehaviorSubject<TempMes[]>([]);
 
   constructor(private readonly channelsStore: ChannelsStore,
               private readonly signalr: SignalrApi,
@@ -50,7 +55,11 @@ export class ChannelsDataService {
     );
     return combineLatest([
       storeMessages$,
-      this.temporaryMessages$
+      this.temporaryMessages$.pipe(
+        map(temp => temp
+          .filter(item => item.channelId === id)
+          .map(item => item.message))
+      )
     ]).pipe(
       map(([store, temp]) => [...temp, ...store]),
       shareReplay(1)
@@ -67,7 +76,10 @@ export class ChannelsDataService {
       isRead: true,
       content
     };
-    this.temporaryMessages$.next([tempMessage, ...this.temporaryMessages$.value]);
+    this.temporaryMessages$.next([{
+      channelId: id,
+      message: tempMessage
+    }, ...this.temporaryMessages$.value]);
     // send to signalr
     await this.signalr.sendChannelMessage({
       message: content,
@@ -75,7 +87,8 @@ export class ChannelsDataService {
     });
     // remove after it was sent (self message will be received as other ones)
     const temp = this.temporaryMessages$.value;
-    temp.splice(temp.findIndex(item => item.content === content), 1);
+    const deleteIndex = temp.findIndex(item => item.message.content === content);
+    temp.splice(deleteIndex, 1);
     this.temporaryMessages$.next(temp);
   }
 
