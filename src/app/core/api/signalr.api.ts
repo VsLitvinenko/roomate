@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, Observable, Subject, take } from 'rxjs';
 import { Message } from './channels-api';
 import { UsersService } from '../services';
+import { promiseDelay } from '../../shared';
 
 interface ChannelMessageEvent {
   channelId: number;
@@ -14,6 +15,8 @@ interface ChannelMessageEvent {
 })
 export class SignalrApi {
   private readonly channelMessageEvents$ = new Subject<ChannelMessageEvent>();
+
+  private readonly connected$ = new BehaviorSubject<boolean>(false);
 
   private readonly connection = new signalR.HubConnectionBuilder()
     .withUrl('http://localhost:8100/hub',
@@ -27,17 +30,25 @@ export class SignalrApi {
 
   constructor(private readonly users: UsersService) {
     this.receiveChannelsMessages();
-    this.connect();
+    this.connect().then();
   }
 
   public get channelMessageEvents(): Observable<ChannelMessageEvent> {
     return this.channelMessageEvents$.asObservable();
   }
 
+  private get connectionReady(): Observable<unknown> {
+    return this.connected$.pipe(
+      filter(value => value),
+      take(1)
+    );
+  }
+
   public async sendChannelMessage(params: {
     message: string;
     channelId: number;
   }): Promise<void> {
+    await firstValueFrom(this.connectionReady);
     await this.connection.invoke('SendChannelMessage', params);
   }
 
@@ -58,10 +69,15 @@ export class SignalrApi {
     );
   }
 
-  private connect(): void {
-    this.connection.start().then(
-      answer => console.log(answer, 'CONNECTED'),
-      err => console.error(err, 'NO CONNECTION')
-    );
+  private async connect(): Promise<void> {
+    try {
+      await this.connection.start();
+      this.connected$.next(true);
+      console.log('CONNECTED');
+    }
+    catch (err) {
+      await promiseDelay(5000);
+      await this.connect();
+    }
   }
 }
