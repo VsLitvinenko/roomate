@@ -37,10 +37,12 @@ export class SignalrApi {
     return this.channelMessageEvents$.asObservable();
   }
 
-  private get connectionReady(): Observable<unknown> {
-    return this.connected$.pipe(
-      filter(value => value),
-      take(1)
+  private get connectionReady(): Promise<unknown> {
+    return firstValueFrom(
+      this.connected$.pipe(
+        filter(value => value),
+        take(1)
+      )
     );
   }
 
@@ -48,7 +50,7 @@ export class SignalrApi {
     message: string;
     channelId: number;
   }): Promise<void> {
-    await firstValueFrom(this.connectionReady);
+    await this.connectionReady;
     await this.connection.invoke('SendChannelMessage', params);
   }
 
