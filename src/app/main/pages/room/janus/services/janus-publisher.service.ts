@@ -120,7 +120,7 @@ export class JanusPublisherService {
   }
 
   private onJoinedRoom(msg: JanusJS.Message): void {
-    this.myPrivateId$.next((msg as any).private);
+    this.myPrivateId$.next((msg as any).private_id);
 
     if (!(this.initialUseVideo || this.initialUseAudio)) {
       return;

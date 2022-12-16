@@ -63,7 +63,7 @@ export class SignalrApi {
           id: mes.id,
           senderId: mes.senderId,
           timestamp: mes.timestamp,
-          content: mes.message,
+          content: mes.content,
           isRead: true,
           attachments: []
         }
