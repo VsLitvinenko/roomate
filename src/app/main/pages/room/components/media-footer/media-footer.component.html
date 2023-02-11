@@ -60,12 +60,14 @@
           <ion-list-header>
             <ion-label> Audio input </ion-label>
           </ion-list-header>
-          <ion-item *ngFor="let item of devices.audioinput"
-                    class="no-ion-hover">
-            <ion-label> {{item.label}} </ion-label>
-            <ion-radio slot="start" color="roomate-green"
-                       [value]="item.deviceId"></ion-radio>
-          </ion-item>
+          <ng-container *ngIf="devices.audioinput.length !== 0; else noDevices">
+            <ion-item *ngFor="let item of devices.audioinput"
+                      class="no-ion-hover">
+              <ion-label> {{item.label}} </ion-label>
+              <ion-radio slot="start" color="roomate-green"
+                         [value]="item.deviceId"></ion-radio>
+            </ion-item>
+          </ng-container>
         </ion-radio-group>
       </ion-list>
 
@@ -75,12 +77,14 @@
           <ion-list-header>
             <ion-label> Video input </ion-label>
           </ion-list-header>
-          <ion-item *ngFor="let item of devices.videoinput"
-                    class="no-ion-hover">
-            <ion-label> {{item.label}} </ion-label>
-            <ion-radio slot="start" color="roomate-green"
-                       [value]="item.deviceId"></ion-radio>
-          </ion-item>
+          <ng-container *ngIf="devices.videoinput.length !== 0; else noDevices">
+            <ion-item *ngFor="let item of devices.videoinput"
+                      class="no-ion-hover">
+              <ion-label> {{item.label}} </ion-label>
+              <ion-radio slot="start" color="roomate-green"
+                         [value]="item.deviceId"></ion-radio>
+            </ion-item>
+          </ng-container>
         </ion-radio-group>
       </ion-list>
 
@@ -101,3 +105,10 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+
+<ng-template #noDevices>
+  <ion-item>
+    <ion-icon name="alert-circle-outline" slot="start" color="danger"></ion-icon>
+    <ion-label> No devices found </ion-label>
+  </ion-item>
+</ng-template>

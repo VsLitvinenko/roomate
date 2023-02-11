@@ -85,7 +85,7 @@ export class MediaFooterComponent implements OnInit {
       .forEach(device => this.devices[device.kind].push(device));
 
     Object.keys(this.activeDevicesId)
-      .forEach(key => this.activeDevicesId[key] = this.devices[key][0].deviceId);
+      .forEach(key => this.activeDevicesId[key] = this.devices[key][0]?.deviceId);
   }
 
 }
