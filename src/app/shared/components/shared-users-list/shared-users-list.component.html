@@ -1,0 +1,39 @@
+<ion-list *ngIf="usersList; else skeletonUsers"
+          lines="none" mode="md" class="users">
+
+  <ng-content></ng-content>
+
+  <ion-item *ngFor="let user of usersList"
+            class="no-ion-hover current-user">
+    <ion-row class="ion-align-items-center">
+      <ion-thumbnail>
+        <img [src]="user.imageUrl" alt="">
+      </ion-thumbnail>
+
+      <div *ngIf="user.online" class="online"></div>
+
+      <ion-label>
+        <h2> {{user.fullName}} </h2>
+        <p> @{{user.username}} </p>
+      </ion-label>
+    </ion-row>
+  </ion-item>
+
+</ion-list>
+
+<ng-template #skeletonUsers>
+  <ion-list lines="none" mode="md" class="users">
+    <ion-item *ngFor="let item of [1, 2, 3]"
+              class="no-ion-hover skeleton-user">
+      <ion-row class="ion-align-items-center">
+        <ion-thumbnail>
+          <ion-skeleton-text animated="true"></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label>
+          <h2> <ion-skeleton-text animated="true"></ion-skeleton-text> </h2>
+          <p> <ion-skeleton-text animated="true"></ion-skeleton-text> </p>
+        </ion-label>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+</ng-template>
