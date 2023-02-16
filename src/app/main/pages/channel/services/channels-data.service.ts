@@ -49,8 +49,8 @@ export class ChannelsDataService {
 
   public getChannelMessages(id: number): Observable<Message[]> {
     const storeMessages$ =  this.getChannel(id).pipe(
-      filter(channel => !!channel.messages.length),
       tap(channel => this.users.updateListOfUsers(channel.members)),
+      filter(channel => !!channel.messages.length),
       map(channel => channel.messages),
     );
     return combineLatest([
@@ -94,7 +94,7 @@ export class ChannelsDataService {
 
   public async loadChannelMessages(id: number): Promise<void> {
     const newMessages = firstValueFrom(
-      getChannelsMessages(id, this.channelsStore.lastChatMessage(id))
+      getChannelsMessages(id, this.channelsStore.lastLoadedChatMessage(id))
     );
     await this.channelsStore.updateChatMessages(id, newMessages, 'end');
   }

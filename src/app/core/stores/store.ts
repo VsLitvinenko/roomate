@@ -1,6 +1,6 @@
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Message } from '../api/channels-api';
+import { Message } from '../api';
 import { cloneDeep } from 'lodash-es';
 
 export interface FullChat {
@@ -59,7 +59,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     return this.store.has(id) && this.store.get(id).value.isFullyLoaded;
   }
 
-  public lastChatMessage(id: number): number {
+  public lastLoadedChatMessage(id: number): number {
     return this.store.get(id).value.messages.length;
   }
 

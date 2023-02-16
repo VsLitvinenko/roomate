@@ -41,7 +41,7 @@
                                [usersList]="context.users">
           <ion-item class="header">
             <ion-icon slot="start" name="people"></ion-icon>
-            <ion-label>
+            <ion-label *ngIf="context.users">
               <h2> All channel's members: </h2>
               <p> ({{getOnlineUsersCount(context.users)}} users online) </p>
             </ion-label>
