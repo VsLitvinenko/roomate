@@ -1,6 +1,7 @@
 <ion-content appScrollbarTheme>
 
-  <app-shared-chat-actions></app-shared-chat-actions>
+  <app-shared-chat-actions (add)="openCreateChannelModal()">
+  </app-shared-chat-actions>
 
   <ion-accordion-group *ngIf="(channelFolders$ | async) as folders; else skeletonList"
                        [value]="['public', 'private']"

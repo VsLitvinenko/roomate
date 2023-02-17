@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-shared-chat-actions',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shared-chat-actions.component.scss'],
 })
 export class SharedChatActionsComponent implements OnInit {
+  @Output() public add = new EventEmitter<void>();
 
   constructor() { }
 

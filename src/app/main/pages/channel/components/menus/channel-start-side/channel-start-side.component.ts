@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ChannelsDataService } from '../../../services';
 import { partition } from 'lodash-es';
 import { StoreShortChannel } from '../../../../../../core';
+import { CreateChannelModalService } from '../../create-channel-modal/create-channel-modal.service';
 
 interface ShortChannelsFolder {
   value: string;
@@ -21,9 +22,14 @@ export class ChannelStartSideComponent implements OnInit {
 
   public channelFolders$ = this.getChannelFolders();
 
-  constructor(private readonly channelsData: ChannelsDataService) { }
+  constructor(private readonly channelsData: ChannelsDataService,
+              private readonly createModalService: CreateChannelModalService) { }
 
   ngOnInit(): void {
+  }
+
+  public async openCreateChannelModal(): Promise<void> {
+    await this.createModalService.openModal();
   }
 
   public trackByValue(index: number, item: ShortChannelsFolder): string {

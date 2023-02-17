@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
+import { CreateChannelModalService } from '../../components';
 
 @Component({
   selector: 'app-no-chat',
@@ -8,7 +9,8 @@ import { MenuControllerService } from '../../../../services/menu-controller.serv
 })
 export class NoChannelComponent implements OnInit {
 
-  constructor(private readonly menuController: MenuControllerService) { }
+  constructor(private readonly menuController: MenuControllerService,
+              private readonly createModalService: CreateChannelModalService) { }
 
   ngOnInit(): void {
   }
@@ -16,6 +18,10 @@ export class NoChannelComponent implements OnInit {
   // proxy by ion-router-outlet
   ionViewWillEnter(): void {
     this.menuController.clearEndSideMenuTemplate();
+  }
+
+  public async openCreateChannelModal(): Promise<void> {
+    await this.createModalService.openModal();
   }
 
 }
