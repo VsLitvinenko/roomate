@@ -7,7 +7,6 @@ import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators
 import { ChannelsDataService } from '../../services';
 import { combineLatest, from, Observable } from 'rxjs';
 import { Message, InjectorService } from '../../../../../core';
-import { promiseDelay } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -46,13 +45,13 @@ export class CurrentChannelComponent implements OnInit {
     this.scrollToBottomOnNewMessageSubscribe();
   }
 
-  ionViewWillEnter(): void {
-    if (!this.loading) {
-      this.loading = true;
-      // for smooth animation
-      promiseDelay(100).then(() => this.loading = false);
-    }
-  }
+  // ionViewWillEnter(): void {
+  //   if (!this.loading) {
+  //     this.loading = true;
+  //     // for smooth animation
+  //     promiseDelay(100).then(() => this.loading = false);
+  //   }
+  // }
 
   public infiniteScroll(event: any): void {
     this.channelsData.loadChannelMessages(this.channelId).then(
