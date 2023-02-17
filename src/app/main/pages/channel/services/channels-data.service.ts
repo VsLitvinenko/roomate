@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChannelsStore,
   StoreChannel,
@@ -10,34 +9,26 @@ import {
   getChannel,
   getChannelsMessages,
   getShortChannels,
-  SignalrApi
 } from '../../../../core';
 import {
-  BehaviorSubject,
   combineLatest,
   firstValueFrom,
   from,
   Observable,
   switchMap
 } from 'rxjs';
+import { ChannelsSirgalrService, TempMes } from './channels-sirgalr.service';
 
-interface TempMes {
-  message: Message;
-  channelId: number;
-}
-
-@UntilDestroy()
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelsDataService {
 
   public readonly shortChannels$ = this.getShortsChannels();
-  private readonly temporaryMessages$ = new BehaviorSubject<TempMes[]>([]);
 
   constructor(private readonly channelsStore: ChannelsStore,
-              private readonly signalr: SignalrApi,
-              private readonly users: UsersService) {
+              private readonly users: UsersService,
+              private readonly channelsSignalr: ChannelsSirgalrService) {
     this.receiveChannelsMessages();
   }
 
@@ -55,11 +46,7 @@ export class ChannelsDataService {
     );
     return combineLatest([
       storeMessages$,
-      this.temporaryMessages$.pipe(
-        map(temp => temp
-          .filter(item => item.channelId === id)
-          .map(item => item.message))
-      )
+      this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
       map(([store, temp]) => [...temp, ...store]),
       shareReplay(1)
@@ -68,28 +55,7 @@ export class ChannelsDataService {
 
   public async sendMessageToChannel(id: number, content: string): Promise<void> {
     // add temp message
-    const tempMessage: Message = {
-      id: null,
-      senderId: this.users.selfId,
-      timestamp: (new Date()).toISOString(),
-      attachments: [],
-      isRead: true,
-      content
-    };
-    this.temporaryMessages$.next([{
-      channelId: id,
-      message: tempMessage
-    }, ...this.temporaryMessages$.value]);
-    // send to signalr
-    await this.signalr.sendChannelMessage({
-      message: content,
-      channelId: id
-    });
-    // remove after it was sent (self message will be received as other ones)
-    const temp = this.temporaryMessages$.value;
-    const deleteIndex = temp.findIndex(item => item.message.content === content);
-    temp.splice(deleteIndex, 1);
-    this.temporaryMessages$.next(temp);
+    await this.channelsSignalr.sendMessageToChannel(id, this.users.selfId, content);
   }
 
   public async loadChannelMessages(id: number): Promise<void> {
@@ -120,10 +86,9 @@ export class ChannelsDataService {
   }
 
   private receiveChannelsMessages(): void {
-    this.signalr.channelMessageEvents.pipe(
-      untilDestroyed(this)
-    ).subscribe(event => this.channelsStore.updateChatMessages(
-      event.channelId, [event.message], 'start'
-    ));
+    const handler = (temp: TempMes) => this.channelsStore.updateChatMessages(
+      temp.channelId, [temp.message], 'start'
+    );
+    this.channelsSignalr.receiveChannelsMessages(handler).then();
   }
 }

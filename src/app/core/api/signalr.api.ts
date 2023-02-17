@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject, filter, firstValueFrom, Observable, Subject, take } from 'rxjs';
-import { Message } from './channels-api';
+import { BehaviorSubject, filter, firstValueFrom, take } from 'rxjs';
 import { UsersService } from '../services';
 import { promiseDelay } from '../../shared';
-
-interface ChannelMessageEvent {
-  channelId: number;
-  message: Message;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalrApi {
-  private readonly channelMessageEvents$ = new Subject<ChannelMessageEvent>();
 
   private readonly connected$ = new BehaviorSubject<boolean>(false);
 
@@ -29,46 +22,16 @@ export class SignalrApi {
     .build();
 
   constructor(private readonly users: UsersService) {
-    this.receiveChannelsMessages();
-    this.connect().then();
+    // this.connect().then();
   }
 
-  public get channelMessageEvents(): Observable<ChannelMessageEvent> {
-    return this.channelMessageEvents$.asObservable();
-  }
-
-  private get connectionReady(): Promise<unknown> {
+  public get connectionReady(): Promise<signalR.HubConnection> {
     return firstValueFrom(
       this.connected$.pipe(
         filter(value => value),
         take(1)
       )
-    );
-  }
-
-  public async sendChannelMessage(params: {
-    message: string;
-    channelId: number;
-  }): Promise<void> {
-    await this.connectionReady;
-    await this.connection.invoke('SendChannelMessage', params);
-  }
-
-  private receiveChannelsMessages(): void {
-    this.connection.on(
-      'ReceiveChannelMessage',
-      (mes: any) => this.channelMessageEvents$.next({
-        channelId: mes.channelId,
-        message: {
-          id: mes.id,
-          senderId: mes.senderId,
-          timestamp: mes.timestamp,
-          content: mes.content,
-          isRead: true,
-          attachments: []
-        }
-      })
-    );
+    ).then(() => this.connection);
   }
 
   private async connect(): Promise<void> {
