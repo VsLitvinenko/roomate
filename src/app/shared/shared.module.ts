@@ -9,7 +9,8 @@ import {
   SharedTextareaFooterComponent,
   SharedLoaderComponent,
   SharedMessagesGroupComponent,
-  SharedUsersListComponent
+  SharedUsersListComponent,
+  SharedChatActionsComponent
 } from './components';
 
 const directives = [
@@ -22,6 +23,7 @@ const componentsExport = [
   SharedTextareaFooterComponent,
   SharedChatComponent,
   SharedUsersListComponent,
+  SharedChatActionsComponent
 ];
 
 const components = [

@@ -1,0 +1,39 @@
+.header {
+  margin-right: 9px;
+  margin-left: 5px;
+
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  ion-searchbar {
+    margin-right: 8px;
+    padding-right: 0;
+    transition: width 0.3s ease-in-out;
+
+    &.searchbar-has-focus {
+      width: 100% !important;
+    }
+
+    &:not(.searchbar-has-focus):not(.searchbar-has-value) {
+      width: 48px;
+      ::ng-deep {
+        .searchbar-input-container, .searchbar-input {
+          cursor: pointer;
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  ion-button {
+    --border-radius: 10px;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --background: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.07);
+    --box-shadow: none;
+    ion-icon {
+      color: var(--ion-color-step-600, #666666);
+    }
+  }
+}
