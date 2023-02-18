@@ -9,6 +9,7 @@ import {
   getChannel,
   getChannelsMessages,
   getShortChannels,
+  ChannelsApiClient,
 } from '../../../../core';
 import {
   combineLatest,
@@ -28,6 +29,7 @@ export class ChannelsDataService {
 
   constructor(private readonly channelsStore: ChannelsStore,
               private readonly users: UsersService,
+              private readonly channelsApi: ChannelsApiClient,
               private readonly channelsSignalr: ChannelsSirgalrService) {
     this.receiveChannelsMessages();
   }
@@ -75,6 +77,17 @@ export class ChannelsDataService {
       tap(() => this.loadChannelMessages(id)),
       switchMap(() => this.channelsStore.getChat(id))
     );
+  }
+
+  public async createChannel(title: string, isPrivate: boolean, members: number[]): Promise<void> {
+    const newChannel = await firstValueFrom(
+      this.channelsApi.createChannel({
+        title,
+        members,
+        private: isPrivate
+      })
+    );
+    await this.channelsStore.setChat(newChannel.id, newChannel);
   }
 
   private getShortsChannels(): Observable<StoreShortChannel[]> {

@@ -18,7 +18,8 @@
 
 <ng-container *ngIf="privateInput.checked">
   <div class="members">
-    <ion-chip *ngFor="let user of (members$ | async)">
+    <ion-chip *ngFor="let user of (members$ | async)"
+              (click)="userDeleted(user)">
       <ion-avatar>
         <img [src]="user.imageUrl" alt="">
       </ion-avatar>
@@ -31,7 +32,8 @@
 
   <ion-content appScrollbarTheme
                scrollAlwaysVisible="true">
-    <app-shared-users-list [usersList]="searchUserList$ | async"></app-shared-users-list>
+    <app-shared-users-list [usersList]="searchUserList$ | async"
+                           (userSelected)="userSelected($event)"></app-shared-users-list>
   </ion-content>
 </ng-container>
 
@@ -39,5 +41,5 @@
   <ion-button fill="clear" color="roomate-green" mode="md"
               (click)="closeModal()"> close </ion-button>
   <ion-button fill="outline" color="roomate-green" mode="md"
-              (click)="closeModal()"> create </ion-button>
+              (click)="createChannel(nameInput.value, privateInput.checked)"> create </ion-button>
 </ion-buttons>

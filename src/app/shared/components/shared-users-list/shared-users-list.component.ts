@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserInfo } from '../../../core';
 
 @Component({
@@ -8,6 +8,7 @@ import { UserInfo } from '../../../core';
 })
 export class SharedUsersListComponent {
   @Input() public usersList: UserInfo[];
+  @Output() public userSelected = new EventEmitter<UserInfo>();
 
   constructor() { }
 }
