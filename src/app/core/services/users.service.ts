@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, from, Observable, combineLatest } from 'rxjs';
 import { filter, map, switchMap} from 'rxjs/operators';
-import { getUsers } from '../api';
-import { AuthorizeResponse, UserInfo, LoginApiClient } from '../api-generated/api-client';
+import { AuthorizeResponse, UserInfo, LoginApiClient, UsersApiClient } from '../api-generated/api-client';
 
 const localStorageKey = 'roomate.auth';
 
@@ -15,7 +14,8 @@ export class UsersService {
   private readonly authData$ = new BehaviorSubject<AuthorizeResponse>(null);
   private readonly users = new Map<number, BehaviorSubject<UserInfo>>();
 
-  constructor(private readonly loginApi: LoginApiClient) {
+  constructor(private readonly loginApi: LoginApiClient,
+              private readonly usersApi: UsersApiClient) {
     this.selfUser$ = this.authData$.pipe(
       filter(data => data !== null),
       map(data => data.userInfo)
@@ -95,7 +95,10 @@ export class UsersService {
   }
 
   private async loadUsersList(ids: number[]): Promise<void> {
-    const newUsers = await firstValueFrom(getUsers(ids));
+    // const newUsers = await firstValueFrom(getUsers(ids));
+    const newUsers = await firstValueFrom(
+      this.usersApi.browseUsersInformation({ id: ids })
+    );
     newUsers.forEach(user => this.users.get(user.id).next(user));
   }
 
