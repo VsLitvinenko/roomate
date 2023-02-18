@@ -4,9 +4,9 @@ import { IonContent, IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components';
 import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { ChannelsDataService } from '../../services';
+import { ChannelMessagesInfo, ChannelsDataService } from '../../services';
 import { combineLatest, from, Observable } from 'rxjs';
-import { Message, InjectorService } from '../../../../../core';
+import { InjectorService } from '../../../../../core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -19,7 +19,7 @@ export class CurrentChannelComponent implements OnInit {
   @ViewChild('currentChatContent', { static: true })
   private readonly chatContent: IonContent;
 
-  public readonly messages$ = this.getChannelMessagesFromStore();
+  public readonly messagesInfo$ = this.getChannelMessagesFromStore();
   public title$: Observable<string>;
   public loading: boolean;
 
@@ -35,8 +35,9 @@ export class CurrentChannelComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     // init messages update
-    this.messages$.pipe(
+    this.messagesInfo$.pipe(
       take(1),
+      delay(0) // todo
     ).subscribe(() =>
       this.chatContent.scrollToBottom(0)
         .then(() => this.loading = false)
@@ -67,14 +68,14 @@ export class CurrentChannelComponent implements OnInit {
     await modal.present();
   }
 
-  private getChannelMessagesFromStore(): Observable<Message[]> {
+  private getChannelMessagesFromStore(): Observable<ChannelMessagesInfo> {
     return this.activatedRoute.params.pipe(
       tap(params => {
         this.channelId = parseInt(params.id, 10);
         this.title$ = this.channelsData.getChannelTitle(this.channelId);
         this.updateEndSideMenu(this.channelId);
       }),
-      switchMap(params => this.channelsData.getChannelMessages(parseInt(params.id, 10))),
+      switchMap(params => this.channelsData.getChannelMessagesInfo(parseInt(params.id, 10))),
       shareReplay(1)
     );
   }
@@ -90,13 +91,13 @@ export class CurrentChannelComponent implements OnInit {
     let prevMessagesLength = 0;
     combineLatest([
       from(this.chatContent.getScrollElement()),
-      this.messages$
+      this.messagesInfo$
     ]).pipe(
-      filter(([el, messages]) => {
-        const oneNewMessage = messages.length - prevMessagesLength === 1;
-        prevMessagesLength = messages.length;
+      filter(([el, info]) => {
+        const oneNewMessage = info.messages.length - prevMessagesLength === 1;
+        prevMessagesLength = info.messages.length;
         return oneNewMessage && (
-          messages[0].senderId === 1 ||
+          info.messages[0].senderId === 1 ||
           el.scrollHeight - (el.scrollTop + el.clientHeight) < 10
         );
       }),

@@ -5,10 +5,9 @@ import {
   StoreChannel,
   StoreShortChannel,
   UsersService,
-  Message,
-  getChannelsMessages,
   ChannelsApiClient,
   ChannelApiClient,
+  StoreChannelMessage,
 } from '../../../../core';
 import {
   combineLatest,
@@ -18,6 +17,11 @@ import {
   switchMap
 } from 'rxjs';
 import { ChannelsSirgalrService, TempMes } from './channels-sirgalr.service';
+
+export interface ChannelMessagesInfo {
+  messages: StoreChannelMessage[];
+  isLimitMessagesAchieved: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -40,18 +44,16 @@ export class ChannelsDataService {
     );
   }
 
-  public getChannelMessages(id: number): Observable<Message[]> {
-    const storeMessages$ =  this.getChannel(id).pipe(
-      tap(channel => this.users.updateListOfUsers(channel.members)),
-      filter(channel => !!channel.messages.length),
-      map(channel => channel.messages),
-    );
+  public getChannelMessagesInfo(id: number): Observable<ChannelMessagesInfo> {
     return combineLatest([
-      storeMessages$,
+      this.getChannel(id),
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
-      map(([store, temp]) => [...temp, ...store]),
-      shareReplay(1)
+      filter(([channel]) => !!channel.messages.length),
+      map(([channel, tempMes]) => ({
+        messages: [...tempMes, ...channel.messages],
+        isLimitMessagesAchieved: channel.isLimitMessagesAchieved
+      }))
     );
   }
 
@@ -60,19 +62,31 @@ export class ChannelsDataService {
     await this.channelsSignalr.sendMessageToChannel(id, this.users.selfId, content);
   }
 
-  public async loadChannelMessages(id: number): Promise<void> {
-    const newMessages = firstValueFrom(
-      getChannelsMessages(id, this.channelsStore.lastLoadedChatMessage(id))
+  public async loadChannelMessages(channelId: number): Promise<void> {
+    const newMessages = await firstValueFrom(
+      this.currentChannelApi.getChannelMessages(
+        channelId,
+        this.channelsStore.lastLoadedChatMessageId(channelId),
+        50,
+        0
+      )
     );
-    await this.channelsStore.updateChatMessages(id, newMessages, 'end');
+    await this.channelsStore.updateChatMessages(channelId, newMessages, 'end');
   }
 
   public getChannel(id: number): Observable<StoreChannel> {
     if (this.channelsStore.isChatFullyLoaded(id)) {
       return this.channelsStore.getChat(id);
     }
+    const getChannelRequest$: Observable<StoreChannel> = this.currentChannelApi.getChannelInfo(id).pipe(
+      map(channel => ({
+        ...channel,
+        messages: [],
+        isLimitMessagesAchieved: false
+      }))
+    );
     return from(
-      this.channelsStore.setChat(id, firstValueFrom(this.currentChannelApi.getChannelInfo(id)))
+      this.channelsStore.setChat(id, firstValueFrom(getChannelRequest$))
     ).pipe(
       tap(() => this.loadChannelMessages(id)),
       switchMap(() => this.channelsStore.getChat(id))
@@ -87,7 +101,11 @@ export class ChannelsDataService {
         private: isPrivate
       })
     );
-    await this.channelsStore.setChat(newChannel.id, newChannel);
+    await this.channelsStore.setChat(newChannel.id, {
+      ...newChannel,
+      messages: [],
+      isLimitMessagesAchieved: false
+    });
   }
 
   private getShortsChannels(): Observable<StoreShortChannel[]> {

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Message, UserInfo } from '../../../../core';
+import { ChatMessage, UserInfo } from '../../../../core';
 
 @Component({
   selector: 'app-shared-messages-group',
@@ -7,7 +7,7 @@ import { Message, UserInfo } from '../../../../core';
   styleUrls: ['./shared-messages-group.component.scss'],
 })
 export class SharedMessagesGroupComponent {
-  @Input() public messages: Message[] = [];
+  @Input() public messages: ChatMessage[] = [];
   @Input() public user: UserInfo;
   @Input() public self: boolean;
 

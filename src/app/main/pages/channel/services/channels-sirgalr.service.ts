@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Message, SignalrApi } from '../../../../core';
+import { StoreChannelMessage, SignalrApi } from '../../../../core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface TempMes {
-  message: Message;
+  message: StoreChannelMessage;
   channelId: number;
 }
 
@@ -17,7 +17,7 @@ export class ChannelsSirgalrService {
 
   constructor(private readonly signalr: SignalrApi) { }
 
-  public getTemporaryMessages(channelId: number): Observable<Message[]> {
+  public getTemporaryMessages(channelId: number): Observable<StoreChannelMessage[]> {
     return this.temporaryMessages$.pipe(
       map(
         temp => temp
@@ -29,13 +29,14 @@ export class ChannelsSirgalrService {
 
   public async sendMessageToChannel(channelId: number, senderId: number, content: string): Promise<void> {
     // add temp message
-    const tempMessage: Message = {
+    const tempMessage: StoreChannelMessage = {
       id: null,
       timestamp: (new Date()).toISOString(),
-      attachments: [],
-      isRead: true,
+      // attachments: [],
+      // isRead: true,
       content,
-      senderId
+      senderId,
+      channelId
     };
     this.temporaryMessages$.next([{
       message: tempMessage,

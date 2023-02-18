@@ -1,19 +1,7 @@
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Message } from '../api';
 import { cloneDeep } from 'lodash-es';
-
-export interface FullChat {
-  id: number;
-  isFullyLoaded?: boolean;
-  unreadMessagesCount?: number;
-  messages?: Message[];
-}
-
-export interface ShortChat {
-  id: number;
-  unreadMessages: number;
-}
+import { ChatMessage, FullChat, ShortChat } from './interfaces';
 
 export abstract class Store<Full extends FullChat, Short extends ShortChat> {
 
@@ -59,8 +47,9 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     return this.store.has(id) && this.store.get(id).value.isFullyLoaded;
   }
 
-  public lastLoadedChatMessage(id: number): number {
-    return this.store.get(id).value.messages.length;
+  public lastLoadedChatMessageId(id: number): number {
+    const channel = this.store.get(id).value;
+    return channel.messages.length ? channel.messages.at(-1).id : 0;
   }
 
   public async setChat(id: number, newChat: Full | Promise<Full>): Promise<void> {
@@ -82,6 +71,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     chat$.next({
       ...(await newChat),
       isFullyLoaded: true,
+      // IGNORE MESSAGES ARRAY
       unreadMessagesCount: chat$.value.unreadMessagesCount,
       messages: chat$.value.messages
     });
@@ -89,11 +79,11 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
 
   public async updateChatMessages(
     id: number,
-    newMessages: Message[] | Promise<Message[]>,
+    newMessages: ChatMessage[] | Promise<ChatMessage[]>,
     position: 'start' | 'end'
   ): Promise<void> {
     const chat$ = this.store.get(id);
-    let messages: Message[];
+    let messages: ChatMessage[];
     switch (position) {
       case 'start':
         messages = [...(await newMessages), ...chat$.value.messages];
@@ -104,7 +94,9 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     }
     chat$.next({
       ...chat$.value,
-      messages
+      messages,
+      // todo think about limit check logic
+      isLimitMessagesAchieved: messages.some(message => message.id === 1)
     });
   }
 }

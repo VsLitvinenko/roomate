@@ -20,8 +20,8 @@
                      [background]="'var(--ion-background-color)'">
   </app-shared-loader>
 
-  <app-shared-chat [scrollEnabled]="!loading"
-                   [messages]="messages$ | async"
+  <app-shared-chat [scrollEnabled]="!(loading || (messagesInfo$ | async).isLimitMessagesAchieved)"
+                   [messages]="(messagesInfo$ | async)?.messages"
                    (infiniteScroll)="infiniteScroll($event)">
   </app-shared-chat>
 

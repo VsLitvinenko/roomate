@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { FullChat, ShortChat, Store } from './store';
-import { ChannelInfo, ChannelShortInfo } from '../api-generated/api-client';
+import { ChannelInfo, ChannelMessage, ChannelShortInfo } from '../api-generated/api-client';
+import { ChatMessage, FullChat, ShortChat } from './interfaces';
+import { Store } from './store';
 
-export interface StoreChannel extends ChannelInfo, FullChat { }
+export interface StoreChannelMessage extends ChannelMessage, ChatMessage { }
+
+export interface StoreChannel extends ChannelInfo, FullChat {
+  messages: StoreChannelMessage[];
+}
 export interface StoreShortChannel extends ChannelShortInfo, ShortChat { }
 
 @Injectable({
@@ -27,7 +32,8 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         videorooms: [],
         messages: [],
         members: [],
-        isFullyLoaded: false
+        isFullyLoaded: false,
+        isLimitMessagesAchieved: false
       });
 
     super(fullToShort, shortToFull);

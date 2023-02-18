@@ -7,13 +7,13 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { UsersService, Message, UserInfo } from '../../../core';
+import { UsersService, UserInfo, ChatMessage } from '../../../core';
 import { Observable } from 'rxjs';
 import { isSameDay, startOfDay } from 'date-fns';
 import groupBy from 'lodash-es/groupBy';
 
 interface MesGroup {
-  messages: Message[];
+  messages: ChatMessage[];
   user$: Observable<UserInfo>;
   self: boolean;
 }
@@ -26,7 +26,7 @@ interface MesGroup {
 })
 export class SharedChatComponent implements OnChanges {
   @Input() public scrollEnabled: boolean;
-  @Input() public messages: Message[];
+  @Input() public messages: ChatMessage[];
 
   @Output() public infiniteScroll = new EventEmitter();
   // type fix for understanding by IDE
