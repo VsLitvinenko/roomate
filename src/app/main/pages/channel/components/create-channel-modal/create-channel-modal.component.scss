@@ -1,0 +1,28 @@
+:host {
+  justify-content: flex-start;
+}
+
+.roomate-header-title {
+  margin-left: 16px;
+}
+
+ion-label {
+  color: var(--ion-color-dark) !important;
+}
+
+ion-input {
+  margin-left: 16px;
+}
+
+.members {
+  padding: 0 8px;
+}
+
+ion-buttons {
+  margin-top: auto;
+  justify-content: flex-end;
+  padding: 2px;
+  ion-button {
+    margin: 10px;
+  }
+}

@@ -1,3 +1,43 @@
-<p>
-  create-channel-modal works!
-</p>
+<ion-header mode="md">
+  <ion-toolbar>
+    <span class="roomate-header-title"> Create new channel </span>
+  </ion-toolbar>
+</ion-header>
+
+<ion-item mode="md">
+  <ion-label color="medium"> Channels' name </ion-label>
+  <ion-input #nameInput></ion-input>
+</ion-item>
+
+<ion-item class="no-ion-hover" mode="md" lines="none">
+  <ion-label> Private channel </ion-label>
+  <ion-checkbox #privateInput
+                checked="true"
+                slot="end" color="roomate-green"></ion-checkbox>
+</ion-item>
+
+<ng-container *ngIf="privateInput.checked">
+  <div class="members">
+    <ion-chip *ngFor="let user of (members$ | async)">
+      <ion-avatar>
+        <img [src]="user.imageUrl" alt="">
+      </ion-avatar>
+      <ion-label> {{user.shortName}} </ion-label>
+      <ion-icon name="close"></ion-icon>
+    </ion-chip>
+  </div>
+
+  <ion-searchbar placeholder="Search user" mode="ios" clear-icon="close"></ion-searchbar>
+
+  <ion-content appScrollbarTheme
+               scrollAlwaysVisible="true">
+    <app-shared-users-list [usersList]="searchUserList$ | async"></app-shared-users-list>
+  </ion-content>
+</ng-container>
+
+<ion-buttons>
+  <ion-button fill="clear" color="roomate-green" mode="md"
+              (click)="closeModal()"> close </ion-button>
+  <ion-button fill="outline" color="roomate-green" mode="md"
+              (click)="closeModal()"> create </ion-button>
+</ion-buttons>
