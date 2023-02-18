@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, from, Observable, combineLatest } from 'rxjs';
 import { filter, map, switchMap} from 'rxjs/operators';
-import { AuthData, getUsers, login, User } from '../api';
+import { getUsers } from '../api';
+import { AuthorizeResponse, UserInfo, LoginApiClient } from '../api-generated/api-client';
 
 const localStorageKey = 'roomate.auth';
 
@@ -9,20 +10,20 @@ const localStorageKey = 'roomate.auth';
   providedIn: 'root'
 })
 export class UsersService {
-  public readonly selfUser$: Observable<User>;
+  public readonly selfUser$: Observable<UserInfo>;
 
-  private readonly authData$ = new BehaviorSubject<AuthData>(null);
-  private readonly users = new Map<number, BehaviorSubject<User>>();
+  private readonly authData$ = new BehaviorSubject<AuthorizeResponse>(null);
+  private readonly users = new Map<number, BehaviorSubject<UserInfo>>();
 
-  constructor() {
+  constructor(private readonly loginApi: LoginApiClient) {
     this.selfUser$ = this.authData$.pipe(
       filter(data => data !== null),
-      map(data => data.selfUser)
+      map(data => data.userInfo)
     );
 
     const storage = localStorage.getItem(localStorageKey);
     if (storage) {
-      const authData: AuthData = JSON.parse(storage);
+      const authData: AuthorizeResponse = JSON.parse(storage);
       this.setAuthData(authData);
     }
   }
@@ -38,7 +39,7 @@ export class UsersService {
   }
 
   public get selfId(): number {
-    return this.authData$.value.selfUser.id;
+    return this.authData$.value.userInfo.id;
   }
 
   public get accessToken(): string {
@@ -46,7 +47,13 @@ export class UsersService {
   }
 
   public async login(): Promise<void> {
-    const authData = await firstValueFrom(login());
+    const authData = await firstValueFrom(
+      this.loginApi.authorizeByEmail({
+        email: 'slavik@mail.com',
+        password: 'slavik-1234'
+      })
+    );
+    authData.userInfo.imageUrl = 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif';
     localStorage.setItem(localStorageKey, JSON.stringify(authData));
     this.setAuthData(authData);
   }
@@ -56,17 +63,21 @@ export class UsersService {
     localStorage.removeItem(localStorageKey);
   }
 
-  public getUser(id: number): Observable<User> {
+  public getUser(id: number): Observable<UserInfo> {
     if (!this.users.has(id)) {
-      this.users.set(id, new BehaviorSubject<User>(null));
+      this.users.set(id, new BehaviorSubject<UserInfo>(null));
       this.loadUsersList([id]).then();
     }
     return this.users.get(id).pipe(
-      filter(user => user !== null)
+      filter(user => user !== null),
+      map(user => ({
+        ...user,
+        imageUrl: 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
+      }))
     );
   }
 
-  public getUsersList(ids: number[]): Observable<User[]> {
+  public getUsersList(ids: number[]): Observable<UserInfo[]> {
     return from(
       this.updateListOfUsers(ids)
     ).pipe(
@@ -78,7 +89,7 @@ export class UsersService {
   public async updateListOfUsers(ids: number[]): Promise<void> {
     const newIds = ids.filter(id => !this.users.has(id));
     if (newIds.length) {
-      newIds.forEach(id => this.users.set(id, new BehaviorSubject<User>(null)));
+      newIds.forEach(id => this.users.set(id, new BehaviorSubject<UserInfo>(null)));
       await this.loadUsersList(newIds);
     }
   }
@@ -88,11 +99,11 @@ export class UsersService {
     newUsers.forEach(user => this.users.get(user.id).next(user));
   }
 
-  private setAuthData(authData: AuthData): void {
+  private setAuthData(authData: AuthorizeResponse): void {
     this.authData$.next(authData);
     this.users.set(
-      authData.selfUser.id,
-      new BehaviorSubject<User>(authData.selfUser)
+      authData.userInfo.id,
+      new BehaviorSubject<UserInfo>(authData.userInfo)
     );
   }
 }

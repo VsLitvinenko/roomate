@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { User } from 'src/app/core';
+import { UserInfo } from '../../../core';
 
 @Component({
   selector: 'app-shared-users-list',
@@ -7,7 +7,7 @@ import { User } from 'src/app/core';
   styleUrls: ['./shared-users-list.component.scss'],
 })
 export class SharedUsersListComponent {
-  @Input() public usersList: User[];
+  @Input() public usersList: UserInfo[];
 
   constructor() { }
 }

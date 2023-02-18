@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } f
 import { Observable, switchMap } from 'rxjs';
 import { ChannelsDataService } from '../../services';
 import { IonModal } from '@ionic/angular';
-import { UsersService, User, StoreChannel } from '../../../../../core';
+import { UsersService, StoreChannel, UserInfo } from '../../../../../core';
 import { isTouchDevice } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -18,7 +18,7 @@ export class ChannelInfoModalComponent implements AfterViewInit {
   @Input() public channelId: number;
 
   public channel$: Observable<StoreChannel>;
-  public channelsUsers$: Observable<User[]>;
+  public channelsUsers$: Observable<UserInfo[]>;
   public readonly isTouchDevise = isTouchDevice;
   public isNotify = true;
 
@@ -40,7 +40,7 @@ export class ChannelInfoModalComponent implements AfterViewInit {
     this.isNotify = !this.isNotify;
   }
 
-  public getOnlineUsersCount(users: User[]): number {
+  public getOnlineUsersCount(users: UserInfo[]): number {
     return users.filter(user => user.online).length;
   }
 

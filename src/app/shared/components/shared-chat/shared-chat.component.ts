@@ -7,15 +7,14 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { UsersService, Message } from '../../../core';
+import { UsersService, Message, UserInfo } from '../../../core';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/core/api/users-api';
 import { isSameDay, startOfDay } from 'date-fns';
 import groupBy from 'lodash-es/groupBy';
 
 interface MesGroup {
   messages: Message[];
-  user$: Observable<User>;
+  user$: Observable<UserInfo>;
   self: boolean;
 }
 
