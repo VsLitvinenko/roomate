@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, from, Observable, combineLatest } from 'rxjs';
+import { filter, map, switchMap} from 'rxjs/operators';
 import { AuthData, getUsers, login, User } from '../api';
 
 const localStorageKey = 'roomate.auth';
@@ -63,6 +63,14 @@ export class UsersService {
     }
     return this.users.get(id).pipe(
       filter(user => user !== null)
+    );
+  }
+
+  public getUsersList(ids: number[]): Observable<User[]> {
+    return from(
+      this.updateListOfUsers(ids)
+    ).pipe(
+      switchMap(() => combineLatest(ids.map(userId => this.getUser(userId))))
     );
   }
 

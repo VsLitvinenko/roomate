@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { ChannelsDataService } from '../../services';
 import { IonModal } from '@ionic/angular';
 import { UsersService, User, StoreChannel } from '../../../../../core';
@@ -18,6 +18,7 @@ export class ChannelInfoModalComponent implements AfterViewInit {
   @Input() public channelId: number;
 
   public channel$: Observable<StoreChannel>;
+  public channelsUsers$: Observable<User[]>;
   public readonly isTouchDevise = isTouchDevice;
   public isNotify = true;
 
@@ -27,17 +28,16 @@ export class ChannelInfoModalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.modal.ionModalWillPresent.pipe(
       untilDestroyed(this)
-    ).subscribe(() => this.channel$ = this.channelsData.getChannel(this.channelId));
+    ).subscribe(() => {
+      this.channel$ = this.channelsData.getChannel(this.channelId);
+      this.channelsUsers$ = this.channel$.pipe(
+        switchMap(channel => this.users.getUsersList(channel.members))
+      );
+    });
   }
 
   public changeNotify(): void {
     this.isNotify = !this.isNotify;
-  }
-
-  public getChannelUsers(members: number[]): Observable<User[]> {
-    return combineLatest(
-      members.map(id => this.users.getUser(id))
-    );
   }
 
   public getOnlineUsersCount(users: User[]): number {

@@ -37,7 +37,7 @@
 
         </ion-list>
 
-        <app-shared-users-list *ngIf="{ users: (getChannelUsers(channel.members) | async) } as context"
+        <app-shared-users-list *ngIf="{ users: (channelsUsers$ | async) } as context"
                                [usersList]="context.users">
           <ion-item class="header">
             <ion-icon slot="start" name="people"></ion-icon>
