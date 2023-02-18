@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Channel, ShortChannel } from '../api';
 import { FullChat, ShortChat, Store } from './store';
+import { ChannelInfo, ChannelShortInfo } from '../api-generated/api-client';
 
-export interface StoreChannel extends Channel, FullChat { }
-export interface StoreShortChannel extends ShortChannel, ShortChat { }
+export interface StoreChannel extends ChannelInfo, FullChat { }
+export interface StoreShortChannel extends ChannelShortInfo, ShortChat { }
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +16,14 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         id: channel.id,
         title: channel.title,
         private: channel.private,
-        unreadMessagesCount: channel.unreadMessagesCount
+        unreadMessages: channel.unreadMessagesCount
       });
     const shortToFull: (x: StoreShortChannel) => StoreChannel =
       short => ({
         id: short.id,
         title: short.title,
         private: short.private,
-        unreadMessagesCount: short.unreadMessagesCount,
+        unreadMessagesCount: short.unreadMessages,
         videorooms: [],
         messages: [],
         members: [],

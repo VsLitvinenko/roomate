@@ -1,21 +1,21 @@
 import { Observable, of } from 'rxjs';
-import { channels, shortChannels, testGroupMessages } from './data-source';
+import { testGroupMessages } from './data-source';
 import { delay } from 'rxjs/operators';
 
-export interface ShortChannel {
-  id: number;
-  title: string;
-  private: boolean;
-  unreadMessagesCount: number;
-}
+// export interface ShortChannel {
+//   id: number;
+//   title: string;
+//   private: boolean;
+//   unreadMessagesCount: number;
+// }
 
-export interface Channel {
-  id: number;
-  title: string;
-  private: boolean;
-  videorooms: any[];
-  members: number[];
-}
+// export interface Channel {
+//   id: number;
+//   title: string;
+//   private: boolean;
+//   videorooms: any[];
+//   members: number[];
+// }
 
 export interface Message {
   id: number;
@@ -26,19 +26,19 @@ export interface Message {
   isRead: boolean;
 }
 
-export const getShortChannels = (): Observable<ShortChannel[]> => {
-  console.warn('GET SHORT CHANNELS REQUEST');
-  return of(shortChannels).pipe(
-    delay(1000)
-  );
-};
+// export const getShortChannels = (): Observable<ShortChannel[]> => {
+//   console.warn('GET SHORT CHANNELS REQUEST');
+//   return of(shortChannels).pipe(
+//     delay(1000)
+//   );
+// };
 
-export const getChannel = (id: number): Observable<Channel> => {
-  console.warn('GET CHANNEL REQUEST', id);
-  return of(channels.find(item => item.id === id)).pipe(
-    delay(1000)
-  );
-};
+// export const getChannel = (id: number): Observable<Channel> => {
+//   console.warn('GET CHANNEL REQUEST', id);
+//   return of(channels.find(item => item.id === id)).pipe(
+//     delay(1000)
+//   );
+// };
 
 export const getChannelsMessages = (
   id: number,

@@ -22,7 +22,7 @@ export class SignalrApi {
     .build();
 
   constructor(private readonly users: UsersService) {
-    // this.connect().then();
+    this.connect().then();
   }
 
   public get connectionReady(): Promise<signalR.HubConnection> {

@@ -12,7 +12,7 @@ export interface FullChat {
 
 export interface ShortChat {
   id: number;
-  unreadMessagesCount: number;
+  unreadMessages: number;
 }
 
 export abstract class Store<Full extends FullChat, Short extends ShortChat> {

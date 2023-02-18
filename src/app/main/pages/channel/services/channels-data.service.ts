@@ -6,10 +6,9 @@ import {
   StoreShortChannel,
   UsersService,
   Message,
-  getChannel,
   getChannelsMessages,
-  getShortChannels,
   ChannelsApiClient,
+  ChannelApiClient,
 } from '../../../../core';
 import {
   combineLatest,
@@ -30,6 +29,7 @@ export class ChannelsDataService {
   constructor(private readonly channelsStore: ChannelsStore,
               private readonly users: UsersService,
               private readonly channelsApi: ChannelsApiClient,
+              private readonly currentChannelApi: ChannelApiClient,
               private readonly channelsSignalr: ChannelsSirgalrService) {
     this.receiveChannelsMessages();
   }
@@ -72,7 +72,7 @@ export class ChannelsDataService {
       return this.channelsStore.getChat(id);
     }
     return from(
-      this.channelsStore.setChat(id, firstValueFrom(getChannel(id)))
+      this.channelsStore.setChat(id, firstValueFrom(this.currentChannelApi.getChannelInfo(id)))
     ).pipe(
       tap(() => this.loadChannelMessages(id)),
       switchMap(() => this.channelsStore.getChat(id))
@@ -91,7 +91,7 @@ export class ChannelsDataService {
   }
 
   private getShortsChannels(): Observable<StoreShortChannel[]> {
-    return getShortChannels().pipe(
+    return this.channelsApi.getChannelsShortInfo().pipe(
       switchMap(shorts => from(this.channelsStore.setShorts(shorts))),
       switchMap(() => this.channelsStore.getShorts()),
       shareReplay(1)
