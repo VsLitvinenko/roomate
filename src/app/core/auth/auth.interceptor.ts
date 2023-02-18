@@ -1,21 +1,30 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { ToastController } from '@ionic/angular';
+import { catchError, Observable, throwError} from 'rxjs';
 import { UsersService } from '../services';
+import { extractError } from '../../shared';
 
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private readonly users: UsersService) {
+  constructor(private readonly users: UsersService,
+              private readonly toastController: ToastController) {
   }
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.users.isAuth) {
-      const cloned = req.clone({
+    const resRequest = this.users.isAuth ?
+      req.clone({
         headers: req.headers.set('Authorization', `Bearer ${this.users.accessToken}`)
-      });
-      return next.handle(cloned);
-    }
-    else {
-      return next.handle(req);
-    }
+      }) : req;
+    return next.handle(resRequest).pipe(
+      catchError(err => {
+        this.toastController.create({
+          message: extractError(err),
+          duration: 1500,
+          position: 'top',
+          color: 'danger',
+        }).then(toast => toast.present());
+        return throwError(err);
+      })
+    );
   }
 }
