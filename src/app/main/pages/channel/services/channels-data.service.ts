@@ -38,6 +38,10 @@ export class ChannelsDataService {
     this.receiveChannelsMessages();
   }
 
+  public get selfUserId(): number {
+    return this.users.selfId;
+  }
+
   public getChannelTitle(id: number): Observable<string> {
     return this.shortChannels$.pipe(
       map(shorts => shorts.find(channel => channel.id === id)?.title)

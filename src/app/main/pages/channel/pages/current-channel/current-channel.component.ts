@@ -37,7 +37,7 @@ export class CurrentChannelComponent implements OnInit {
     // init messages update
     this.messagesInfo$.pipe(
       take(1),
-      delay(0) // todo
+      delay(10) // render time
     ).subscribe(() =>
       this.chatContent.scrollToBottom(0)
         .then(() => this.loading = false)
@@ -97,7 +97,7 @@ export class CurrentChannelComponent implements OnInit {
         const oneNewMessage = info.messages.length - prevMessagesLength === 1;
         prevMessagesLength = info.messages.length;
         return oneNewMessage && (
-          info.messages[0].senderId === 1 ||
+          info.messages[0].senderId === this.channelsData.selfUserId ||
           el.scrollHeight - (el.scrollTop + el.clientHeight) < 10
         );
       }),
