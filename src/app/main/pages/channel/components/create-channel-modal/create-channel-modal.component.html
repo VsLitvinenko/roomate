@@ -18,13 +18,13 @@
 
 <ng-container *ngIf="privateInput.checked">
   <div class="members">
-    <ion-chip *ngFor="let user of (members$ | async)"
-              (click)="userDeleted(user)">
+    <ion-chip *ngFor="let member of (members$ | async); trackBy:trackById">
       <ion-avatar>
-        <img [src]="user.imageUrl" alt="">
+        <img [src]="member.user.imageUrl" alt="">
       </ion-avatar>
-      <ion-label> {{user.shortName}} </ion-label>
-      <ion-icon name="close"></ion-icon>
+      <ion-label> {{member.user.shortName}} </ion-label>
+      <ion-icon *ngIf="member.isPossibleToDelete" name="close"
+                (click)="userDeleted(member.user)"></ion-icon>
     </ion-chip>
   </div>
 
@@ -41,5 +41,6 @@
   <ion-button fill="clear" color="roomate-green" mode="md"
               (click)="closeModal()"> close </ion-button>
   <ion-button fill="outline" color="roomate-green" mode="md"
+              [disabled]="!nameInput.value"
               (click)="createChannel(nameInput.value, privateInput.checked)"> create </ion-button>
 </ion-buttons>

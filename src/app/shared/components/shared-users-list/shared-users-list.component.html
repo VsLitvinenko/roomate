@@ -3,7 +3,7 @@
 
   <ng-content></ng-content>
 
-  <ion-item *ngFor="let user of usersList"
+  <ion-item *ngFor="let user of usersList; trackBy:trackById"
             (click)="userSelected.emit(user)"
             class="no-ion-hover current-user">
     <ion-row class="ion-align-items-center">

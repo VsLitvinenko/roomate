@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { UserInfo, UsersService } from '../../../../../core';
-import { BehaviorSubject, of, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap, combineLatest, of, map, Observable } from 'rxjs';
 import { ChannelsDataService } from '../../services';
+
+interface MemberInfo {
+  user: UserInfo;
+  isPossibleToDelete: boolean;
+}
 
 @Component({
   selector: 'app-create-channel-modal',
@@ -11,12 +16,21 @@ import { ChannelsDataService } from '../../services';
 })
 export class CreateChannelModalComponent implements OnInit {
 
-  public readonly searchUserList$ = this.users.getUsersList([1, 2, 3, 4, 5, 6]);
-
   public readonly membersIds$ = new BehaviorSubject<number[]>([this.users.selfId]);
 
-  public readonly members$ = this.membersIds$.pipe(
-    switchMap(ids => ids.length ? this.users.getUsersList(ids) : of([]))
+  public readonly searchUserList$ = combineLatest([
+    of([1, 2, 3, 4, 5, 6]),
+    this.membersIds$
+  ]).pipe(
+    switchMap(([searchIds, membersIds]) => {
+      const listIds = searchIds.filter(id => !membersIds.includes(id));
+      return listIds.length ? this.users.getUsersList(listIds) : of([]);
+    })
+  );
+
+  public readonly members$: Observable<MemberInfo[]> = this.membersIds$.pipe(
+    switchMap(ids => this.users.getUsersList(ids)),
+    map(users => users.map(user => ({ user, isPossibleToDelete: user.id !== this.users.selfId})))
   );
 
   constructor(private readonly modalCtrl: ModalController,
@@ -24,6 +38,10 @@ export class CreateChannelModalComponent implements OnInit {
               private readonly users: UsersService) { }
 
   ngOnInit(): void {}
+
+  public trackById(index: number, item: MemberInfo): number | string {
+    return item.user.id;
+  }
 
   public async closeModal(): Promise<void> {
     await this.modalCtrl.dismiss();

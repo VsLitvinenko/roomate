@@ -11,4 +11,8 @@ export class SharedUsersListComponent {
   @Output() public userSelected = new EventEmitter<UserInfo>();
 
   constructor() { }
+
+  public trackById(index: number, item: UserInfo): number | string {
+    return item.id;
+  }
 }
