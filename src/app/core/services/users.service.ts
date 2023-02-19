@@ -28,10 +28,10 @@ export class UsersService {
     );
 
     const storage = localStorage.getItem(localStorageKey);
-    if (storage) {
-      const authData: AuthorizeResponse = JSON.parse(storage);
-      this.setAuthData(authData);
-    }
+    // if (storage) {
+    //   const authData: AuthorizeResponse = JSON.parse(storage);
+    //   this.setAuthData(authData);
+    // }
   }
 
   public get isAuth$(): Observable<boolean> {
