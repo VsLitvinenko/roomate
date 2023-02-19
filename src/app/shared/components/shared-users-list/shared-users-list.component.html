@@ -3,22 +3,28 @@
 
   <ng-content></ng-content>
 
-  <ion-item *ngFor="let user of usersList; trackBy:trackById"
-            (click)="userSelected.emit(user)"
-            class="no-ion-hover current-user">
-    <ion-row class="ion-align-items-center">
-      <ion-thumbnail>
-        <img [src]="user.imageUrl" alt="">
-      </ion-thumbnail>
+  <ng-container *ngIf="!!usersList.length; else noUsers">
+    <ion-item *ngFor="let user of usersList"
+              (click)="userSelected.emit(user)"
+              class="no-ion-hover current-user">
+      <ion-row class="ion-align-items-center">
+        <ion-thumbnail>
+          <img [src]="user.imageUrl" alt="">
+        </ion-thumbnail>
 
-      <div *ngIf="user.online" class="online"></div>
+        <div *ngIf="user.online" class="online"></div>
 
-      <ion-label>
-        <h2> {{user.fullName}} </h2>
-        <p> @{{user.userName}} </p>
-      </ion-label>
-    </ion-row>
-  </ion-item>
+        <ion-label>
+          <h2> {{user.fullName}} </h2>
+          <p> @{{user.userName}} </p>
+        </ion-label>
+      </ion-row>
+    </ion-item>
+  </ng-container>
+
+  <ng-template #noUsers>
+    <span class="no-users"> No users </span>
+  </ng-template>
 
 </ion-list>
 

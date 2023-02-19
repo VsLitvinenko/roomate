@@ -7,15 +7,21 @@
 </ion-infinite-scroll>
 
 <div class="msgs-container">
-  <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
-       class="reverse">
-    <app-shared-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
-                               [messages]="group.messages"
-                               [user]="group.user$ | async"
-                               [self]="group.self">
-    </app-shared-messages-group>
-    <div class="date">
-      <span> {{day.key | date: 'd MMMM'}} </span>
+  <ng-container *ngIf="messages && messages.length; else noMessages">
+    <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
+         class="reverse">
+      <app-shared-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
+                                 [messages]="group.messages"
+                                 [user]="group.user$ | async"
+                                 [self]="group.self">
+      </app-shared-messages-group>
+      <div class="date">
+        <span> {{day.key | date: 'd MMMM'}} </span>
+      </div>
     </div>
-  </div>
+  </ng-container>
+
+  <ng-template #noMessages>
+    <span class="no-messages"> No messages </span>
+  </ng-template>
 </div>

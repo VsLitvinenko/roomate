@@ -1,3 +1,7 @@
+:host, ion-list {
+  min-height: 100%;
+}
+
 ion-list {
   padding-left: 12px;
   padding-right: 6px;
@@ -68,4 +72,13 @@ ion-list {
       }
     }
   }
+}
+
+.no-users {
+  position: absolute;
+  top: 49%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--ion-color-medium);
 }
