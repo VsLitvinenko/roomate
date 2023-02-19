@@ -30,7 +30,7 @@ export class SharedChatComponent implements OnChanges {
 
   @Output() public infiniteScroll = new EventEmitter();
   // type fix for understanding by IDE
-  public messageDays: { [time: number]: MesGroup[] } | ReadonlyMap<number, MesGroup[]>;
+  public messageDays: Record<number, MesGroup[]>;
 
   constructor(private readonly users: UsersService) {
   }
