@@ -69,6 +69,22 @@
             },
             "ci": {
               "progress": false
+            },
+            "user1": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/login/mock-users-auth-data/auth-data.ts",
+                  "with": "src/app/login/mock-users-auth-data/auth-data-user1.ts"
+                }
+              ]
+            },
+            "user2": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/login/mock-users-auth-data/auth-data.ts",
+                  "with": "src/app/login/mock-users-auth-data/auth-data-user2.ts"
+                }
+              ]
             }
           }
         },
@@ -84,6 +100,12 @@
             },
             "ci": {
               "progress": false
+            },
+            "user1": {
+              "browserTarget": "app:build:user1"
+            },
+            "user2": {
+              "browserTarget": "app:build:user2"
             }
           }
         },

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../core';
 import { Router } from '@angular/router';
+import { AUTH_DATA } from '../mock-users-auth-data/auth-data';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +14,17 @@ export class LoginComponent implements OnInit {
               private readonly router: Router) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.users.isAuth) {
-      this.goToApp().then();
+      await this.goToApp();
+    }
+    else {
+      await this.login();
     }
   }
 
   public async login(): Promise<void> {
-    await this.users.login();
+    await this.users.login(AUTH_DATA);
     await this.goToApp();
   }
 

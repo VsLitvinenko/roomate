@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, from, Observable, combineLatest } from 'rxjs';
 import { filter, map, switchMap} from 'rxjs/operators';
-import { AuthorizeResponse, UserInfo, LoginApiClient, UsersApiClient } from '../api-generated/api-client';
+import {
+  AuthorizeResponse,
+  UserInfo,
+  LoginApiClient,
+  UsersApiClient,
+  AuthorizeRequest
+} from '../api-generated/api-client';
 
 const localStorageKey = 'roomate.auth';
 
@@ -21,11 +27,11 @@ export class UsersService {
       map(data => data.userInfo)
     );
 
-    const storage = localStorage.getItem(localStorageKey);
-    if (storage) {
-      const authData: AuthorizeResponse = JSON.parse(storage);
-      this.setAuthData(authData);
-    }
+    // const storage = localStorage.getItem(localStorageKey);
+    // if (storage) {
+    //   const authData: AuthorizeResponse = JSON.parse(storage);
+    //   this.setAuthData(authData);
+    // }
   }
 
   public get isAuth$(): Observable<boolean> {
@@ -46,12 +52,9 @@ export class UsersService {
     return this.authData$.value.accessToken;
   }
 
-  public async login(): Promise<void> {
+  public async login(authRequest: AuthorizeRequest): Promise<void> {
     const authData = await firstValueFrom(
-      this.loginApi.authorizeByEmail({
-        email: 'slavik@mail.com',
-        password: 'slavik-1234'
-      })
+      this.loginApi.authorizeByEmail(authRequest)
     );
     authData.userInfo.imageUrl = 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif';
     localStorage.setItem(localStorageKey, JSON.stringify(authData));
