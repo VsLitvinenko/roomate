@@ -8,7 +8,7 @@
 
 .msgs-container {
   padding: 2px 12px;
-  min-height: calc(100% - 40px); //40px is infinite-scroll size
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

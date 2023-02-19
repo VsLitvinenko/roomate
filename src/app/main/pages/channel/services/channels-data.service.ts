@@ -67,12 +67,9 @@ export class ChannelsDataService {
     await this.channelsSignalr.sendMessageToChannel(id, this.users.selfId, content);
   }
 
-  public async loadChannelMessages(channelId: number): Promise<void> {
+  public async loadTopChannelMessages(channelId: number): Promise<void> {
     const lastMesId = this.channelsStore.lastLoadedChatMessageId(channelId);
-    const newMessages = (await firstValueFrom(
-      this.currentChannelApi.getChannelMessages(channelId, lastMesId, 50, 0)
-    )).filter(mes => mes.id !== lastMesId);
-    await this.channelsStore.updateChatMessages(channelId, newMessages, 'end');
+    await this.loadChannelMessages(channelId, lastMesId, 50, 0);
   }
 
   public getChannel(id: number): Observable<StoreChannel> {
@@ -89,7 +86,7 @@ export class ChannelsDataService {
     return from(
       this.channelsStore.setChat(id, firstValueFrom(getChannelRequest$))
     ).pipe(
-      tap(() => this.loadChannelMessages(id)),
+      tap(() => this.loadTopChannelMessages(id)),
       switchMap(() => this.channelsStore.getChat(id))
     );
   }
@@ -115,6 +112,21 @@ export class ChannelsDataService {
       switchMap(() => this.channelsStore.getShorts()),
       shareReplay(1)
     );
+  }
+
+  private async loadChannelMessages(
+    channelId: number,
+    mesId: number,
+    before: number,
+    after: number
+  ): Promise<void> {
+    const newMessages = (await firstValueFrom(
+      this.currentChannelApi.getChannelMessages(channelId, mesId, before, after)
+    ));
+    const options = {
+      isTopMesLimitAchieved: newMessages.length !== before
+    };
+    await this.channelsStore.updateChatMessages(channelId, newMessages.filter(mes => mes.id !== mesId), 'end', options);
   }
 
   private receiveChannelsMessages(): void {

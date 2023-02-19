@@ -55,7 +55,7 @@ export class CurrentChannelComponent implements OnInit {
   // }
 
   public infiniteScroll(event: any): void {
-    this.channelsData.loadChannelMessages(this.channelId).then(
+    this.channelsData.loadTopChannelMessages(this.channelId).then(
       () => event.target.complete()
     );
   }

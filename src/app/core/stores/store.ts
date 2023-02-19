@@ -81,7 +81,10 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   public async updateChatMessages(
     id: number,
     newMessages: ChatMessage[] | Promise<ChatMessage[]>,
-    position: 'start' | 'end'
+    position: 'start' | 'end',
+    options: {
+      isTopMesLimitAchieved?: boolean;
+    } = {}
   ): Promise<void> {
     const chat$ = this.store.get(id);
     const existMessages = chat$.value.messages ?? [];
@@ -97,8 +100,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     chat$.next({
       ...chat$.value,
       messages,
-      // todo think about limit check logic
-      isTopMesLimitAchieved: messages.some(message => message.id === 1)
+      isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? false
     });
   }
 }
