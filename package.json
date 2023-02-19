@@ -4,7 +4,9 @@
   "author": "Litvinenko Vyacheslav",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start:slavik": "ng serve",
+    "start:toha": "ng serve --configuration=user1",
+    "start:polya": "ng serve --configuration=user2",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
