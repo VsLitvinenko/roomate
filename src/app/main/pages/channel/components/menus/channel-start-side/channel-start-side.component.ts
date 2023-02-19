@@ -20,15 +20,15 @@ interface ShortChannelsFolder {
 })
 export class ChannelStartSideComponent implements OnInit {
 
-  public searchEvent$ = new BehaviorSubject<any>(null);
+  public searchEvent$ = new BehaviorSubject<string>(null);
   public channelFolders$ = combineLatest([
     this.getChannelFolders(),
     this.searchEvent$
   ]).pipe(
-    map(([folders, searchEvent]) => folders.map(item => ({
+    map(([folders, search]) => folders.map(item => ({
       ...item,
       channels: item.channels.filter(
-        channel => searchEvent === null || channel.title.toLowerCase().includes(searchEvent.target.value.toLowerCase())
+        channel => search === null || channel.title.trim().toLowerCase().includes(search.trim().toLowerCase())
       )
     })).filter(item => item.channels.length))
   );

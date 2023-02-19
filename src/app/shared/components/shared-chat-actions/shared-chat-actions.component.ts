@@ -7,7 +7,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SharedChatActionsComponent implements OnInit {
   @Output() public add = new EventEmitter<void>();
-  @Output() public search = new EventEmitter<any>();
+  @Output() public search = new EventEmitter<string>();
 
   constructor() { }
 
