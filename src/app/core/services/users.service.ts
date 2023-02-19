@@ -7,7 +7,7 @@ import {
   LoginApiClient,
   UsersApiClient,
   AuthorizeRequest
-} from '../api-generated/api-client';
+} from '../api';
 
 const localStorageKey = 'roomate.auth';
 
@@ -27,11 +27,11 @@ export class UsersService {
       map(data => data.userInfo)
     );
 
-    // const storage = localStorage.getItem(localStorageKey);
-    // if (storage) {
-    //   const authData: AuthorizeResponse = JSON.parse(storage);
-    //   this.setAuthData(authData);
-    // }
+    const storage = localStorage.getItem(localStorageKey);
+    if (storage) {
+      const authData: AuthorizeResponse = JSON.parse(storage);
+      this.setAuthData(authData);
+    }
   }
 
   public get isAuth$(): Observable<boolean> {

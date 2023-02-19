@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChannelInfo, ChannelMessage, ChannelShortInfo } from '../api-generated/api-client';
+import { ChannelInfo, ChannelMessage, ChannelShortInfo } from '../api';
 import { ChatMessage, FullChat, ShortChat } from './interfaces';
 import { Store } from './store';
 
