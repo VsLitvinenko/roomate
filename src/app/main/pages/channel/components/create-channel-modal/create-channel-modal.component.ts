@@ -16,16 +16,16 @@ interface MemberInfo {
 })
 export class CreateChannelModalComponent implements OnInit {
 
+  public readonly searchEvent$ = new BehaviorSubject<string>(null);
   public readonly membersIds$ = new BehaviorSubject<number[]>([this.users.selfId]);
 
   public readonly searchUserList$ = combineLatest([
-    of([1, 2, 3, 4, 5, 6]),
-    this.membersIds$
+    this.userListBeforeSearch$,
+    this.searchEvent$
   ]).pipe(
-    switchMap(([searchIds, membersIds]) => {
-      const listIds = searchIds.filter(id => !membersIds.includes(id));
-      return listIds.length ? this.users.getUsersList(listIds) : of([]);
-    })
+    map(([users, search]) => users.filter(
+      user => search === null || user.fullName.trim().toLowerCase().includes(search.trim().toLowerCase())
+    ))
   );
 
   public readonly members$: Observable<MemberInfo[]> = this.membersIds$.pipe(
@@ -36,6 +36,18 @@ export class CreateChannelModalComponent implements OnInit {
   constructor(private readonly modalCtrl: ModalController,
               private readonly channelsData: ChannelsDataService,
               private readonly users: UsersService) { }
+
+  private get userListBeforeSearch$(): Observable<UserInfo[]> {
+    return combineLatest([
+      of([1, 2, 3, 4, 5, 6]),
+      this.membersIds$
+    ]).pipe(
+      switchMap(([searchIds, membersIds]) => {
+        const listIds = searchIds.filter(id => !membersIds.includes(id));
+        return listIds.length ? this.users.getUsersList(listIds) : of([]);
+      })
+    );
+  }
 
   ngOnInit(): void {}
 
