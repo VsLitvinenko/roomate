@@ -1,6 +1,7 @@
 <ion-content appScrollbarTheme>
 
-  <app-shared-chat-actions (add)="openCreateChannelModal()">
+  <app-shared-chat-actions (add)="openCreateChannelModal()"
+                           (search)="searchEvent$.next($event)">
   </app-shared-chat-actions>
 
   <ion-accordion-group *ngIf="(channelFolders$ | async) as folders; else skeletonList"
@@ -18,13 +19,13 @@
         <ion-menu-toggle [autoHide]="false">
           <ion-item class="no-ion-hover"
                     *ngFor="let item of folder.channels; trackBy:trackById"
-                    [ngClass]="item.unreadMessagesCount ? 'unread' : 'read'"
+                    [ngClass]="item.unreadMessages ? 'unread' : 'read'"
                     [routerLink]="['/app', 'channel', 'current', item.id]"
                     routerLinkActive="active">
             <span class="tag"> # </span>
             <ion-label> {{item.title}} </ion-label>
-            <ion-badge *ngIf="item.unreadMessagesCount"
-                       color="medium"> {{item.unreadMessagesCount}} </ion-badge>
+            <ion-badge *ngIf="item.unreadMessages"
+                       color="medium"> {{item.unreadMessages}} </ion-badge>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>

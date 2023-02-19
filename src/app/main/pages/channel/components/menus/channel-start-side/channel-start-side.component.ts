@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { ChannelsDataService } from '../../../services';
 import { partition } from 'lodash-es';
 import { StoreShortChannel } from '../../../../../../core';
@@ -20,7 +20,18 @@ interface ShortChannelsFolder {
 })
 export class ChannelStartSideComponent implements OnInit {
 
-  public channelFolders$ = this.getChannelFolders();
+  public searchEvent$ = new BehaviorSubject<any>(null);
+  public channelFolders$ = combineLatest([
+    this.getChannelFolders(),
+    this.searchEvent$
+  ]).pipe(
+    map(([folders, searchEvent]) => folders.map(item => ({
+      ...item,
+      channels: item.channels.filter(
+        channel => searchEvent === null || channel.title.toLowerCase().includes(searchEvent.target.value.toLowerCase())
+      )
+    })).filter(item => item.channels.length))
+  );
 
   constructor(private readonly channelsData: ChannelsDataService,
               private readonly createModalService: CreateChannelModalService) { }
