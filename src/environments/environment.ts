@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost/api'
+  signalR: 'http://localhost:8100',
+  janus: 'http://localhost:8088'
 };
 
 /*

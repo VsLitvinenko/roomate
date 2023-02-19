@@ -5,9 +5,10 @@ import { Janus } from './janus.constants';
 import { JanusJS } from './janus.types';
 import { JanusSubscribeService, JanusShareScreenService, JanusPublisherService } from './services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { environment } from '../../../../../environments/environment';
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
-const server = 'http://localhost:8088/janus';
+const server = `${environment.janus}/janus`;
 
 @UntilDestroy()
 @Injectable()

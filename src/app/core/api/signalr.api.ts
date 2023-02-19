@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject, filter, firstValueFrom, take } from 'rxjs';
 import { UsersService } from '../services';
 import { promiseDelay } from '../../shared';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class SignalrApi {
   private readonly connected$ = new BehaviorSubject<boolean>(false);
 
   private readonly connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:8100/hub',
+    .withUrl(`${environment.signalR}/hub`,
       {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets,
