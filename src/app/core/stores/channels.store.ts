@@ -30,7 +30,7 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         private: short.private,
         unreadMessagesCount: short.unreadMessages,
         videorooms: [],
-        messages: [],
+        messages: null,
         members: [],
         isFullyLoaded: false,
         isTopMesLimitAchieved: false

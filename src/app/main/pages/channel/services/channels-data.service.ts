@@ -50,7 +50,7 @@ export class ChannelsDataService {
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
       tap(([channel]) => this.users.updateListOfUsers(channel.members)),
-      filter(([channel]) => !!channel.messages.length),
+      filter(([channel]) => channel.messages !== null),
       map(([channel, tempMes]) => ({
         messages: [...tempMes, ...channel.messages],
         isTopMesLimitAchieved: channel.isTopMesLimitAchieved

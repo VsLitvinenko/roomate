@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { cloneDeep } from 'lodash-es';
 import { ChatMessage, FullChat, ShortChat } from './interfaces';
@@ -9,6 +9,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   private readonly shortToFull: (x: Short) => Full;
 
   private readonly store = new Map<number, BehaviorSubject<Full>>();
+  private readonly refreshList$ = new BehaviorSubject<void>(void 0);
 
   protected constructor(
     fullToShort: (x: Full) => Short,
@@ -19,9 +20,8 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   }
 
   public getShorts(): Observable<Short[]> {
-    return combineLatest(
-      [...this.store.values()]
-    ).pipe(
+    return this.refreshList$.pipe(
+      switchMap(() => combineLatest([...this.store.values()])),
       map(res => res.map(full => this.fullToShort(full)))
     );
   }
@@ -49,7 +49,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
 
   public lastLoadedChatMessageId(id: number): number {
     const channel = this.store.get(id).value;
-    return channel.messages.length ? channel.messages.at(-1).id : 0;
+    return channel.messages?.length ? channel.messages.at(-1).id : 0;
   }
 
   public async setChat(id: number, newChat: Full | Promise<Full>): Promise<void> {
@@ -61,7 +61,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     }
     else {
       const pseudoLoad = {
-        messages: [],
+        messages: null,
         unreadMessagesCount: 0,
         isFullyLoaded: true,
       } as Full;
@@ -75,6 +75,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       unreadMessagesCount: chat$.value.unreadMessagesCount,
       messages: chat$.value.messages
     });
+    this.refreshList$.next(void 0);
   }
 
   public async updateChatMessages(
@@ -83,13 +84,14 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     position: 'start' | 'end'
   ): Promise<void> {
     const chat$ = this.store.get(id);
+    const existMessages = chat$.value.messages ?? [];
     let messages: ChatMessage[];
     switch (position) {
       case 'start':
-        messages = [...(await newMessages), ...chat$.value.messages];
+        messages = [...(await newMessages), ...existMessages];
         break;
       case 'end':
-        messages = [...chat$.value.messages, ...(await newMessages)];
+        messages = [...existMessages, ...(await newMessages)];
         break;
     }
     chat$.next({
