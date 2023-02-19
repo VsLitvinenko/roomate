@@ -96,7 +96,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       ...chat$.value,
       messages,
       // todo think about limit check logic
-      isLimitMessagesAchieved: messages.some(message => message.id === 1)
+      isTopMesLimitAchieved: messages.some(message => message.id === 1)
     });
   }
 }

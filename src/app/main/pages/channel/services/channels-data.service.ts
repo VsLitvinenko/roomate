@@ -20,7 +20,7 @@ import { ChannelsSirgalrService, TempMes } from './channels-sirgalr.service';
 
 export interface ChannelMessagesInfo {
   messages: StoreChannelMessage[];
-  isLimitMessagesAchieved: boolean;
+  isTopMesLimitAchieved: boolean;
 }
 
 @Injectable({
@@ -49,10 +49,11 @@ export class ChannelsDataService {
       this.getChannel(id),
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
+      tap(([channel]) => this.users.updateListOfUsers(channel.members)),
       filter(([channel]) => !!channel.messages.length),
       map(([channel, tempMes]) => ({
         messages: [...tempMes, ...channel.messages],
-        isLimitMessagesAchieved: channel.isLimitMessagesAchieved
+        isTopMesLimitAchieved: channel.isTopMesLimitAchieved
       }))
     );
   }
@@ -63,14 +64,10 @@ export class ChannelsDataService {
   }
 
   public async loadChannelMessages(channelId: number): Promise<void> {
-    const newMessages = await firstValueFrom(
-      this.currentChannelApi.getChannelMessages(
-        channelId,
-        this.channelsStore.lastLoadedChatMessageId(channelId),
-        50,
-        0
-      )
-    );
+    const lastMesId = this.channelsStore.lastLoadedChatMessageId(channelId);
+    const newMessages = (await firstValueFrom(
+      this.currentChannelApi.getChannelMessages(channelId, lastMesId, 50, 0)
+    )).filter(mes => mes.id !== lastMesId);
     await this.channelsStore.updateChatMessages(channelId, newMessages, 'end');
   }
 
@@ -82,7 +79,7 @@ export class ChannelsDataService {
       map(channel => ({
         ...channel,
         messages: [],
-        isLimitMessagesAchieved: false
+        isTopMesLimitAchieved: false
       }))
     );
     return from(
@@ -104,7 +101,7 @@ export class ChannelsDataService {
     await this.channelsStore.setChat(newChannel.id, {
       ...newChannel,
       messages: [],
-      isLimitMessagesAchieved: false
+      isTopMesLimitAchieved: false
     });
   }
 

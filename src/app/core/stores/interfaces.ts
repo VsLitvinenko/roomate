@@ -10,7 +10,7 @@ export interface FullChat {
   isFullyLoaded?: boolean;
   unreadMessagesCount?: number;
   messages?: ChatMessage[];
-  isLimitMessagesAchieved: boolean;
+  isTopMesLimitAchieved: boolean;
 }
 
 export interface ShortChat {
