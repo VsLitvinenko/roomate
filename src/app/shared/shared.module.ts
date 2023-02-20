@@ -12,9 +12,14 @@ import {
   SharedUsersListComponent,
   SharedChatActionsComponent
 } from './components';
+import { LocalizationPipe } from './localization';
 
 const directives = [
   ScrollbarThemeDirective,
+];
+
+const pipes = [
+  LocalizationPipe
 ];
 
 const componentsExport = [
@@ -40,11 +45,13 @@ const components = [
     ...directives,
     ...components,
     ...componentsExport,
+    ...pipes
   ],
   providers: [],
   exports: [
     ...directives,
     ...componentsExport,
+    ...pipes,
   ]
 })
 export class SharedModule { }
