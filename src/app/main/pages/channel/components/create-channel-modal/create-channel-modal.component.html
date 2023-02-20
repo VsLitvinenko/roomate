@@ -1,21 +1,24 @@
 <ion-header mode="md">
   <ion-toolbar>
-    <span class="roomate-header-title"> {{ 'createNewChannel' | localization }} </span>
+    <span class="roomate-header-title">
+      {{ ['create', 'new', 'channel'] | localization }}
+    </span>
   </ion-toolbar>
 </ion-header>
 
-<ion-item mode="md">
-  <ion-label color="medium"> {{ 'channelsName' | localization }} </ion-label>
-  <ion-input #nameInput></ion-input>
-</ion-item>
+<ng-container [formGroup]="form">
+  <ion-item mode="md">
+    <ion-label color="medium"> {{ 'channelsName' | localization }} </ion-label>
+    <ion-input formControlName="title"></ion-input>
+  </ion-item>
 
-<ion-item class="no-ion-hover" mode="md" lines="none">
-  <ion-label> {{ ['public', 'channel'] | localization }} </ion-label>
-  <ion-checkbox #publicInput
-                slot="end" color="roomate-green"></ion-checkbox>
-</ion-item>
+  <ion-item class="no-ion-hover" mode="md" lines="none">
+    <ion-label> {{ ['public', 'channel'] | localization }} </ion-label>
+    <ion-checkbox formControlName="public" slot="end" color="roomate-green"></ion-checkbox>
+  </ion-item>
+</ng-container>
 
-<ng-container *ngIf="!publicInput.checked">
+<ng-container *ngIf="(form.controls.public.valueChanges | async) !== true">
   <div class="members">
     <ion-chip *ngFor="let member of (members$ | async); trackBy:trackById">
       <ion-avatar>
@@ -44,8 +47,8 @@
     {{ 'close' | localization }}
   </ion-button>
   <ion-button fill="outline" color="roomate-green" mode="md"
-              [disabled]="!nameInput.value"
-              (click)="createChannel(nameInput.value, !publicInput.checked)">
-    {{ 'create' | localization }}
+              [disabled]="form.invalid"
+              (click)="createChannel()">
+    {{ 'save' | localization }}
   </ion-button>
 </ion-buttons>

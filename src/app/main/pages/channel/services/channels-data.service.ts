@@ -120,6 +120,7 @@ export class ChannelsDataService {
     before: number,
     after: number
   ): Promise<void> {
+    // todo result messages count to compare with before / after
     const newMessages = (await firstValueFrom(
       this.currentChannelApi.getChannelMessages(channelId, mesId, before, after)
     ));

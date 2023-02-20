@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { UserInfo, UsersService } from '../../../../../core';
 import { BehaviorSubject, switchMap, combineLatest, of, map, Observable } from 'rxjs';
 import { ChannelsDataService } from '../../services';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 interface MemberInfo {
   user: UserInfo;
@@ -18,6 +19,11 @@ export class CreateChannelModalComponent implements OnInit {
 
   public readonly searchEvent$ = new BehaviorSubject<string>(null);
   public readonly membersIds$ = new BehaviorSubject<number[]>([this.users.selfId]);
+  public readonly form = new FormGroup({
+    id: new FormControl(null),
+    title: new FormControl('', Validators.required),
+    public: new FormControl(false)
+  });
 
   public readonly searchUserList$ = combineLatest([
     this.userListBeforeSearch$,
@@ -59,11 +65,12 @@ export class CreateChannelModalComponent implements OnInit {
     await this.modalCtrl.dismiss();
   }
 
-  public createChannel(title: string | number, isPrivate: boolean): void {
+  public createChannel(): void {
+    const formValue = this.form.getRawValue();
     this.channelsData.createChannel(
-      String(title),
-      isPrivate,
-      this.membersIds$.value
+      formValue.title,
+      !formValue.public,
+      formValue.public ?  [] : this.membersIds$.value
     ).then(() => this.closeModal());
   }
 
