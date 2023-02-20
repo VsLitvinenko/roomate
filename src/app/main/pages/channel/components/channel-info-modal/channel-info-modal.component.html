@@ -19,23 +19,23 @@
         <span> {{ channel.members.length }} {{ 'nMembers' | localization }} </span>
       </ion-item>
 
+      <ion-list lines="none" mode="md" class="actions">
+
+        <ion-item (click)="changeNotify()">
+          <ion-icon slot="start" name="notifications-outline"></ion-icon>
+          <ion-label> {{ 'notifications' | localization }} </ion-label>
+          <ion-toggle color="roomate-green" [checked]="isNotify"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon slot="start" name="exit-outline" color="danger"></ion-icon>
+          <ion-label color="danger"> {{ ['leave', 'channel'] | localization }} </ion-label>
+        </ion-item>
+
+      </ion-list>
+
       <ion-content appScrollbarTheme
                    scrollAlwaysVisible="true">
-
-        <ion-list lines="none" mode="md" class="actions">
-
-          <ion-item (click)="changeNotify()">
-            <ion-icon slot="start" name="notifications-outline"></ion-icon>
-            <ion-label> {{ 'notifications' | localization }} </ion-label>
-            <ion-toggle color="roomate-green" [checked]="isNotify"></ion-toggle>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon slot="start" name="exit-outline" color="danger"></ion-icon>
-            <ion-label color="danger"> {{ ['leave', 'channel'] | localization }} </ion-label>
-          </ion-item>
-
-        </ion-list>
 
         <app-shared-users-list *ngIf="{ users: (channelsUsers$ | async) } as context"
                                [usersList]="context.users">
