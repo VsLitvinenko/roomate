@@ -1,22 +1,21 @@
 <ion-header mode="md">
   <ion-toolbar>
-    <span class="roomate-header-title"> Create new channel </span>
+    <span class="roomate-header-title"> {{ 'createNewChannel' | localization }} </span>
   </ion-toolbar>
 </ion-header>
 
 <ion-item mode="md">
-  <ion-label color="medium"> Channels' name </ion-label>
+  <ion-label color="medium"> {{ 'channelsName' | localization }} </ion-label>
   <ion-input #nameInput></ion-input>
 </ion-item>
 
 <ion-item class="no-ion-hover" mode="md" lines="none">
-  <ion-label> Private channel </ion-label>
-  <ion-checkbox #privateInput
-                checked="true"
+  <ion-label> {{ 'publicChannel' | localization }} </ion-label>
+  <ion-checkbox #publicInput
                 slot="end" color="roomate-green"></ion-checkbox>
 </ion-item>
 
-<ng-container *ngIf="privateInput.checked">
+<ng-container *ngIf="!publicInput.checked">
   <div class="members">
     <ion-chip *ngFor="let member of (members$ | async); trackBy:trackById">
       <ion-avatar>
@@ -40,8 +39,12 @@
 
 <ion-buttons>
   <ion-button fill="clear" color="roomate-green" mode="md"
-              (click)="closeModal()"> close </ion-button>
+              (click)="closeModal()">
+    {{ 'close' | localization }}
+  </ion-button>
   <ion-button fill="outline" color="roomate-green" mode="md"
               [disabled]="!nameInput.value"
-              (click)="createChannel(nameInput.value, privateInput.checked)"> create </ion-button>
+              (click)="createChannel(nameInput.value, !publicInput.checked)">
+    {{ 'create' | localization }}
+  </ion-button>
 </ion-buttons>

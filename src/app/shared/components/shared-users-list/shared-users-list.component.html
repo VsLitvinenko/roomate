@@ -4,7 +4,7 @@
   <ng-content></ng-content>
 
   <ng-container *ngIf="!!usersList.length; else noUsers">
-    <ion-item *ngFor="let user of usersList"
+    <ion-item *ngFor="let user of usersList; trackBy:trackById"
               (click)="userSelected.emit(user)"
               class="no-ion-hover current-user">
       <ion-row class="ion-align-items-center">
@@ -23,7 +23,7 @@
   </ng-container>
 
   <ng-template #noUsers>
-    <span class="no-users"> No users </span>
+    <span class="no-users"> {{ 'noUsers' | localization }} </span>
   </ng-template>
 
 </ion-list>
