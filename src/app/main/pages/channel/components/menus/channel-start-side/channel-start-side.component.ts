@@ -5,6 +5,7 @@ import { ChannelsDataService } from '../../../services';
 import { partition } from 'lodash-es';
 import { StoreShortChannel } from '../../../../../../core';
 import { CreateChannelModalService } from '../../create-channel-modal/create-channel-modal.service';
+import { LocalizationService } from '../../../../../../shared';
 
 interface ShortChannelsFolder {
   value: string;
@@ -34,7 +35,8 @@ export class ChannelStartSideComponent implements OnInit {
   );
 
   constructor(private readonly channelsData: ChannelsDataService,
-              private readonly createModalService: CreateChannelModalService) { }
+              private readonly createModalService: CreateChannelModalService,
+              private readonly localizationService: LocalizationService) { }
 
   ngOnInit(): void {
   }
@@ -59,7 +61,7 @@ export class ChannelStartSideComponent implements OnInit {
             const isPrivate = folder[0]?.private;
             return {
               value: isPrivate ? 'private' : 'public',
-              title: isPrivate ? 'Private channels' : 'Public channels',
+              title: this.localizationService.localize([(isPrivate ? 'privates' : 'publics'), 'channels']),
               icon: isPrivate ? 'lock-closed-outline' : 'people-outline',
               channels: folder,
             };

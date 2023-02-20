@@ -14,7 +14,10 @@ export enum LocalisationEnum {
   noUsers = 'noUsers',
   close = 'close',
   create = 'create',
-  publicChannel = 'publicChannel',
+  public = 'public',
+  publics = 'publics',
+  private = 'private',
+  privates = 'privates',
   channelsName = 'channelsName',
   createNewChannel = 'createNewChannel',
   channelInfo = 'channelInfo',
@@ -70,8 +73,20 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
     { en: 'Create', ru: 'Создать' }
   ],
   [
-    LocalisationEnum.publicChannel,
-    { en: 'Public channel', ru: 'Публичный канал' }
+    LocalisationEnum.public,
+    { en: 'Public', ru: 'Публичный' }
+  ],
+  [
+    LocalisationEnum.publics,
+    { en: 'Public', ru: 'Публичные' }
+  ],
+  [
+    LocalisationEnum.privates,
+    { en: 'Private', ru: 'Приватные' }
+  ],
+  [
+    LocalisationEnum.private,
+    { en: 'Private', ru: 'Приватный' }
   ],
   [
     LocalisationEnum.channelsName,
