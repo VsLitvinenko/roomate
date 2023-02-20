@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { DarkThemeService } from '../../../core';
 import { isAppFullWidth$, sharedMenuLinks } from '../../common';
+import { LocalizationService } from '../../localization';
 
 @Component({
   selector: 'app-shared-header',
@@ -12,11 +13,13 @@ export class SharedHeaderComponent implements OnInit {
   @Input() endSideButtonIcon: string;
 
   public isFull$ = isAppFullWidth$;
-  public readonly menuLinks = sharedMenuLinks;
+  public readonly menuLinks = sharedMenuLinks.map(link => ({
+    ...link,
+    title: this.localizationService.localize(link.title)
+  }));
 
-  constructor(
-    private readonly darkTheme: DarkThemeService,
-  ) { }
+  constructor(private readonly darkTheme: DarkThemeService,
+              private readonly localizationService: LocalizationService) { }
 
   ngOnInit(): void {
   }

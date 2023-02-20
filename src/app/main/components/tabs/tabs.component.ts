@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { sharedMenuLinks } from 'src/app/shared/common/constants';
+import { LocalizationService, sharedMenuLinks } from 'src/app/shared';
 import { DarkThemeService } from '../../../core';
 
 @Component({
@@ -9,8 +9,12 @@ import { DarkThemeService } from '../../../core';
 })
 export class TabsComponent implements OnInit {
   @Input() isTabsShowing: boolean;
-  public readonly menuLinks = sharedMenuLinks;
-  constructor(private readonly darkTheme: DarkThemeService) {
+  public readonly menuLinks = sharedMenuLinks.map(link => ({
+    ...link,
+    title: this.localizationService.localize(link.title)
+  }));
+  constructor(private readonly darkTheme: DarkThemeService,
+              private readonly localizationService: LocalizationService) {
   }
 
   ngOnInit(): void {

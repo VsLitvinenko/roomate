@@ -5,6 +5,7 @@ import { MainRoutingModule } from './main-routing.module';
 import { CommonModule } from '@angular/common';
 import { TabsComponent, ProfileHeaderComponent } from './components';
 import { MenuControllerService } from './services/menu-controller.service';
+import { SharedModule } from '../shared';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { MenuControllerService } from './services/menu-controller.service';
     CommonModule,
     IonicModule,
     MainRoutingModule,
+    SharedModule,
   ],
   providers: [
     MenuControllerService

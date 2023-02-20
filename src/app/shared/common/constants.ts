@@ -1,5 +1,6 @@
-import { fromEvent, Observable } from 'rxjs';
-import { map, shareReplay, startWith } from 'rxjs/operators';
+import {fromEvent, Observable} from 'rxjs';
+import {map, shareReplay, startWith} from 'rxjs/operators';
+import {LocalisationEnum} from '../localization';
 
 // https://ionicframework.com/docs/api/split-pane
 export const splitPaneBreakPoint = {
@@ -10,14 +11,14 @@ export const splitPaneBreakPoint = {
 
 export interface MenuHeaderLink {
   url: string;
-  title: string;
+  title: LocalisationEnum;
   icon: string;
 }
 
 export const sharedMenuLinks: MenuHeaderLink[] = [
-  { url: '/app/channel', title: 'channel', icon: 'people' },
-  { url: '/app/direct', title: 'direct', icon: 'person' },
-  { url: '/app/room', title: 'room', icon: 'flash' },
+  { url: '/app/channel', title: LocalisationEnum.channels, icon: 'people' },
+  { url: '/app/direct', title: LocalisationEnum.directs, icon: 'person' },
+  { url: '/app/room', title: LocalisationEnum.room, icon: 'flash' },
 ];
 
 export const isTouchDevice = window.matchMedia('(any-pointer:coarse)').matches;
