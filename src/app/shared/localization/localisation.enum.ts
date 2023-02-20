@@ -27,6 +27,8 @@ export enum LocalisationEnum {
   nUsers = 'nUsers',
   nMembers = 'nMembers',
   online = 'online',
+  enterMessage = 'enterMessage',
+  toSearch = 'toSearch',
 }
 
 export type Localisation = (keyof typeof LocalisationEnum);
@@ -123,5 +125,13 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
   [
     LocalisationEnum.online,
     { en: 'Online', ru: 'Онлайн' }
+  ],
+  [
+    LocalisationEnum.enterMessage,
+    { en: 'Enter your message', ru: 'Напишите сообщение' }
+  ],
+  [
+    LocalisationEnum.toSearch,
+    { en: 'Search for', ru: 'Найти' }
   ],
 ]);

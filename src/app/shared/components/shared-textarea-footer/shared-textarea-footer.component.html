@@ -9,7 +9,7 @@
                   class="message-input"
                   spellcheck="true" autofocus="true"
                   autoGrow="true" rows="1"
-                  placeholder="enter your message...">
+                  [placeholder]="('enterMessage' | localization) + '...'">
     </ion-textarea>
 
     <ion-icon name="send-outline"

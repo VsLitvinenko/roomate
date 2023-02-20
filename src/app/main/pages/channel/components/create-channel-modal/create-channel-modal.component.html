@@ -27,7 +27,8 @@
     </ion-chip>
   </div>
 
-  <ion-searchbar placeholder="Search user" mode="ios" clear-icon="close"
+  <ion-searchbar [placeholder]="['toSearch', 'nUsers'] | localization"
+                 mode="ios" clear-icon="close"
                  (ionChange)="searchEvent$.next($event.target.value)"></ion-searchbar>
 
   <ion-content appScrollbarTheme
