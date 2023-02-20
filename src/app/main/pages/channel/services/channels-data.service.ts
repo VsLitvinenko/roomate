@@ -104,8 +104,9 @@ export class ChannelsDataService {
     await this.channelsStore.setChat(newChannel.id, {
       ...newChannel,
       messages: [],
-      isTopMesLimitAchieved: false
+      isTopMesLimitAchieved: true
     });
+    await this.channelsStore.updateChatMessages(newChannel.id, [], 'start');
   }
 
   private loadShortsChannels(): void {

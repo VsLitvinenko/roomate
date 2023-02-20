@@ -65,7 +65,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
         unreadMessagesCount: 0,
         isFullyLoaded: true,
       } as Full;
-      chat$ = this.store.get(id) ?? new BehaviorSubject<Full>(pseudoLoad);
+      chat$ = new BehaviorSubject<Full>(pseudoLoad);
       this.store.set(id, chat$);
     }
     chat$.next({
