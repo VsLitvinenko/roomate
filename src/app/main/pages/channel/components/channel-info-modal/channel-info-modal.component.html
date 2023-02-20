@@ -16,7 +16,7 @@
 
       <ion-item class="info-header" lines="full">
         <ion-label> {{ channel.title }} </ion-label>
-        <span> {{ channel.members.length }} {{ 'nMembers' | localization }} </span>
+        <span> {{ channel.members.length }} {{ 'nMembers' | localization : channel.members.length }} </span>
       </ion-item>
 
       <ion-list lines="none" mode="md" class="actions">
@@ -43,7 +43,11 @@
             <ion-icon slot="start" name="people"></ion-icon>
             <ion-label *ngIf="context.users">
               <h2> {{ 'allChannelsMembers' | localization }}: </h2>
-              <p> ({{getOnlineUsersCount(context.users)}} {{ ['nUsers', 'online'] | localization }}) </p>
+              <p *ngIf="getOnlineUsersCount(context.users) as onlineCount">
+                ({{ onlineCount }}
+                {{ 'nUsers' | localization : onlineCount }}
+                {{ 'online' | localization | lowercase }})
+              </p>
             </ion-label>
           </ion-item>
         </app-shared-users-list>

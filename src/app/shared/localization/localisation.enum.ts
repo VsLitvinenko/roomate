@@ -1,17 +1,18 @@
+import { ruCaseByNumeral } from './functions';
+
 export interface LocalisationLanguages {
-  en: string;
-  ru: string;
+  en: string | ((...args: any[]) => string);
+  ru: string | ((...args: any[]) => string);
 }
 
 export enum LocalisationEnum {
   unknownError = 'unknownError',
-  noMessages = 'noMessages',
   channels = 'channels',
   channel = 'channel',
   directs = 'directs',
   room = 'room',
   settings = 'settings',
-  noUsers = 'noUsers',
+  no = 'no',
   close = 'close',
   create = 'create',
   public = 'public',
@@ -24,11 +25,12 @@ export enum LocalisationEnum {
   notifications = 'notifications',
   leave = 'leave',
   allChannelsMembers = 'allChannelsMembers',
-  nUsers = 'nUsers',
-  nMembers = 'nMembers',
   online = 'online',
   enterMessage = 'enterMessage',
   toSearch = 'toSearch',
+  nUsers = 'nUsers',
+  nMembers = 'nMembers',
+  nMessages = 'nMessages'
 }
 
 export type Localisation = (keyof typeof LocalisationEnum);
@@ -39,8 +41,8 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
     { en: 'UNKNOWN ERROR', ru: 'НЕИЗВЕСТНАЯ ОШИБКА' }
   ],
   [
-    LocalisationEnum.noMessages,
-    { en: 'No messages', ru: 'Нет сообщений' }
+    LocalisationEnum.no,
+    { en: 'No', ru: 'Нет' }
   ],
   [
     LocalisationEnum.channels,
@@ -61,10 +63,6 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
   [
     LocalisationEnum.settings,
     { en: 'Settings', ru: 'Настройки' }
-  ],
-  [
-    LocalisationEnum.noUsers,
-    { en: 'No users', ru: 'Нет пользователей' }
   ],
   [
     LocalisationEnum.close,
@@ -115,14 +113,6 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
     { en: 'All channel\'s members', ru: 'Все участники канала' }
   ],
   [
-    LocalisationEnum.nMembers,
-    { en: 'members', ru: 'участников' }
-  ],
-  [
-    LocalisationEnum.nUsers,
-    { en: 'users', ru: 'пользователей' }
-  ],
-  [
     LocalisationEnum.online,
     { en: 'Online', ru: 'Онлайн' }
   ],
@@ -134,4 +124,52 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
     LocalisationEnum.toSearch,
     { en: 'Search for', ru: 'Найти' }
   ],
+  [
+    LocalisationEnum.nMembers,
+    {
+      en: (n: number) => n === 1 ? 'member' : 'members',
+      ru: (n: number) => {
+        switch (ruCaseByNumeral(n)) {
+          case 'single':
+            return 'участник';
+          case 'middle':
+            return 'участника';
+          case 'default':
+            return 'участников';
+        }
+      }
+    }
+  ],
+  [
+    LocalisationEnum.nUsers,
+    {
+      en: (n: number) => n === 1 ? 'user' : 'users',
+      ru: (n: number) => {
+        switch (ruCaseByNumeral(n)) {
+          case 'single':
+            return 'пользователь';
+          case 'middle':
+            return 'пользователя';
+          case 'default':
+            return 'пользователей';
+        }
+      }
+    }
+  ],
+  [
+    LocalisationEnum.nMessages,
+    {
+      en: (n: number) => n === 1 ? 'message' : 'messages',
+      ru: (n: number) => {
+        switch (ruCaseByNumeral(n)) {
+          case 'single':
+            return 'сообщение';
+          case 'middle':
+            return 'сообщения';
+          case 'default':
+            return 'сообщений';
+        }
+      }
+    }
+  ]
 ]);

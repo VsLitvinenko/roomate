@@ -9,7 +9,7 @@ export class LocalizationPipe implements PipeTransform {
   constructor(private readonly localizeService: LocalizationService) {
   }
 
-  public transform(value: Localisation | (Localisation | string)[]): string {
-    return this.localizeService.localize(value);
+  public transform(value: Localisation | (Localisation | string)[], ...args: any[]): string {
+    return this.localizeService.localize(value, ...args);
   }
 }

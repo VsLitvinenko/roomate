@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-bitwise
+export const integerDivision = (a: number, b: number) => (~~(a / b));
+
 export const promiseDelay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
