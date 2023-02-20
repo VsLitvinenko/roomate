@@ -3,7 +3,6 @@ import { filter, map, shareReplay, tap } from 'rxjs/operators';
 import {
   ChannelsStore,
   StoreChannel,
-  StoreShortChannel,
   UsersService,
   ChannelsApiClient,
   ChannelApiClient,
@@ -28,13 +27,16 @@ export interface ChannelMessagesInfo {
 })
 export class ChannelsDataService {
 
-  public readonly shortChannels$ = this.getShortsChannels();
+  public readonly shortChannels$ = this.channelsStore.getShorts().pipe(
+    shareReplay(1)
+  );
 
   constructor(private readonly channelsStore: ChannelsStore,
               private readonly users: UsersService,
               private readonly channelsApi: ChannelsApiClient,
               private readonly currentChannelApi: ChannelApiClient,
               private readonly channelsSignalr: ChannelsSirgalrService) {
+    this.loadShortsChannels();
     this.receiveChannelsMessages();
   }
 
@@ -106,12 +108,10 @@ export class ChannelsDataService {
     });
   }
 
-  private getShortsChannels(): Observable<StoreShortChannel[]> {
-    return this.channelsApi.getChannelsShortInfo().pipe(
-      switchMap(shorts => from(this.channelsStore.setShorts(shorts))),
-      switchMap(() => this.channelsStore.getShorts()),
-      shareReplay(1)
-    );
+  private loadShortsChannels(): void {
+    firstValueFrom(
+      this.channelsApi.getChannelsShortInfo()
+    ).then(shorts => this.channelsStore.setShorts(shorts));
   }
 
   private async loadChannelMessages(

@@ -1,15 +1,15 @@
-import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, switchMap } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { cloneDeep } from 'lodash-es';
 import { ChatMessage, FullChat, ShortChat } from './interfaces';
+import { HotMap } from 'src/app/shared';
 
 export abstract class Store<Full extends FullChat, Short extends ShortChat> {
 
   private readonly fullToShort: (x: Full) => Short;
   private readonly shortToFull: (x: Short) => Full;
 
-  private readonly store = new Map<number, BehaviorSubject<Full>>();
-  private readonly refreshList$ = new BehaviorSubject<void>(void 0);
+  private readonly store = new HotMap<number, BehaviorSubject<Full>>();
 
   protected constructor(
     fullToShort: (x: Full) => Short,
@@ -20,19 +20,19 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   }
 
   public getShorts(): Observable<Short[]> {
-    return this.refreshList$.pipe(
-      switchMap(() => combineLatest([...this.store.values()])),
+    return this.store.valuesUpdated.pipe(
+      switchMap(values => this.store.size ? combineLatest([...values]) : of([])),
       map(res => res.map(full => this.fullToShort(full)))
     );
   }
 
   public async setShorts(shorts: Promise<Short[]> | Short[]): Promise<void> {
-    (await shorts)
-      .filter(short => !this.store.has(short.id))
-      .forEach(short => {
-        const full = this.shortToFull(short);
-        this.store.set(short.id, new BehaviorSubject<Full>(full));
-      });
+    const value: ([ number, BehaviorSubject<Full> ])[] =
+      (await shorts)
+        .filter(short => !this.store.has(short.id))
+        .map(short => this.shortToFull(short))
+        .map(full => [full.id, new BehaviorSubject<Full>(full)]);
+    this.store.setMany(value);
   }
 
   public getChat(id: number): Observable<Full> {
@@ -75,7 +75,6 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       unreadMessagesCount: chat$.value.unreadMessagesCount,
       messages: chat$.value.messages
     });
-    this.refreshList$.next(void 0);
   }
 
   public async updateChatMessages(
