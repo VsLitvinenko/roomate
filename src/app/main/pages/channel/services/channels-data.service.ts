@@ -106,7 +106,7 @@ export class ChannelsDataService {
       messages: [],
       isTopMesLimitAchieved: true
     });
-    await this.channelsStore.updateChatMessages(newChannel.id, [], 'start');
+    await this.channelsStore.updateChatMessages(newChannel.id, [], { position: 'start' });
   }
 
   private loadShortsChannels(): void {
@@ -126,14 +126,15 @@ export class ChannelsDataService {
       this.currentChannelApi.getChannelMessages(channelId, mesId, before, after)
     ));
     const options = {
+      position: 'end',
       isTopMesLimitAchieved: newMessages.length !== before
-    };
-    await this.channelsStore.updateChatMessages(channelId, newMessages.filter(mes => mes.id !== mesId), 'end', options);
+    } as any;
+    await this.channelsStore.updateChatMessages(channelId, newMessages.filter(mes => mes.id !== mesId), options);
   }
 
   private receiveChannelsMessages(): void {
     const handler = (temp: TempMes) => this.channelsStore.updateChatMessages(
-      temp.channelId, [temp.message], 'start'
+      temp.channelId, [temp.message], { position: 'start' }
     );
     this.channelsSignalr.receiveChannelsMessages(handler).then();
   }

@@ -23,7 +23,7 @@
                     [routerLink]="['/app', 'channel', 'current', item.id]"
                     routerLinkActive="active">
             <span class="tag"> # </span>
-            <ion-label> {{item.title}} </ion-label>
+            <ion-label [title]="item.title"> {{item.title}} </ion-label>
             <ion-badge *ngIf="item.unreadMessages"
                        color="medium"> {{item.unreadMessages}} </ion-badge>
           </ion-item>

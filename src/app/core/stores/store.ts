@@ -80,15 +80,15 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   public async updateChatMessages(
     id: number,
     newMessages: ChatMessage[] | Promise<ChatMessage[]>,
-    position: 'start' | 'end',
     options: {
+      position: 'start' | 'end';
       isTopMesLimitAchieved?: boolean;
-    } = {}
+    }
   ): Promise<void> {
     const chat$ = this.store.get(id);
     const existMessages = chat$.value.messages ?? [];
     let messages: ChatMessage[];
-    switch (position) {
+    switch (options.position) {
       case 'start':
         messages = [...(await newMessages), ...existMessages];
         break;
@@ -99,7 +99,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     chat$.next({
       ...chat$.value,
       messages,
-      isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? false
+      isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? chat$.value.isTopMesLimitAchieved
     });
   }
 }
