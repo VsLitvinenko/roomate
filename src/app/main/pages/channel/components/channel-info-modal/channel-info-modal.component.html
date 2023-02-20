@@ -4,10 +4,10 @@
   <ng-template>
     <ion-header mode="md">
       <ion-toolbar>
-        <span class="roomate-header-title"> Channel info </span>
+        <span class="roomate-header-title"> {{ 'channelInfo' | localization }} </span>
         <ion-buttons slot="end">
           <ion-button fill="clear" color="roomate-green"
-                      (click)="modal.dismiss()"> close </ion-button>
+                      (click)="modal.dismiss()"> {{ 'close' | localization }} </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -16,7 +16,7 @@
 
       <ion-item class="info-header" lines="full">
         <ion-label> {{ channel.title }} </ion-label>
-        <span> {{ channel.members.length }} members </span>
+        <span> {{ channel.members.length }} {{ 'nMembers' | localization }} </span>
       </ion-item>
 
       <ion-content appScrollbarTheme
@@ -26,13 +26,13 @@
 
           <ion-item (click)="changeNotify()">
             <ion-icon slot="start" name="notifications-outline"></ion-icon>
-            <ion-label> Notifications </ion-label>
+            <ion-label> {{ 'notifications' | localization }} </ion-label>
             <ion-toggle color="roomate-green" [checked]="isNotify"></ion-toggle>
           </ion-item>
 
           <ion-item>
             <ion-icon slot="start" name="exit-outline" color="danger"></ion-icon>
-            <ion-label color="danger"> Leave channel </ion-label>
+            <ion-label color="danger"> {{ ['leave', 'channel'] | localization }} </ion-label>
           </ion-item>
 
         </ion-list>
@@ -42,8 +42,8 @@
           <ion-item class="header">
             <ion-icon slot="start" name="people"></ion-icon>
             <ion-label *ngIf="context.users">
-              <h2> All channel's members: </h2>
-              <p> ({{getOnlineUsersCount(context.users)}} users online) </p>
+              <h2> {{ 'allChannelsMembers' | localization }}: </h2>
+              <p> ({{getOnlineUsersCount(context.users)}} {{ ['nUsers', 'online'] | localization }}) </p>
             </ion-label>
           </ion-item>
         </app-shared-users-list>

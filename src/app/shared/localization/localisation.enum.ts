@@ -1,4 +1,4 @@
-interface LocalisationLanguages {
+export interface LocalisationLanguages {
   en: string;
   ru: string;
 }
@@ -7,6 +7,7 @@ export enum LocalisationEnum {
   unknownError = 'unknownError',
   noMessages = 'noMessages',
   channels = 'channels',
+  channel = 'channel',
   directs = 'directs',
   room = 'room',
   settings = 'settings',
@@ -16,9 +17,18 @@ export enum LocalisationEnum {
   publicChannel = 'publicChannel',
   channelsName = 'channelsName',
   createNewChannel = 'createNewChannel',
+  channelInfo = 'channelInfo',
+  notifications = 'notifications',
+  leave = 'leave',
+  allChannelsMembers = 'allChannelsMembers',
+  nUsers = 'nUsers',
+  nMembers = 'nMembers',
+  online = 'online',
 }
 
-export const localisationValues = new Map<keyof typeof LocalisationEnum, LocalisationLanguages>([
+export type Localisation = (keyof typeof LocalisationEnum);
+
+export const localisationValues = new Map<Localisation, LocalisationLanguages>([
   [
     LocalisationEnum.unknownError,
     { en: 'UNKNOWN ERROR', ru: 'НЕИЗВЕСТНАЯ ОШИБКА' }
@@ -30,6 +40,10 @@ export const localisationValues = new Map<keyof typeof LocalisationEnum, Localis
   [
     LocalisationEnum.channels,
     { en: 'Channels', ru: 'Каналы' }
+  ],
+  [
+    LocalisationEnum.channel,
+    { en: 'Channel', ru: 'Канал' }
   ],
   [
     LocalisationEnum.directs,
@@ -66,5 +80,33 @@ export const localisationValues = new Map<keyof typeof LocalisationEnum, Localis
   [
     LocalisationEnum.createNewChannel,
     { en: 'Create new channel', ru: 'Создать новый канал' }
+  ],
+  [
+    LocalisationEnum.channelInfo,
+    { en: 'Channel information', ru: 'Информация о канале' }
+  ],
+  [
+    LocalisationEnum.notifications,
+    { en: 'Notifications', ru: 'Уведомления' }
+  ],
+  [
+    LocalisationEnum.leave,
+    { en: 'Leave', ru: 'Покинуть' }
+  ],
+  [
+    LocalisationEnum.allChannelsMembers,
+    { en: 'All channel\'s members', ru: 'Все участники канала' }
+  ],
+  [
+    LocalisationEnum.nMembers,
+    { en: 'members', ru: 'участников' }
+  ],
+  [
+    LocalisationEnum.nUsers,
+    { en: 'users', ru: 'пользователей' }
+  ],
+  [
+    LocalisationEnum.online,
+    { en: 'Online', ru: 'Онлайн' }
   ],
 ]);
