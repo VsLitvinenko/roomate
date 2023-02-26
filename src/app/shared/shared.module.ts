@@ -5,10 +5,11 @@ import { IonicModule } from '@ionic/angular';
 import { ScrollbarThemeDirective } from './directives';
 import {
   SharedHeaderComponent,
+  MessagesGroupComponent,
+  ChatComponent,
   SharedChatComponent,
   SharedTextareaFooterComponent,
   SharedLoaderComponent,
-  SharedMessagesGroupComponent,
   SharedUsersListComponent,
   SharedChatActionsComponent
 } from './components';
@@ -32,7 +33,8 @@ const componentsExport = [
 ];
 
 const components = [
-  SharedMessagesGroupComponent,
+  MessagesGroupComponent,
+  ChatComponent,
 ];
 
 @NgModule({

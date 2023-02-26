@@ -1,0 +1,28 @@
+<ion-infinite-scroll *ngIf="scrollEnabled"
+                     threshold="50%" position="top"
+                     (ionInfinite)="infiniteScroll.emit($event)">
+  <ion-infinite-scroll-content loading-spinner="crescent"
+                               class="current-chat-infinite-loading">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+<div class="msgs-container">
+  <ng-container *ngIf="messages && messages.length; else noMessages">
+    <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
+         class="reverse">
+      <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
+                                 [messages]="group.messages"
+                                 [user]="group.user$ | async"
+                                 [self]="group.self">
+      </app-messages-group>
+      <div class="date">
+        <span> {{day.key | date: 'd MMMM'}} </span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noMessages>
+    <span class="no-messages"> {{ ['no', 'nMessages'] | localization }} </span>
+  </ng-template>
+</div>
+

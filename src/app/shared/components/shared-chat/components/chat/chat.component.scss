@@ -1,0 +1,41 @@
+.current-chat-infinite-loading {
+  min-height: 40px !important;
+  ::ng-deep .infinite-loading {
+    --color: var(--roomate-color-green);
+    margin: 4px 0;
+  }
+}
+
+.msgs-container {
+  padding: 2px 12px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  .date {
+    margin-top: 12px;
+    position: sticky;
+    top: 5px;
+
+    display: flex;
+    justify-content: center;
+
+    span {
+      background-color: var(--ion-background-color);
+      color: var(--ion-color-medium);
+      padding: 8px;
+      border-radius: 8px;
+    }
+  }
+}
+
+.reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.no-messages {
+  color: var(--ion-color-medium);
+  margin: auto;
+}

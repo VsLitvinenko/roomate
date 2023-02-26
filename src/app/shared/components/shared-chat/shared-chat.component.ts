@@ -5,18 +5,14 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChange,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
-import { UsersService, UserInfo, ChatMessage } from '../../../core';
-import { Observable } from 'rxjs';
-import { isSameDay, startOfDay } from 'date-fns';
-import groupBy from 'lodash-es/groupBy';
-
-interface MesGroup {
-  messages: ChatMessage[];
-  user$: Observable<UserInfo>;
-  self: boolean;
-}
+import { BehaviorSubject } from 'rxjs';
+import { ChatMessage, UsersService } from '../../../core';
+import { IonContent } from '@ionic/angular';
+import { promiseDelay } from '../../common';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,56 +21,43 @@ interface MesGroup {
   styleUrls: ['./shared-chat.component.scss'],
 })
 export class SharedChatComponent implements OnChanges {
-  @Input() public scrollEnabled: boolean;
-  @Input() public messages: ChatMessage[];
-
+  @Input() messages: ChatMessage[];
+  @Input() isTopMesLimitAchieved: boolean;
   @Output() public infiniteScroll = new EventEmitter();
-  // type fix for understanding by IDE
-  public messageDays: Record<number, MesGroup[]>;
 
+  @ViewChild('currentChatContent', { static: true }) private readonly chatContent: IonContent;
+  public readonly loading$ = new BehaviorSubject<boolean>(true);
   constructor(private readonly users: UsersService) {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.messages && this.messages) {
-      this.messageDays = groupBy(
-        this.splitMessagesIntoGroups(),
-        group =>  startOfDay(new Date(group.messages[0].timestamp)).getTime()
-      );
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes.messages &&
+      !Boolean(changes.messages.previousValue) &&
+      Boolean(changes.messages.currentValue)) {
+      this.firstMessagesLoaded();
+    }
+    else if (changes.messages.previousValue && await this.needToScrollDown(changes.messages)) {
+      await this.chatContent.scrollToBottom(200);
     }
   }
 
-  public trackByDay(index, item: { key: string; value: MesGroup[] }): string {
-    return item.key;
+  private firstMessagesLoaded(): void {
+    promiseDelay(10)
+      .then(() => this.chatContent.scrollToBottom(0))
+      .then(() => this.loading$.next(false));
   }
 
-  public trackByGroup(index, item: MesGroup): string {
-    return item.messages.reduce(
-      (res, mes) => res += mes.content, ''
-    ) + item.messages.at(-1).id;
-  }
-
-  private splitMessagesIntoGroups(): MesGroup[] {
-    return this.messages.reduce((res, item, index, arr) => {
-      if (
-        (index === 0) ||
-        (item.senderId !== arr[index - 1].senderId) ||
-        !isSameDay(
-          new Date(item.timestamp),
-          new Date(arr[index - 1].timestamp),
-        )
-      ) {
-        res.push({
-          messages: [item],
-          self: this.users.selfId === item.senderId,
-          user$: this.users.getUser(item.senderId),
-        });
-      }
-      else {
-        res.at(-1).messages.push(item);
-      }
-      return res;
-    }, [] as MesGroup[]);
+  private async needToScrollDown(mesChanges: SimpleChange): Promise<boolean> {
+    const el = await this.chatContent.getScrollElement();
+    if (el.scrollHeight > el.clientHeight) {
+      const oneNewMessage = mesChanges.currentValue.length - mesChanges.previousValue.length === 1;
+      const selfMessage =  mesChanges.currentValue[0].senderId === this.users.selfId;
+      const nearToBottom = el.scrollHeight - (el.scrollTop + el.clientHeight) < 10;
+      return oneNewMessage && (selfMessage || nearToBottom);
+    }
+    else {
+      return false;
+    }
   }
 
 }
