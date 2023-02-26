@@ -15,16 +15,14 @@
 
 <ion-content #currentChatContent
              appScrollbarTheme>
-
-  <app-shared-loader [loading]="loading"
+  <app-shared-loader [loading]="loading$ | async"
                      [background]="'var(--ion-background-color)'">
   </app-shared-loader>
-
-  <app-shared-chat [scrollEnabled]="!(loading || (messagesInfo$ | async).isTopMesLimitAchieved)"
-                   [messages]="(messagesInfo$ | async)?.messages"
+  <app-shared-chat *ngIf="(messagesInfo$ | async) as info"
+                   [messages]="info.messages"
+                   [scrollEnabled]="!((loading$ | async) || info.isTopMesLimitAchieved)"
                    (infiniteScroll)="infiniteScroll($event)">
   </app-shared-chat>
-
 </ion-content>
 
 <ion-footer class="ion-no-border">
@@ -33,5 +31,5 @@
 </ion-footer>
 
 <app-channel-info-modal #channelInfo
-                        [channelId]="channelId">
+                        [channelId]="channelId$ | async">
 </app-channel-info-modal>

@@ -11,10 +11,10 @@ export class LocalizationService {
 
   public localize(value: Localisation | (Localisation | string)[], ...args: any[]): string {
     if (isArray(value)) {
+      if (args.length !== 0) {
+        console.warn('roomate warning: Localisation arguments are not available with arrays');
+      }
       return value.map((item, index) => {
-        if (args.length !== 0) {
-          console.warn('roomate warning: Localisation arguments are not available with arrays');
-        }
         const res = this.getString(localisationValues.get(item as Localisation));
         return index === 0 ? res : res.toLowerCase();
       }).join(' ');
@@ -29,7 +29,7 @@ export class LocalizationService {
     if (!value) {
       return 'localization error';
     }
-    else if (value && isFunction(value[key])) {
+    else if (isFunction(value[key])) {
       return value[key](...args);
     }
     else {

@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonContent, IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components';
-import { delay, filter, shareReplay, switchMap, take, tap } from 'rxjs/operators';
-import { ChannelMessagesInfo, ChannelsDataService } from '../../services';
-import { combineLatest, from, Observable } from 'rxjs';
+import { delay, filter, shareReplay, switchMap, take, tap, map } from 'rxjs/operators';
+import { ChannelsDataService } from '../../services';
+import { BehaviorSubject, combineLatest, firstValueFrom, from } from 'rxjs';
 import { InjectorService } from '../../../../../core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -14,16 +14,26 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   selector: 'app-current-chat',
   templateUrl: './current-channel.component.html',
   styleUrls: ['./current-channel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrentChannelComponent implements OnInit {
-  @ViewChild('currentChatContent', { static: true })
-  private readonly chatContent: IonContent;
+  @ViewChild('currentChatContent', { static: true }) private readonly chatContent: IonContent;
 
-  public readonly messagesInfo$ = this.getChannelMessagesFromStore();
-  public title$: Observable<string>;
-  public loading: boolean;
+  public readonly channelId$ = this.activatedRoute.params.pipe(
+    map(params => parseInt(params.id, 10)),
+    tap(id => this.updateEndSideMenu(id)),
+    shareReplay(1)
+  );
 
-  public channelId: number;
+  public readonly title$ = this.channelId$.pipe(
+    switchMap(id => this.channelsData.getChannelTitle(id))
+  );
+
+  public readonly messagesInfo$ = this.channelId$.pipe(
+    switchMap(id => this.channelsData.getChannelMessagesInfo(id)),
+    shareReplay(1)
+  );
+  public readonly loading$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -33,14 +43,13 @@ export class CurrentChannelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loading = true;
     // init messages update
     this.messagesInfo$.pipe(
       take(1),
       delay(10) // render time
     ).subscribe(() =>
       this.chatContent.scrollToBottom(0)
-        .then(() => this.loading = false)
+        .then(() => this.loading$.next(false))
     );
     // other messages updates
     this.scrollToBottomOnNewMessageSubscribe();
@@ -55,29 +64,18 @@ export class CurrentChannelComponent implements OnInit {
   // }
 
   public infiniteScroll(event: any): void {
-    this.channelsData.loadTopChannelMessages(this.channelId).then(
-      () => event.target.complete()
-    );
+    firstValueFrom(this.channelId$)
+      .then(id => this.channelsData.loadTopChannelMessages(id))
+      .then(() => event.target.complete());
   }
 
-  public async messageSend(content: string): Promise<void> {
-    await this.channelsData.sendMessageToChannel(this.channelId, content);
+  public messageSend(content: string): void {
+    firstValueFrom(this.channelId$)
+      .then(id => this.channelsData.sendMessageToChannel(id, content));
   }
 
   public async openInfoModal(modal: IonModal): Promise<void> {
     await modal.present();
-  }
-
-  private getChannelMessagesFromStore(): Observable<ChannelMessagesInfo> {
-    return this.activatedRoute.params.pipe(
-      tap(params => {
-        this.channelId = parseInt(params.id, 10);
-        this.title$ = this.channelsData.getChannelTitle(this.channelId);
-        this.updateEndSideMenu(this.channelId);
-      }),
-      switchMap(params => this.channelsData.getChannelMessagesInfo(parseInt(params.id, 10))),
-      shareReplay(1)
-    );
   }
 
   private updateEndSideMenu(id: number): void {
