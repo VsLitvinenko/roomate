@@ -3,14 +3,14 @@
   <ion-menu content-id="menu-content"
             menuId="start-menu"
             side="start" type="reveal"
-            (ionDidOpen)="toggleMenu(true)"
-            (ionDidClose)="toggleMenu(false)"
+            (ionDidOpen)="isTabsShowing$.next(true)"
+            (ionDidClose)="isTabsShowing$.next(false)"
             [maxEdgeStart]="menuEdgeStart">
 
     <app-profile-header></app-profile-header>
     <div class="start-container"
-         [style.padding-bottom.px]="isTabsShowing ? 65 : 0">
-      <ng-container *ngComponentOutlet="startSideMenuComponent | async">
+         [style.padding-bottom.px]="(isTabsShowing$ | async) ? 65 : 0">
+      <ng-container *ngComponentOutlet="startSideMenuComponent$ | async">
       </ng-container>
     </div>
   </ion-menu>
@@ -18,9 +18,9 @@
   <ion-menu content-id="menu-content"
             menuId="end-menu"
             side="end" type="reveal"
-            [swipeGesture]="(endSideMenuTemplate | async) !== null"
+            [swipeGesture]="(endSideMenuTemplate$ | async) !== null"
             [maxEdgeStart]="menuEdgeStart">
-    <ng-container *ngIf="(endSideMenuTemplate | async) as template">
+    <ng-container *ngIf="(endSideMenuTemplate$ | async) as template">
       <ng-container *ngComponentOutlet="template.component;
                     injector: template.injector"></ng-container>
     </ng-container>
@@ -33,7 +33,7 @@
 
 </ion-split-pane>
 
-<app-tabs *ngIf="isMobile | async"
-          [isTabsShowing]="isTabsShowing">
+<app-tabs *ngIf="isMobile$ | async"
+          [isTabsShowing]="isTabsShowing$ | async">
 </app-tabs>
 

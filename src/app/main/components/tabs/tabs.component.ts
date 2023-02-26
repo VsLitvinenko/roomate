@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { LocalizationService, sharedMenuLinks } from 'src/app/shared';
 import { DarkThemeService } from '../../../core';
 
@@ -6,9 +6,12 @@ import { DarkThemeService } from '../../../core';
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsComponent implements OnInit {
   @Input() isTabsShowing: boolean;
+
+  // const
   public readonly menuLinks = sharedMenuLinks.map(link => ({
     ...link,
     title: this.localizationService.localize(link.title)

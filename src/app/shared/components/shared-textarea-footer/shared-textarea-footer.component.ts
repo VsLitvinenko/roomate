@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { IonTextarea } from '@ionic/angular';
 
 @Component({
   selector: 'app-shared-textarea-footer',
   templateUrl: './shared-textarea-footer.component.html',
   styleUrls: ['./shared-textarea-footer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedTextareaFooterComponent {
   @Output() public messageSend = new EventEmitter();

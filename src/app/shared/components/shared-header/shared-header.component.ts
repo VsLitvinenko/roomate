@@ -10,9 +10,10 @@ import { LocalizationService } from '../../localization';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedHeaderComponent implements OnInit {
-  @Input() endSideButtonIcon: string;
+  @Input() public endSideButtonIcon: string;
 
-  public isFull$ = isAppFullWidth$;
+  public readonly isFull$ = isAppFullWidth$;
+  // const
   public readonly menuLinks = sharedMenuLinks.map(link => ({
     ...link,
     title: this.localizationService.localize(link.title)

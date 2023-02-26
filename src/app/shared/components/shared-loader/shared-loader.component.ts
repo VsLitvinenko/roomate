@@ -1,22 +1,23 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-shared-loader',
   templateUrl: './shared-loader.component.html',
   styleUrls: ['./shared-loader.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedLoaderComponent {
-  @Input() loading: boolean;
-  @Input() background = 'transparent';
-  @Input() scale = 1.5;
+  @Input() public loading: boolean;
+  @Input() public background = 'transparent';
+  @Input() public scale = 1.5;
 
   constructor() { }
 
-  get spinnerStyle(): any {
+  public get spinnerStyle(): any {
     return { transform: `scale(${this.scale})` };
   }
 
-  public stopPointEvent(event: Event) {
+  public stopPointEvent(event: Event): void {
     event.stopImmediatePropagation();
   }
 }

@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChatMessage, UserInfo } from '../../../../core';
 
 @Component({
   selector: 'app-shared-messages-group',
   templateUrl: './shared-messages-group.component.html',
   styleUrls: ['./shared-messages-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedMessagesGroupComponent {
   @Input() public messages: ChatMessage[] = [];

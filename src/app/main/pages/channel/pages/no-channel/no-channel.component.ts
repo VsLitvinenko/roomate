@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { CreateChannelModalService } from '../../components';
 
@@ -6,6 +6,7 @@ import { CreateChannelModalService } from '../../components';
   selector: 'app-no-chat',
   templateUrl: './no-channel.component.html',
   styleUrls: ['./no-channel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoChannelComponent implements OnInit {
 
