@@ -98,12 +98,15 @@ export class UsersService {
   }
 
   private async loadUsersList(ids: number[]): Promise<void> {
-    // const newUsers = await firstValueFrom(getUsers(ids));
-    const newUsers = await firstValueFrom(
-      this.usersApi.browseUsersInformation({ id: ids })
-    );
-    newUsers.forEach(user => this.users.get(user.id).next(user));
-    // todo clear pseudoLoaded users on request error
+    try {
+      const newUsers = await firstValueFrom(
+        this.usersApi.browseUsersInformation({ id: ids })
+      );
+      newUsers.forEach(user => this.users.get(user.id).next(user));
+    }
+    catch (e) {
+      ids.forEach(id => this.users.delete(id));
+    }
   }
 
   private setAuthData(authData: AuthorizeResponse): void {

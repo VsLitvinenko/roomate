@@ -21,7 +21,7 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         id: channel.id,
         title: channel.title,
         private: channel.private,
-        unreadMessages: channel.unreadMessagesCount
+        unreadMessages: channel.unreadMessages
       });
     const shortToFull: (x: StoreShortChannel) => StoreChannel =
       short => ({

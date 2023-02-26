@@ -62,19 +62,24 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     else {
       const pseudoLoad = {
         messages: null,
-        unreadMessagesCount: 0,
+        unreadMessages: 0,
         isFullyLoaded: true,
       } as Full;
       chat$ = new BehaviorSubject<Full>(pseudoLoad);
       this.store.set(id, chat$);
     }
-    chat$.next({
-      ...(await newChat),
-      isFullyLoaded: true,
-      // IGNORE MESSAGES ARRAY
-      unreadMessagesCount: chat$.value.unreadMessagesCount,
-      messages: chat$.value.messages
-    });
+    try {
+      chat$.next({
+        ...(await newChat),
+        isFullyLoaded: true,
+        // IGNORE MESSAGES ARRAY
+        unreadMessagesCount: chat$.value.unreadMessages,
+        messages: chat$.value.messages
+      });
+    }
+    catch (e) {
+      chat$.value.isFullyLoaded = false;
+    }
   }
 
   public async updateChatMessages(
