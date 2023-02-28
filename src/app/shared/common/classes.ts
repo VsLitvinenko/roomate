@@ -5,7 +5,7 @@ export class HotMap<K, V> extends Map<K, V> {
   private readonly valuesUpdated$ = new Subject<IterableIterator<V>>();
 
   public get valuesUpdated(): Observable<IterableIterator<V>> {
-    return this.valuesUpdated$.pipe();
+    return this.valuesUpdated$.asObservable();
   }
 
   public set(key: K, value: V): this {

@@ -30,6 +30,8 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         private: short.private,
         unreadMessagesCount: short.unreadMessages,
         videorooms: [],
+        creatorId: null,
+        createdAt: null,
         messages: null,
         members: [],
         isFullyLoaded: false,

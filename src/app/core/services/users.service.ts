@@ -56,7 +56,6 @@ export class UsersService {
     const authData = await firstValueFrom(
       this.loginApi.authorizeByEmail(authRequest)
     );
-    authData.userInfo.imageUrl = 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif';
     localStorage.setItem(localStorageKey, JSON.stringify(authData));
     this.setAuthData(authData);
   }
@@ -72,11 +71,7 @@ export class UsersService {
       this.loadUsersList([id]).then();
     }
     return this.users.get(id).pipe(
-      filter(user => user !== null),
-      map(user => ({
-        ...user,
-        imageUrl: 'https://hope.be/wp-content/uploads/2015/05/no-user-image.gif'
-      }))
+      filter(user => user !== null)
     );
   }
 

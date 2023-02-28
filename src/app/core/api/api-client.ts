@@ -106,7 +106,7 @@ export class ChannelApiClient {
      * @return Success
      */
     sendMessage(channelId: string, body: SendMessageRequest | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/channel/{channelId}";
+        let url_ = this.baseUrl + "/channel/{channelId}/messages";
         if (channelId === undefined || channelId === null)
             throw new Error("The parameter 'channelId' must be defined.");
         url_ = url_.replace("{channelId}", encodeURIComponent("" + channelId));
@@ -767,6 +767,8 @@ export interface ChannelInfo {
     id: number;
     private: boolean;
     title: string | null;
+    creatorId: number;
+    createdAt: string;
     members: number[] | null;
     videorooms: number[] | null;
 }
