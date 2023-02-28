@@ -8,7 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { isSameDay, startOfDay } from 'date-fns';
+import { differenceInHours, isSameDay, startOfDay } from 'date-fns';
 import groupBy from 'lodash-es/groupBy';
 import { ChatMessage, UserInfo, UsersService } from 'src/app/core';
 
@@ -62,7 +62,11 @@ export class ChatComponent implements OnChanges {
         !isSameDay(
           new Date(item.timestamp),
           new Date(arr[index - 1].timestamp),
-        )
+        ) ||
+        differenceInHours(
+          new Date(arr[index - 1].timestamp),
+          new Date(item.timestamp)
+        ) > 0
       ) {
         res.push({
           messages: [item],
