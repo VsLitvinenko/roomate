@@ -10,6 +10,10 @@ ion-split-pane {
       display: none;
     }
   }
+
+  .ion-valid {
+    --highlight-background: var(--roomate-color-green) !important;
+  }
 }
 
 .start-container {
