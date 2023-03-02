@@ -73,7 +73,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
         ...(await newChat),
         isFullyLoaded: true,
         // IGNORE MESSAGES ARRAY
-        unreadMessagesCount: chat$.value.unreadMessages,
+        unreadMessages: chat$.value.unreadMessages,
         messages: chat$.value.messages
       });
     }
