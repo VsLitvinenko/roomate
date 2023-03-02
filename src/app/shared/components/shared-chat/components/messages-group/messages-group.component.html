@@ -28,7 +28,9 @@
       </ng-template>
     </ng-container>
 
-    <div class="text"> {{msg.content}} </div>
+<!--    white-space: pre-wrap container!!!-->
+    <div class="text">{{msg.content}}</div>
+
     <div class="date">
       <ion-icon *ngIf="msg.id === null"
                 name="time-outline"></ion-icon>
