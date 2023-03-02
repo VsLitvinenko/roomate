@@ -1,4 +1,6 @@
 <div *ngFor="let msg of messages; let first = first; let last = last"
+     [class.self]="self"
+     [class.self-mobile]="self && (isMobile$ | async)"
      [id]="msg.id"
      class="message">
 
@@ -14,8 +16,7 @@
     </ion-thumbnail>
   </div>
 
-  <div class="text-container"
-       [class.self]="self">
+  <div class="text-container">
     <ng-container *ngIf="last">
       <div *ngIf="user; else skeletonName" class="name">
         <span (click)="openUser()"> {{user.fullName}} </span>

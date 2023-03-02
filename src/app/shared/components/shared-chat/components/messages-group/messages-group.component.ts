@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChatMessage, UserInfo } from '../../../../../core';
+import { isAppFullWidth$ } from '../../../../common';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-messages-group',
@@ -11,6 +13,10 @@ export class MessagesGroupComponent {
   @Input() public messages: ChatMessage[] = [];
   @Input() public user: UserInfo;
   @Input() public self: boolean;
+
+  public readonly isMobile$ = isAppFullWidth$.pipe(
+    map(value => !value)
+  );
 
   constructor() { }
 

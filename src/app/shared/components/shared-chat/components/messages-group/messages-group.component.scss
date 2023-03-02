@@ -25,6 +25,7 @@
 
   .text-container {
     max-width: 80%;
+    min-width: 80px;
     margin-left: 50px;
     padding: 8px 12px;
 
@@ -61,11 +62,20 @@
       }
     }
   }
+}
 
-  .self {
+.self {
+  .text-container {
     background-color: var(--roomate-my-message) !important;
     .name {
       display: none;
     }
+  }
+}
+
+.self-mobile {
+  justify-content: flex-end;
+  .img-container {
+    display: none;
   }
 }
