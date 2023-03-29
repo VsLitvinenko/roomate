@@ -1,9 +1,8 @@
 {
   "/api": {
-    "target": "http://localhost:8100",
+    "target": "https://dev.roomate.ru",
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": {"^/api" : ""},
     "logLevel": "debug"
   }
 }

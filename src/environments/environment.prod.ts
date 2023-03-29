@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  signalR: 'http://localhost:8100',
-  janus: 'http://localhost:8088'
+  signalR: 'https://dev.roomate.ru/api',
+  janus: 'https://dev.roomate.ru/janus-gateway'
 };
