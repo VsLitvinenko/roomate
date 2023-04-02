@@ -771,6 +771,7 @@ export interface ChannelInfo {
     createdAt: string;
     members: number[] | null;
     videorooms: number[] | null;
+    lastReadMessageId: number | null;
 }
 
 export interface ChannelMessage {

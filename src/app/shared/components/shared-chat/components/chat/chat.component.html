@@ -1,6 +1,14 @@
-<ion-infinite-scroll *ngIf="scrollEnabled"
+<ion-infinite-scroll *ngIf="topScrollEnabled"
                      threshold="50%" position="top"
-                     (ionInfinite)="infiniteScroll.emit($event)">
+                     (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'top' })">
+  <ion-infinite-scroll-content loading-spinner="crescent"
+                               class="current-chat-infinite-loading">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+<ion-infinite-scroll *ngIf="bottomScrollEnabled"
+                     threshold="50%" position="bottom"
+                     (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'bottom' })">
   <ion-infinite-scroll-content loading-spinner="crescent"
                                class="current-chat-infinite-loading">
   </ion-infinite-scroll-content>

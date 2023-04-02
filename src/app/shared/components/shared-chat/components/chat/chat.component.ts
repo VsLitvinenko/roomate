@@ -18,6 +18,11 @@ interface MesGroup {
   self: boolean;
 }
 
+export interface ChatInfiniteScrollEvent {
+  side: 'top' | 'bottom';
+  event: any;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-chat',
@@ -25,10 +30,11 @@ interface MesGroup {
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnChanges {
-  @Input() public scrollEnabled: boolean;
+  @Input() public topScrollEnabled: boolean;
+  @Input() public bottomScrollEnabled: boolean;
   @Input() public messages: ChatMessage[];
 
-  @Output() public infiniteScroll = new EventEmitter();
+  @Output() public infiniteScroll = new EventEmitter<ChatInfiniteScrollEvent>();
   // type fix for understanding by IDE
   public messageDays: Record<number, MesGroup[]>;
 

@@ -20,6 +20,7 @@ import { ChannelsSirgalrService, TempMes } from './channels-sirgalr.service';
 export interface ChannelMessagesInfo {
   messages: StoreChannelMessage[];
   isTopMesLimitAchieved: boolean;
+  isBottomMesLimitAchieved: boolean;
 }
 
 @Injectable({
@@ -55,7 +56,8 @@ export class ChannelsDataService {
       filter(([channel]) => channel.messages !== null),
       map(([channel, tempMes]) => ({
         messages: [...tempMes, ...channel.messages],
-        isTopMesLimitAchieved: channel.isTopMesLimitAchieved
+        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
+        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved
       }))
     );
   }
@@ -65,9 +67,25 @@ export class ChannelsDataService {
     await this.channelsSignalr.sendMessageToChannel(id, this.users.selfId, content);
   }
 
-  public async loadTopChannelMessages(channelId: number): Promise<void> {
-    const lastMesId = this.channelsStore.lastLoadedChatMessageId(channelId);
-    await this.loadChannelMessages(channelId, lastMesId, 50, 0);
+  public async loadChannelMessages(
+    channelId: number,
+    side: 'top' | 'bottom' | 'initial',
+    messageId?: number
+  ): Promise<void> {
+    let requestMessageId: number;
+    let before: number;
+    let after: number;
+    if (side === 'initial') {
+      requestMessageId = messageId ?? 0;
+      before = 30;
+      after = 30;
+    }
+    else {
+      requestMessageId = this.channelsStore.borderLoadedChatMessageId(channelId, side);
+      before = side === 'top' ? 40 : 0;
+      after = side === 'bottom' ? 40: 0;
+    }
+    await this.loadChannelMessagesStore(channelId, requestMessageId, before, after);
   }
 
   public getChannel(id: number): Observable<StoreChannel> {
@@ -78,13 +96,14 @@ export class ChannelsDataService {
       map(channel => ({
         ...channel,
         messages: [],
-        isTopMesLimitAchieved: false
+        isTopMesLimitAchieved: true,
+        isBottomMesLimitAchieved: true
       }))
     );
     return from(
       this.channelsStore.setChat(id, firstValueFrom(getChannelRequest$))
     ).pipe(
-      tap(() => this.loadTopChannelMessages(id)),
+      tap(channel => this.loadChannelMessages(id, 'initial', channel.lastReadMessageId)),
       switchMap(() => this.channelsStore.getChat(id))
     );
   }
@@ -100,7 +119,8 @@ export class ChannelsDataService {
     await this.channelsStore.setChat(newChannel.id, {
       ...newChannel,
       messages: [],
-      isTopMesLimitAchieved: true
+      isTopMesLimitAchieved: true,
+      isBottomMesLimitAchieved: true,
     });
     await this.channelsStore.updateChatMessages(newChannel.id, [], { position: 'start' });
   }
@@ -111,7 +131,7 @@ export class ChannelsDataService {
     ).then(shorts => this.channelsStore.setShorts(shorts));
   }
 
-  private async loadChannelMessages(
+  private async loadChannelMessagesStore(
     channelId: number,
     mesId: number,
     before: number,
@@ -121,11 +141,32 @@ export class ChannelsDataService {
     const newMessages = (await firstValueFrom(
       this.currentChannelApi.getChannelMessages(channelId, mesId, before, after)
     ));
+    let isTopMesLimitAchieved: boolean;
+    let isBottomMesLimitAchieved: boolean;
+    let position: 'start' | 'end';
+    if (mesId === 0) {
+      // first read messages in channel
+      isTopMesLimitAchieved = true;
+      isBottomMesLimitAchieved = newMessages.length < after;
+      position = 'end';
+    }
+    else {
+      // before + after + 1 current message (by mesId) as a request result
+      const readIndex = newMessages.findIndex(item => item.id === mesId);
+      isBottomMesLimitAchieved = after === 0 ? undefined : readIndex < after;
+      isTopMesLimitAchieved = before === 0 ? undefined : newMessages.length - readIndex - 1 < before;
+      position = before === 0 ? 'start' : 'end';
+      if (before === 0 || after === 0) {
+        // infinite scroll condition
+        newMessages.splice(readIndex, 1);
+      }
+    }
     const options = {
-      position: 'end',
-      isTopMesLimitAchieved: newMessages.length !== before
-    } as any;
-    await this.channelsStore.updateChatMessages(channelId, newMessages.filter(mes => mes.id !== mesId), options);
+      isBottomMesLimitAchieved,
+      isTopMesLimitAchieved,
+      position
+    };
+    await this.channelsStore.updateChatMessages(channelId, newMessages, options);
   }
 
   private receiveChannelsMessages(): void {

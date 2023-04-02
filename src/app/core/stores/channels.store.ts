@@ -35,7 +35,9 @@ export class ChannelsStore extends Store<StoreChannel, StoreShortChannel> {
         messages: null,
         members: [],
         isFullyLoaded: false,
-        isTopMesLimitAchieved: false
+        isTopMesLimitAchieved: true,
+        isBottomMesLimitAchieved: true,
+        lastReadMessageId: null,
       });
 
     super(fullToShort, shortToFull);

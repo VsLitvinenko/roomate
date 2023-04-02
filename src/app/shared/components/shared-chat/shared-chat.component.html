@@ -12,7 +12,8 @@
   </ion-button>
 
   <app-chat [messages]="messages"
-            [scrollEnabled]="!((loading$ | async) || isTopMesLimitAchieved)"
+            [topScrollEnabled]="!((loading$ | async) || isTopMesLimitAchieved)"
+            [bottomScrollEnabled]="!((loading$ | async) || isBottomMesLimitAchieved)"
             (infiniteScroll)="infiniteScroll.emit($event)">
   </app-chat>
 </ion-content>

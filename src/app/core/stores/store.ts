@@ -47,12 +47,16 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     return this.store.has(id) && this.store.get(id).value.isFullyLoaded;
   }
 
-  public lastLoadedChatMessageId(id: number): number {
+  public borderLoadedChatMessageId(id: number, side: 'top' | 'bottom'): number {
     const channel = this.store.get(id).value;
-    return channel.messages?.length ? channel.messages.at(-1).id : 0;
+    if (channel.messages?.length) {
+      return side === 'top' ? channel.messages.at(-1).id : channel.messages.at(0).id;
+    } else {
+      return 0;
+    }
   }
 
-  public async setChat(id: number, newChat: Full | Promise<Full>): Promise<void> {
+  public async setChat(id: number, newChat: Full | Promise<Full>): Promise<Full> {
     let chat$: BehaviorSubject<Full>;
     if (this.store.has(id)) {
       // fully load short chat or update existing chat
@@ -76,6 +80,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
         unreadMessages: chat$.value.unreadMessages,
         messages: chat$.value.messages
       });
+      return newChat;
     }
     catch (e) {
       chat$.value.isFullyLoaded = false;
@@ -88,6 +93,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     options: {
       position: 'start' | 'end';
       isTopMesLimitAchieved?: boolean;
+      isBottomMesLimitAchieved?: boolean;
     }
   ): Promise<void> {
     const chat$ = this.store.get(id);
@@ -104,7 +110,8 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     chat$.next({
       ...chat$.value,
       messages,
-      isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? chat$.value.isTopMesLimitAchieved
+      isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? chat$.value.isTopMesLimitAchieved,
+      isBottomMesLimitAchieved: options.isBottomMesLimitAchieved ?? chat$.value.isBottomMesLimitAchieved
     });
   }
 }

@@ -15,6 +15,7 @@ import { ChatMessage } from '../../../core';
 import { IonContent } from '@ionic/angular';
 import { filterVisibleElements, openElementsChildren, promiseDelay } from '../../common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ChatInfiniteScrollEvent } from './components/chat/chat.component';
 
 @UntilDestroy()
 @Component({
@@ -26,7 +27,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class SharedChatComponent implements OnChanges, AfterViewInit {
   @Input() public messages: ChatMessage[];
   @Input() public isTopMesLimitAchieved: boolean;
-  @Output() public infiniteScroll = new EventEmitter<any>();
+  @Input() public isBottomMesLimitAchieved: boolean;
+  @Output() public infiniteScroll = new EventEmitter<ChatInfiniteScrollEvent>();
   @Output() public updateLastReadMessage = new EventEmitter<number>();
   @ViewChild('currentChatContent', { static: true }) private readonly chatContent: IonContent;
 
@@ -94,9 +96,10 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   }
 
   private firstMessagesLoaded(): void {
-    promiseDelay(10) // smooth render time
-      .then(() => this.chatContent.scrollToBottom(0))
-      .then(() => this.loading$.next(false));
+    // promiseDelay(10) // smooth render time
+    //   .then(() => this.chatContent.scrollToBottom(0))
+    //   .then(() => this.loading$.next(false));
+    this.loading$.next(false);
   }
 
   private needToScrollDown(mesChanges: SimpleChange): boolean {

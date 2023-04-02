@@ -7,6 +7,7 @@ import { shareReplay, switchMap, tap, map } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services';
 import { firstValueFrom } from 'rxjs';
 import { InjectorService } from '../../../../../core';
+import { ChatInfiniteScrollEvent } from '../../../../../shared';
 
 @Component({
   selector: 'app-current-chat',
@@ -48,10 +49,10 @@ export class CurrentChannelComponent implements OnInit {
   //   }
   // }
 
-  public infiniteScroll(event: any): void {
+  public infiniteScroll(scrollEvent: ChatInfiniteScrollEvent): void {
     firstValueFrom(this.channelId$)
-      .then(id => this.channelsData.loadTopChannelMessages(id))
-      .then(() => event.target.complete());
+      .then(id => this.channelsData.loadChannelMessages(id, scrollEvent.side))
+      .then(() => scrollEvent.event.target.complete());
   }
 
   public messageSend(content: string): void {

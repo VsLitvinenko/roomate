@@ -11,6 +11,7 @@ export interface FullChat {
   unreadMessages?: number;
   messages?: ChatMessage[];
   isTopMesLimitAchieved: boolean;
+  isBottomMesLimitAchieved: boolean;
 }
 
 export interface ShortChat {
