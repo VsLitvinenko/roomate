@@ -1,3 +1,16 @@
 :host {
   flex-grow: 1;
+
+  ion-button[slot="fixed"] {
+    bottom: 8px;
+    right: 10px;
+    --background: var(--roomate-border-color);
+    --color: var(--ion-color-medium);
+    --padding-start: 8px;
+    --padding-end: 8px;
+
+    &:hover {
+      --color: var(--ion-color-dark);
+    }
+  }
 }
