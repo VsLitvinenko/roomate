@@ -45,28 +45,30 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   constructor(private readonly localizationService: LocalizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
+    if (!(
       changes.messages &&
-      Boolean(changes.messages.currentValue) &&
-      !Boolean(changes.messages.previousValue)
-    ) {
+      changes.messages.currentValue
+    )) {
+      // no changes or still don't have any messages
+      return;
+    }
+
+    if (!changes.messages.previousValue) {
       this.firstMessagesLoaded();
     }
+
+    if (
+      changes.messages.currentValue.length &&
+      this.needToReadMessageCauseNoScroll(changes.messages)
+    ) {
+      this.updateLastReadMessage.emit(this.messages[0].id);
+    }
     else if (
-      changes.messages &&
-      Boolean(changes.messages.currentValue?.length) &&
-      Boolean(changes.messages.previousValue) &&
+      changes.messages.currentValue.length &&
+      changes.messages.previousValue &&
       this.needToScrollDownOnNewMessage(changes.messages)
     ) {
       this.chatContent.scrollToBottom(200).then();
-    }
-    else if (
-      changes.messages &&
-      Boolean(changes.messages.currentValue?.length) &&
-      Boolean(changes.messages.previousValue) &&
-      this.needToReadMessageCauseNoScroll(changes.messages)
-    ) {
-      // this.updateLastReadMessage.emit(this.messages[0].id);
     }
   }
 
@@ -101,6 +103,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       event.target
     );
     const lastId = Number(visibleMessages.at(-1).id);
+    // todo check later messages by timestamp
     if (lastId > this.lastReadMessageId) {
       this.updateLastReadMessage.emit(lastId);
     }
@@ -147,8 +150,9 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   private needToReadMessageCauseNoScroll(mesChanges: SimpleChange): boolean {
     const el = this.ionContentScrollElement;
     const isScrollExist = el.scrollHeight > el.clientHeight;
-    // todo читать сообщения, когда их мало в чате, и скролла еще нет
-    return true;
+    return !isScrollExist &&
+      mesChanges.currentValue[0].id !== null && // skip temp messages
+      mesChanges.currentValue[0].id > this.lastReadMessageId; // todo check later messages by timestamp
   }
 
   private createNewMessagesBarElement(): HTMLElement {
