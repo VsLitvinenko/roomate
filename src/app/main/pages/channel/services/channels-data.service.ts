@@ -21,6 +21,7 @@ export interface ChannelMessagesInfo {
   messages: StoreChannelMessage[];
   isTopMesLimitAchieved: boolean;
   isBottomMesLimitAchieved: boolean;
+  lastReadMessageId: number;
 }
 
 @Injectable({
@@ -57,7 +58,8 @@ export class ChannelsDataService {
       map(([channel, tempMes]) => ({
         messages: [...tempMes, ...channel.messages],
         isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
-        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved
+        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
+        lastReadMessageId: channel.lastReadMessageId
       }))
     );
   }

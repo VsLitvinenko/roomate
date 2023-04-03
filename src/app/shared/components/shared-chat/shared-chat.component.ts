@@ -13,9 +13,10 @@ import {
 import { BehaviorSubject, Observable, auditTime, debounceTime, map } from 'rxjs';
 import { ChatMessage } from '../../../core';
 import { IonContent } from '@ionic/angular';
-import { filterVisibleElements, openElementsChildren, promiseDelay } from '../../common';
+import { filterVisibleElements, isAppFullWidth$, openElementsChildren, promiseDelay } from '../../common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ChatInfiniteScrollEvent } from './components/chat/chat.component';
+import { LocalizationService } from '../../localization';
 
 @UntilDestroy()
 @Component({
@@ -28,15 +29,20 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   @Input() public messages: ChatMessage[];
   @Input() public isTopMesLimitAchieved: boolean;
   @Input() public isBottomMesLimitAchieved: boolean;
+  @Input() public lastReadMessageId: number;
+
   @Output() public infiniteScroll = new EventEmitter<ChatInfiniteScrollEvent>();
   @Output() public updateLastReadMessage = new EventEmitter<number>();
+
   @ViewChild('currentChatContent', { static: true }) private readonly chatContent: IonContent;
 
   public readonly loading$ = new BehaviorSubject<boolean>(true);
   public isNotNearToBottom$: Observable<boolean>;
 
   private ionContentScrollElement: HTMLElement;
-  constructor() { }
+  private readonly newMessagesBar = this.createNewMessagesBarElement();
+
+  constructor(private readonly localizationService: LocalizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -49,7 +55,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
     else if (
       Boolean(changes.messages.currentValue?.length) &&
       Boolean(changes.messages.previousValue) &&
-      this.needToScrollDown(changes.messages)
+      this.needToScrollDownOnNewMessage(changes.messages)
     ) {
       this.chatContent.scrollToBottom(200).then();
     }
@@ -79,7 +85,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
     ).subscribe(event => this.ionScroll(event));
   }
 
-  public ionScroll(event: any): void {
+  private ionScroll(event: any): void {
     const visibleDays = filterVisibleElements(
       [...event.target.lastChild.lastChild.children],
       event.target
@@ -96,13 +102,30 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   }
 
   private firstMessagesLoaded(): void {
-    // promiseDelay(10) // smooth render time
-    //   .then(() => this.chatContent.scrollToBottom(0))
-    //   .then(() => this.loading$.next(false));
-    this.loading$.next(false);
+    promiseDelay(10)
+      .then(() => {
+        if (!this.lastReadMessageId) {
+          // do nothing, should keep scroll on top
+          return;
+        }
+        else if (this.lastReadMessageId === this.messages[0].id) {
+          // all messages were read
+          return this.chatContent.scrollToBottom(0);
+        }
+        else {
+          // scroll to last read message
+          const msgEl = document.getElementById(String(this.lastReadMessageId));
+          msgEl.before(this.newMessagesBar);
+
+          const msgPos = msgEl.getBoundingClientRect().top;
+          const parentHeight = this.ionContentScrollElement.clientHeight;
+          return this.chatContent.scrollToPoint(null, msgPos - parentHeight/2, 0);
+        }
+      })
+      .then(() => this.loading$.next(false));
   }
 
-  private needToScrollDown(mesChanges: SimpleChange): boolean {
+  private needToScrollDownOnNewMessage(mesChanges: SimpleChange): boolean {
     const el = this.ionContentScrollElement;
     if (el && el.scrollHeight > el.clientHeight) {
       const oneNewMessage = mesChanges.currentValue.length - mesChanges.previousValue.length === 1;
@@ -121,6 +144,23 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
     const isScrollExist = el.scrollHeight > el.clientHeight;
     // todo читать сообщения, когда их мало в чате, и скролла еще нет
     return true;
+  }
+
+  private createNewMessagesBarElement(): HTMLElement {
+    const newMessagesEl = document.createElement('div');
+    newMessagesEl.innerHTML = `<span>${this.localizationService.localize('newMessages')}</span>`;
+
+    isAppFullWidth$.pipe(
+      untilDestroyed(this)
+    ).subscribe(fullWidth => {
+      if (fullWidth) {
+        newMessagesEl.className = 'new-messages-bar';
+      }
+      else {
+        newMessagesEl.className = 'new-messages-bar mobile-bar';
+      }
+    });
+    return newMessagesEl;
   }
 
 }

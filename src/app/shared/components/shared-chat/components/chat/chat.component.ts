@@ -30,8 +30,8 @@ export interface ChatInfiniteScrollEvent {
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnChanges {
-  @Input() public topScrollEnabled: boolean;
-  @Input() public bottomScrollEnabled: boolean;
+  @Input() public topScrollDisabled: boolean;
+  @Input() public bottomScrollDisabled: boolean;
   @Input() public messages: ChatMessage[];
 
   @Output() public infiniteScroll = new EventEmitter<ChatInfiniteScrollEvent>();

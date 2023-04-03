@@ -13,4 +13,40 @@
       --color: var(--ion-color-dark);
     }
   }
+
+  ::ng-deep {
+    .new-messages-bar {
+      margin: 16px 50px 8px;
+      text-align: center;
+      overflow: hidden;
+      color: var(--ion-color-medium);
+      position: relative;
+
+      &:before {
+        display: block;
+        content: '';
+        position: absolute;
+        top:50%;
+        width:100%;
+        border-bottom: 2px solid var(--ion-color-medium);
+        filter: brightness(60%);
+        z-index: -1;
+      }
+
+      span {
+        background-color: var(--ion-background-color);
+        padding: 0 12px;
+      }
+    }
+
+    .mobile-bar {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  .mobile-bar {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }

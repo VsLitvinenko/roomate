@@ -31,7 +31,8 @@ export enum LocalisationEnum {
   toSearch = 'toSearch',
   nUsers = 'nUsers',
   nMembers = 'nMembers',
-  nMessages = 'nMessages'
+  nMessages = 'nMessages',
+  newMessages = 'newMessages',
 }
 
 export type Localisation = (keyof typeof LocalisationEnum);
@@ -128,6 +129,10 @@ export const localisationValues = new Map<Localisation, LocalisationLanguages>([
   [
     LocalisationEnum.toSearch,
     { en: 'Search for', ru: 'Найти' }
+  ],
+  [
+    LocalisationEnum.newMessages,
+    { en: 'New messages', ru: 'Новые сообщения' }
   ],
   [
     LocalisationEnum.nMembers,

@@ -1,13 +1,13 @@
-<ion-infinite-scroll *ngIf="topScrollEnabled"
-                     threshold="50%" position="top"
+<ion-infinite-scroll position="top" threshold="800px"
+                     [disabled]="topScrollDisabled"
                      (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'top' })">
   <ion-infinite-scroll-content loading-spinner="crescent"
                                class="current-chat-infinite-loading">
   </ion-infinite-scroll-content>
 </ion-infinite-scroll>
 
-<ion-infinite-scroll *ngIf="bottomScrollEnabled"
-                     threshold="50%" position="bottom"
+<ion-infinite-scroll position="bottom" threshold="800px"
+                     [disabled]="bottomScrollDisabled"
                      (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'bottom' })">
   <ion-infinite-scroll-content loading-spinner="crescent"
                                class="current-chat-infinite-loading">
