@@ -55,6 +55,11 @@ export class CurrentChannelComponent implements OnInit {
       .then(() => scrollEvent.event.target.complete());
   }
 
+  public updateLastReadMessage(mesId: number): void {
+    firstValueFrom(this.channelId$)
+      .then(id => this.channelsData.updateLastReadMessage(id, mesId));
+  }
+
   public messageSend(content: string): void {
     firstValueFrom(this.channelId$)
       .then(id => this.channelsData.sendMessageToChannel(id, content));

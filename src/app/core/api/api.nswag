@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "http://localhost:8100/swagger/v1/swagger.json",
+      "url": "https://dev.roomate.ru/api/swagger/v1/swagger.json",
       "newLineBehavior": "Auto"
     }
   },

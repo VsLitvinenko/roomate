@@ -8,6 +8,12 @@ export interface TempMes {
   channelId: number;
 }
 
+export interface LastReadMesEvent {
+  channelId: number;
+  messageId: number;
+  unreadMessagesCount: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -72,11 +78,24 @@ export class ChannelsSirgalrService {
     );
   }
 
+  public async updateLastReadMessage(channelId: number, messageId: number): Promise<void> {
+    const connection = await this.signalr.connectionReady;
+    await connection.invoke('UpdateLastReadMessage', { channelId, messageId });
+  }
+
+  public async receiveLastReadMessageWasUpdated(handler: (LastReadMesEvent) => void): Promise<void> {
+    const connection = await this.signalr.connectionReady;
+    connection.on(
+      'LastReadMessageUpdated',
+      event => handler(event)
+    );
+  }
+
   private async sendChannelMessageToSignalr(params: {
     message: string;
     channelId: number;
   }): Promise<void> {
     const connection = await this.signalr.connectionReady;
-    return connection.invoke('SendChannelMessage', params);
+    await connection.invoke('SendChannelMessage', params);
   }
 }

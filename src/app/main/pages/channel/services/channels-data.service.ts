@@ -15,7 +15,7 @@ import {
   Observable,
   switchMap
 } from 'rxjs';
-import { ChannelsSirgalrService, TempMes } from './channels-sirgalr.service';
+import { ChannelsSirgalrService, LastReadMesEvent, TempMes } from './channels-sirgalr.service';
 
 export interface ChannelMessagesInfo {
   messages: StoreChannelMessage[];
@@ -40,6 +40,7 @@ export class ChannelsDataService {
               private readonly channelsSignalr: ChannelsSirgalrService) {
     this.loadShortsChannels();
     this.receiveChannelsMessages();
+    this.receiveLastReadMessageWasUpdated();
   }
 
   public getChannelTitle(id: number): Observable<string> {
@@ -56,7 +57,7 @@ export class ChannelsDataService {
       tap(([channel]) => this.users.updateListOfUsers(channel.members)),
       filter(([channel]) => channel.messages !== null),
       map(([channel, tempMes]) => ({
-        messages: [...tempMes, ...channel.messages],
+        messages: tempMes.length ? [...tempMes, ...channel.messages] : channel.messages,
         isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
         isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
         lastReadMessageId: channel.lastReadMessageId
@@ -67,6 +68,10 @@ export class ChannelsDataService {
   public async sendMessageToChannel(id: number, content: string): Promise<void> {
     // add temp message
     await this.channelsSignalr.sendMessageToChannel(id, this.users.selfId, content);
+  }
+
+  public async updateLastReadMessage(channelId: number, messageId: number): Promise<void> {
+    await this.channelsSignalr.updateLastReadMessage(channelId, messageId);
   }
 
   public async loadChannelMessages(
@@ -176,5 +181,12 @@ export class ChannelsDataService {
       temp.channelId, [temp.message], { position: 'start' }
     );
     this.channelsSignalr.receiveChannelsMessages(handler).then();
+  }
+
+  private receiveLastReadMessageWasUpdated(): void {
+    const handler = (event: LastReadMesEvent) => this.channelsStore.updateLastReadMessage(
+      event.channelId, event.messageId, event.unreadMessagesCount
+    );
+    this.channelsSignalr.receiveLastReadMessageWasUpdated(handler).then();
   }
 }

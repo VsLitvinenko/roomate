@@ -1,6 +1,5 @@
 import { BehaviorSubject, combineLatest, Observable, of, switchMap } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { cloneDeep } from 'lodash-es';
 import { ChatMessage, FullChat, ShortChat } from './interfaces';
 import { HotMap } from 'src/app/shared';
 
@@ -38,8 +37,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
   public getChat(id: number): Observable<Full> {
     return this.store.get(id).pipe(
       filter(full => full.hasOwnProperty('id')),
-      filter(full => full.isFullyLoaded),
-      map(full => cloneDeep(full)) // immutable
+      filter(full => full.isFullyLoaded)
     );
   }
 
@@ -66,7 +64,6 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     else {
       const pseudoLoad = {
         messages: null,
-        unreadMessages: 0,
         isFullyLoaded: true,
       } as Full;
       chat$ = new BehaviorSubject<Full>(pseudoLoad);
@@ -112,6 +109,15 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       messages,
       isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? chat$.value.isTopMesLimitAchieved,
       isBottomMesLimitAchieved: options.isBottomMesLimitAchieved ?? chat$.value.isBottomMesLimitAchieved
+    });
+  }
+
+  public updateLastReadMessage(chatId: number, lastReadMessageId: number, unreadMessages: number): void {
+    const chat$ = this.store.get(chatId);
+    chat$.next({
+      ...chat$.value,
+      lastReadMessageId,
+      unreadMessages
     });
   }
 }

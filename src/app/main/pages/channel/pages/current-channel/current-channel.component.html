@@ -18,6 +18,7 @@
                  [isTopMesLimitAchieved]="context.info?.isTopMesLimitAchieved"
                  [isBottomMesLimitAchieved]="context.info?.isBottomMesLimitAchieved"
                  [lastReadMessageId]="context.info?.lastReadMessageId"
+                 (updateLastReadMessage)="updateLastReadMessage($event)"
                  (infiniteScroll)="infiniteScroll($event)">
 </app-shared-chat>
 

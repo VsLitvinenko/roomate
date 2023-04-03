@@ -53,6 +53,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       this.firstMessagesLoaded();
     }
     else if (
+      changes.messages &&
       Boolean(changes.messages.currentValue?.length) &&
       Boolean(changes.messages.previousValue) &&
       this.needToScrollDownOnNewMessage(changes.messages)
@@ -60,11 +61,12 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       this.chatContent.scrollToBottom(200).then();
     }
     else if (
+      changes.messages &&
       Boolean(changes.messages.currentValue?.length) &&
       Boolean(changes.messages.previousValue) &&
       this.needToReadMessageCauseNoScroll(changes.messages)
     ) {
-      this.updateLastReadMessage.emit(this.messages[0].id);
+      // this.updateLastReadMessage.emit(this.messages[0].id);
     }
   }
 
@@ -80,7 +82,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
     });
 
     this.chatContent.ionScroll.pipe(
-      debounceTime(400),
+      debounceTime(500),
       untilDestroyed(this)
     ).subscribe(event => this.ionScroll(event));
   }
@@ -98,7 +100,10 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       openElementsChildren(visibleGroups, { reverseLeaf: true }),
       event.target
     );
-    console.log(visibleMessages);
+    const lastId = Number(visibleMessages.at(-1).id);
+    if (lastId > this.lastReadMessageId) {
+      this.updateLastReadMessage.emit(lastId);
+    }
   }
 
   private firstMessagesLoaded(): void {
@@ -117,7 +122,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
           const msgEl = document.getElementById(String(this.lastReadMessageId));
           msgEl.before(this.newMessagesBar);
 
-          const msgPos = msgEl.getBoundingClientRect().top;
+          const msgPos = msgEl.getBoundingClientRect().bottom;
           const parentHeight = this.ionContentScrollElement.clientHeight;
           return this.chatContent.scrollToPoint(null, msgPos - parentHeight/2, 0);
         }
