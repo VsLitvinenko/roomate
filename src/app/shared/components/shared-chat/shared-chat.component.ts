@@ -149,7 +149,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
 
   private needToReadMessageCauseNoScroll(mesChanges: SimpleChange): boolean {
     const el = this.ionContentScrollElement;
-    const isScrollExist = el.scrollHeight > el.clientHeight;
+    const isScrollExist = el && el.scrollHeight > el.clientHeight;
     return !isScrollExist &&
       mesChanges.currentValue[0].id !== null && // skip temp messages
       mesChanges.currentValue[0].id > this.lastReadMessageId; // todo check later messages by timestamp

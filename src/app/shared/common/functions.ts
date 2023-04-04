@@ -16,10 +16,26 @@ export const extractError = (error: any): string => {
   }
 };
 
-export const filterVisibleElements = (array: HTMLElement[], scrollTarget: HTMLElement) => array.filter(item => {
-  const rect = item.getBoundingClientRect();
-  return ((rect.y + rect.height) > 0 && ((rect.bottom - rect.height) < scrollTarget.clientHeight));
-});
+export const filterVisibleElements = (array: HTMLElement[], scrollTarget: HTMLElement) => {
+  let firstVisibleIndex: number;
+  let lastVisibleIndex: number;
+
+  let isPrevElementVisible = false;
+  for (let i = 0; i < array.length; i++) {
+    const rect = array[i].getBoundingClientRect();
+    const isItemVisible = (rect.y + rect.height) > 0 && ((rect.bottom - rect.height) < scrollTarget.clientHeight);
+    if (!isPrevElementVisible && isItemVisible) {
+      firstVisibleIndex = i;
+    }
+    if (isPrevElementVisible && !isItemVisible) {
+      lastVisibleIndex = i;
+      break;
+    }
+    isPrevElementVisible = isItemVisible;
+    // console.log(i);
+  }
+  return array.slice(firstVisibleIndex, lastVisibleIndex);
+};
 
 export const openElementsChildren = (
   array: HTMLElement[],
