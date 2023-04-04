@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { ScrollbarThemeDirective } from './directives';
 import {
-  SharedHeaderComponent,
   MessagesGroupComponent,
   ChatComponent,
   SharedChatComponent,
@@ -14,6 +13,7 @@ import {
   SharedChatActionsComponent
 } from './components';
 import { LocalizationPipe } from './localization';
+import { PushModule } from '@rx-angular/template/push';
 
 const directives = [
   ScrollbarThemeDirective,
@@ -24,7 +24,6 @@ const pipes = [
 ];
 
 const componentsExport = [
-  SharedHeaderComponent,
   SharedLoaderComponent,
   SharedTextareaFooterComponent,
   SharedChatComponent,
@@ -37,23 +36,29 @@ const components = [
   ChatComponent,
 ];
 
+const rxAngularModules = [
+  PushModule
+];
+
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     RouterModule,
+    ...rxAngularModules,
   ],
   declarations: [
     ...directives,
     ...components,
     ...componentsExport,
-    ...pipes
+    ...pipes,
   ],
   providers: [],
   exports: [
     ...directives,
     ...componentsExport,
     ...pipes,
+    ...rxAngularModules,
   ]
 })
 export class SharedModule { }

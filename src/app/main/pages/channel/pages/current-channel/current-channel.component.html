@@ -1,18 +1,18 @@
 <div class="ion-page">
-  <ion-header mode="md">
-    <app-shared-header endSideButtonIcon="globe-sharp">
-      <span *ngIf="(title$ | async) as title; else skeletonTitle"
-            (click)="openInfoModal(channelInfo.modal)"
-            class="roomate-header-title">
-        {{ title }}
-      </span>
-      <ng-template #skeletonTitle>
-        <ion-skeleton-text class="roomate-header-title-skeleton"
-                           animated="true">
-        </ion-skeleton-text>
-      </ng-template>
-    </app-shared-header>
-  </ion-header>
+<!--  <ion-header mode="md">-->
+<!--    <app-shared-header endSideButtonIcon="globe-sharp">-->
+<!--      <span *ngIf="(title$ | async) as title; else skeletonTitle"-->
+<!--            (click)="openInfoModal(channelInfo.modal)"-->
+<!--            class="roomate-header-title">-->
+<!--        {{ title }}-->
+<!--      </span>-->
+<!--      <ng-template #skeletonTitle>-->
+<!--        <ion-skeleton-text class="roomate-header-title-skeleton"-->
+<!--                           animated="true">-->
+<!--        </ion-skeleton-text>-->
+<!--      </ng-template>-->
+<!--    </app-shared-header>-->
+<!--  </ion-header>-->
 
   <app-shared-chat *ngIf="{ info: (messagesInfo$ | async) } as context"
                    [messages]="context.info?.messages"

@@ -1,6 +1,6 @@
-import {fromEvent, Observable} from 'rxjs';
-import {map, shareReplay, startWith} from 'rxjs/operators';
-import {LocalisationEnum} from '../localization';
+import { debounceTime, fromEvent, Observable } from 'rxjs';
+import { map, shareReplay, startWith } from 'rxjs/operators';
+import { LocalisationEnum } from '../localization';
 
 // https://ionicframework.com/docs/api/split-pane
 export const splitPaneBreakPoint = {
@@ -26,6 +26,7 @@ export const isTouchDevice = window.matchMedia('(any-pointer:coarse)').matches;
 export const isAppFullWidth$: Observable<boolean> = fromEvent(window, 'resize')
   .pipe(
     map((event: any) => event.target.innerWidth > splitPaneBreakPoint.minWidth ),
+    debounceTime(100),
     startWith(window.innerWidth > splitPaneBreakPoint.minWidth),
     shareReplay(1),
   );

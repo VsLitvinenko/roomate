@@ -3,15 +3,20 @@ import { IonicModule } from '@ionic/angular';
 import { MainComponent } from './view/main.component';
 import { MainRoutingModule } from './main-routing.module';
 import { CommonModule } from '@angular/common';
-import { TabsComponent, ProfileHeaderComponent } from './components';
+import { TabsComponent, ProfileHeaderComponent, PageHeaderComponent } from './components';
 import { MenuControllerService } from './services/menu-controller.service';
 import { SharedModule } from '../shared';
+
+const components = [
+  TabsComponent,
+  ProfileHeaderComponent,
+  PageHeaderComponent,
+];
 
 @NgModule({
   declarations: [
     MainComponent,
-    TabsComponent,
-    ProfileHeaderComponent,
+    ...components
   ],
   imports: [
     CommonModule,

@@ -9,8 +9,8 @@
 
     <app-profile-header></app-profile-header>
     <div class="start-container"
-         [style.padding-bottom.px]="(isTabsShowing$ | async) ? 65 : 0">
-      <ng-container *ngComponentOutlet="startSideMenuComponent$ | async">
+         [style.padding-bottom.px]="(isTabsShowing$ | push) ? 65 : 0">
+      <ng-container *ngComponentOutlet="startSideMenuComponent$ | push">
       </ng-container>
     </div>
   </ion-menu>
@@ -28,6 +28,9 @@
 
   <!--    content-routing-->
   <div id="menu-content" class="ion-page">
+    <ion-header mode="md">
+      <app-page-header></app-page-header>
+    </ion-header>
     <router-outlet></router-outlet>
   </div>
 

@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { DarkThemeService } from '../../../core';
-import { isAppFullWidth$, sharedMenuLinks } from '../../common';
-import { LocalizationService } from '../../localization';
+import { isAppFullWidth$, sharedMenuLinks, LocalizationService } from '../../../shared';
 
 @Component({
-  selector: 'app-shared-header',
-  templateUrl: './shared-header.component.html',
-  styleUrls: ['./shared-header.component.scss'],
+  selector: 'app-page-header',
+  templateUrl: './page-header.component.html',
+  styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SharedHeaderComponent implements OnInit {
+export class PageHeaderComponent implements OnInit {
   @Input() public endSideButtonIcon: string;
 
   public readonly isFull$ = isAppFullWidth$;
