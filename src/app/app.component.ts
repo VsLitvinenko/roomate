@@ -5,7 +5,7 @@ import { DarkThemeService } from './core';
   selector: 'app-root',
   template: `
     <ion-app>
-      <ion-router-outlet animated="false"></ion-router-outlet>
+      <router-outlet></router-outlet>
     </ion-app>
   `
 })

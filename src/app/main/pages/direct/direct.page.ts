@@ -15,14 +15,7 @@ export class DirectPage implements OnInit {
   constructor(private readonly menuController: MenuControllerService) { }
 
   ngOnInit(): void {
-  }
-
-  ionViewWillEnter(): void {
     this.menuController.setStartSideMenuComponent(DirectStartSideComponent);
-  }
-
-  ionViewWillLeave(): void {
-    this.menuController.clearEndSideMenuTemplate();
   }
 
 }

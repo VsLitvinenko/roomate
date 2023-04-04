@@ -18,14 +18,7 @@ export class ChannelPage implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-
-  ionViewWillEnter(): any {
     this.menuController.setStartSideMenuComponent(ChannelStartSideComponent);
-  }
-
-  ionViewWillLeave(): void {
-    this.menuController.clearEndSideMenuTemplate();
   }
 
 }
