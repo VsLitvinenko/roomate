@@ -5,9 +5,7 @@ import { DirectStartSideComponent } from './components';
 @Component({
   selector: 'app-direct',
   template: `
-    <ion-router-outlet id="menu-content"
-                       animated="false">
-    </ion-router-outlet>
+    <router-outlet></router-outlet>
   `,
 })
 export class DirectPage implements OnInit {

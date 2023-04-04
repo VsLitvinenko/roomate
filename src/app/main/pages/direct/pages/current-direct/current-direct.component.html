@@ -1,42 +1,44 @@
-<ion-header mode="md">
-  <app-shared-header endSideButtonIcon="person">
-    <span class="roomate-header-title">
-      {{(isFull$ | async) ? currentUser.fullName : currentUser.shortName}}
-    </span>
-    <span *ngIf="currentUser.online"
-          class="is-online"> online </span>
-  </app-shared-header>
-</ion-header>
-
-<ion-content #currentChatContent
-             appScrollbarTheme>
-
-  <app-shared-loader [loading]="loading"
-                     [background]="'var(--ion-background-color)'">
-  </app-shared-loader>
-
-  <ion-infinite-scroll *ngIf="!loading"
-                       threshold="50%" position="top"
-                       (ionInfinite)="infiniteScroll($event)">
-    <ion-infinite-scroll-content loading-spinner="crescent"
-                                 class="current-chat-infinite-loading">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-
-  <div class="msgs-container">
-    <div *ngFor="let msg of dataSource; let i = index"
-         [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'"
-         class="message">
-      <span> {{msg.msg}} </span>
-      <span class="ion-text-right">
-        {{ msg.date | date:'hh:mm' }}
+<div class="ion-page">
+  <ion-header mode="md">
+    <app-shared-header endSideButtonIcon="person">
+      <span class="roomate-header-title">
+        {{(isFull$ | async) ? currentUser.fullName : currentUser.shortName}}
       </span>
+      <span *ngIf="currentUser.online"
+            class="is-online"> online </span>
+    </app-shared-header>
+  </ion-header>
+
+  <ion-content #currentChatContent
+               appScrollbarTheme>
+
+    <app-shared-loader [loading]="loading"
+                       [background]="'var(--ion-background-color)'">
+    </app-shared-loader>
+
+    <ion-infinite-scroll *ngIf="!loading"
+                         threshold="50%" position="top"
+                         (ionInfinite)="infiniteScroll($event)">
+      <ion-infinite-scroll-content loading-spinner="crescent"
+                                   class="current-chat-infinite-loading">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <div class="msgs-container">
+      <div *ngFor="let msg of dataSource; let i = index"
+           [ngClass]="msg.from === 0 ? 'my-message' : 'other-message'"
+           class="message">
+        <span> {{msg.msg}} </span>
+        <span class="ion-text-right">
+          {{ msg.date | date:'hh:mm' }}
+        </span>
+      </div>
     </div>
-  </div>
 
-</ion-content>
+  </ion-content>
 
-<ion-footer class="ion-no-border">
-  <app-shared-textarea-footer (messageSend)="messageSend($event)">
-  </app-shared-textarea-footer>
-</ion-footer>
+  <ion-footer class="ion-no-border">
+    <app-shared-textarea-footer (messageSend)="messageSend($event)">
+    </app-shared-textarea-footer>
+  </ion-footer>
+</div>

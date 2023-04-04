@@ -27,6 +27,8 @@ export class RoomPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.menuController.setStartSideMenuComponent(RoomStartSideComponent);
+    this.menuController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
     // const res = confirm('use initial tracks?');
     this.janusService.joinRoom(this.roomId, true, false);
   }
@@ -38,15 +40,6 @@ export class RoomPage implements OnInit {
 
   public setAudioOutputId(event: string): void {
     this.audioOutputId = event;
-  }
-
-  ionViewWillEnter(): void {
-    this.menuController.setStartSideMenuComponent(RoomStartSideComponent);
-    this.menuController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
-  }
-
-  ionViewWillLeave(): void {
-    this.menuController.clearEndSideMenuTemplate();
   }
 
 }

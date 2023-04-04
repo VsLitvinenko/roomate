@@ -1,32 +1,34 @@
-<ion-header mode="md">
-  <app-shared-header endSideButtonIcon="globe-sharp">
-    <span *ngIf="(title$ | async) as title; else skeletonTitle"
-          (click)="openInfoModal(channelInfo.modal)"
-          class="roomate-header-title">
-      {{ title }}
-    </span>
-    <ng-template #skeletonTitle>
-      <ion-skeleton-text class="roomate-header-title-skeleton"
-                         animated="true">
-      </ion-skeleton-text>
-    </ng-template>
-  </app-shared-header>
-</ion-header>
+<div class="ion-page">
+  <ion-header mode="md">
+    <app-shared-header endSideButtonIcon="globe-sharp">
+      <span *ngIf="(title$ | async) as title; else skeletonTitle"
+            (click)="openInfoModal(channelInfo.modal)"
+            class="roomate-header-title">
+        {{ title }}
+      </span>
+      <ng-template #skeletonTitle>
+        <ion-skeleton-text class="roomate-header-title-skeleton"
+                           animated="true">
+        </ion-skeleton-text>
+      </ng-template>
+    </app-shared-header>
+  </ion-header>
 
-<app-shared-chat *ngIf="{ info: (messagesInfo$ | async) } as context"
-                 [messages]="context.info?.messages"
-                 [isTopMesLimitAchieved]="context.info?.isTopMesLimitAchieved"
-                 [isBottomMesLimitAchieved]="context.info?.isBottomMesLimitAchieved"
-                 [lastReadMessageId]="context.info?.lastReadMessageId"
-                 (updateLastReadMessage)="updateLastReadMessage($event)"
-                 (infiniteScroll)="infiniteScroll($event)">
-</app-shared-chat>
+  <app-shared-chat *ngIf="{ info: (messagesInfo$ | async) } as context"
+                   [messages]="context.info?.messages"
+                   [isTopMesLimitAchieved]="context.info?.isTopMesLimitAchieved"
+                   [isBottomMesLimitAchieved]="context.info?.isBottomMesLimitAchieved"
+                   [lastReadMessageId]="context.info?.lastReadMessageId"
+                   (updateLastReadMessage)="updateLastReadMessage($event)"
+                   (infiniteScroll)="infiniteScroll($event)">
+  </app-shared-chat>
 
-<ion-footer class="ion-no-border">
-  <app-shared-textarea-footer (messageSend)="messageSend($event)">
-  </app-shared-textarea-footer>
-</ion-footer>
+  <ion-footer class="ion-no-border">
+    <app-shared-textarea-footer (messageSend)="messageSend($event)">
+    </app-shared-textarea-footer>
+  </ion-footer>
 
-<app-channel-info-modal #channelInfo
-                        [channelId]="channelId$ | async">
-</app-channel-info-modal>
+  <app-channel-info-modal #channelInfo
+                          [channelId]="channelId$ | async">
+  </app-channel-info-modal>
+</div>

@@ -41,14 +41,6 @@ export class CurrentChannelComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // ionViewWillEnter(): void {
-  //   if (!this.loading) {
-  //     this.loading = true;
-  //     // for smooth animation
-  //     promiseDelay(100).then(() => this.loading = false);
-  //   }
-  // }
-
   public infiniteScroll(scrollEvent: ChatInfiniteScrollEvent): void {
     firstValueFrom(this.channelId$)
       .then(id => this.channelsData.loadChannelMessages(id, scrollEvent.side))

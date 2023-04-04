@@ -14,10 +14,6 @@ export class NoChannelComponent implements OnInit {
               private readonly createModalService: CreateChannelModalService) { }
 
   ngOnInit(): void {
-  }
-
-  // proxy by ion-router-outlet
-  ionViewWillEnter(): void {
     this.menuController.clearEndSideMenuTemplate();
   }
 
