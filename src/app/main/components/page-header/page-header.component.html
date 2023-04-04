@@ -1,10 +1,11 @@
-<ion-row class="header-container ion-justify-content-between">
+<ion-row *rxLet="isFull$; let fullSize"
+         class="header-container ion-justify-content-between">
 
   <ion-row class="ion-align-items-center">
     <ion-menu-button menu="start-menu" mode="md"
                      class="left-menu-button">
     </ion-menu-button>
-    <ion-row [class.content]="(isFull$ | async) === false"
+    <ion-row [class.content]="!fullSize"
              class="ion-align-items-end">
       <ng-content ></ng-content>
     </ion-row>
@@ -12,7 +13,7 @@
 
   <ion-row class="ion-align-items-center">
 
-    <ng-container *ngIf="isFull$ | async">
+    <ng-container *ngIf="fullSize">
       <!--      links-->
       <a *ngFor="let link of menuLinks"
          [routerLink]="[link.url]"

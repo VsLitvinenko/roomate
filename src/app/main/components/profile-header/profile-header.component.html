@@ -1,5 +1,5 @@
 <div class="profile-header">
-  <ion-row *ngIf="(user$ | async) as user"
+  <ion-row *rxLet="user$; let user"
            (click)="invisibleButton.click()"
            class="ion-align-items-end">
     <ion-thumbnail>

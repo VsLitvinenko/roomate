@@ -18,9 +18,9 @@
   </ion-item>
 </ng-container>
 
-<ng-container *ngIf="(form.controls.public.valueChanges | async) !== true">
+<ng-container *ngIf="!(form.controls.public.valueChanges | push)">
   <div class="members">
-    <ion-chip *ngFor="let member of (members$ | async); trackBy:trackById">
+    <ion-chip *rxFor="let member of members$; trackBy:trackById">
       <ion-avatar>
         <img [src]="member.user.imageUrl" alt="">
       </ion-avatar>
@@ -36,7 +36,7 @@
 
   <ion-content appScrollbarTheme
                scrollAlwaysVisible="true">
-    <app-shared-users-list [usersList]="searchUserList$ | async"
+    <app-shared-users-list [usersList]="searchUserList$ | push"
                            (userSelected)="userSelected($event)"></app-shared-users-list>
   </ion-content>
 </ng-container>

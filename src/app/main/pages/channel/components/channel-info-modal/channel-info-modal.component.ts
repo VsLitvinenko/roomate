@@ -5,6 +5,7 @@ import { IonModal } from '@ionic/angular';
 import { UsersService, StoreChannel, UserInfo } from '../../../../../core';
 import { isTouchDevice } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { startWith } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -31,7 +32,8 @@ export class ChannelInfoModalComponent implements AfterViewInit {
     ).subscribe(() => {
       this.channel$ = this.channelsData.getChannel(this.channelId);
       this.channelsUsers$ = this.channel$.pipe(
-        switchMap(channel => this.users.getUsersList(channel.members))
+        switchMap(channel => this.users.getUsersList(channel.members)),
+        startWith(null) // to show skeleton users
       );
     });
   }

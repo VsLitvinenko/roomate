@@ -14,6 +14,9 @@ import {
 } from './components';
 import { LocalizationPipe } from './localization';
 import { PushModule } from '@rx-angular/template/push';
+import { IfModule } from '@rx-angular/template/if';
+import { LetModule } from '@rx-angular/template/let';
+import { ForModule } from '@rx-angular/template/for';
 
 const directives = [
   ScrollbarThemeDirective,
@@ -37,7 +40,10 @@ const components = [
 ];
 
 const rxAngularModules = [
-  PushModule
+  PushModule,
+  IfModule,
+  LetModule,
+  ForModule
 ];
 
 @NgModule({

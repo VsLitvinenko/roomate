@@ -15,12 +15,13 @@
     </div>
   </ion-menu>
 
-  <ion-menu content-id="menu-content"
+  <ion-menu *rxLet="endSideMenuTemplate$; let template"
+            content-id="menu-content"
             menuId="end-menu"
             side="end" type="reveal"
-            [swipeGesture]="(endSideMenuTemplate$ | async) !== null"
+            [swipeGesture]="template !== null"
             [maxEdgeStart]="menuEdgeStart">
-    <ng-container *ngIf="(endSideMenuTemplate$ | async) as template">
+    <ng-container *ngIf="template">
       <ng-container *ngComponentOutlet="template.component;
                     injector: template.injector"></ng-container>
     </ng-container>
@@ -36,7 +37,7 @@
 
 </ion-split-pane>
 
-<app-tabs *ngIf="isMobile$ | async"
-          [isTabsShowing]="isTabsShowing$ | async">
+<app-tabs *rxIf="isMobile$"
+          [isTabsShowing]="isTabsShowing$ | push">
 </app-tabs>
 

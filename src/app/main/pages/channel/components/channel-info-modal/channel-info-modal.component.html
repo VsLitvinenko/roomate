@@ -12,7 +12,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ng-container *ngIf="(channel$ | async) as channel">
+    <ng-container *rxLet="channel$; let channel">
 
       <ion-item class="info-header" lines="full">
         <ion-label> {{ channel.title }} </ion-label>
@@ -37,13 +37,13 @@
       <ion-content appScrollbarTheme
                    scrollAlwaysVisible="true">
 
-        <app-shared-users-list *ngIf="{ users: (channelsUsers$ | async) } as context"
-                               [usersList]="context.users">
+        <app-shared-users-list *rxLet="channelsUsers$; let users"
+                               [usersList]="users">
           <ion-item class="header">
             <ion-icon slot="start" name="people"></ion-icon>
-            <ion-label *ngIf="context.users">
+            <ion-label *ngIf="users">
               <h2> {{ 'allChannelsMembers' | localization }}: </h2>
-              <p *ngIf="getOnlineUsersCount(context.users) as onlineCount">
+              <p *ngIf="getOnlineUsersCount(users) as onlineCount">
                 ({{ onlineCount }}
                 {{ 'nUsers' | localization : onlineCount }}
                 {{ 'online' | localization | lowercase }})

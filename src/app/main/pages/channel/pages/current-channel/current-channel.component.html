@@ -14,11 +14,11 @@
 <!--    </app-shared-header>-->
 <!--  </ion-header>-->
 
-  <app-shared-chat *ngIf="{ info: (messagesInfo$ | async) } as context"
-                   [messages]="context.info?.messages"
-                   [isTopMesLimitAchieved]="context.info?.isTopMesLimitAchieved"
-                   [isBottomMesLimitAchieved]="context.info?.isBottomMesLimitAchieved"
-                   [lastReadMessageId]="context.info?.lastReadMessageId"
+  <app-shared-chat *rxLet="messagesInfo$; let info"
+                   [messages]="info.messages"
+                   [isTopMesLimitAchieved]="info.isTopMesLimitAchieved"
+                   [isBottomMesLimitAchieved]="info.isBottomMesLimitAchieved"
+                   [lastReadMessageId]="info.lastReadMessageId"
                    (updateLastReadMessage)="updateLastReadMessage($event)"
                    (infiniteScroll)="infiniteScroll($event)">
   </app-shared-chat>
@@ -29,6 +29,6 @@
   </ion-footer>
 
   <app-channel-info-modal #channelInfo
-                          [channelId]="channelId$ | async">
+                          [channelId]="channelId$ | push">
   </app-channel-info-modal>
 </div>

@@ -4,11 +4,12 @@
                            (search)="searchEvent$.next($event)">
   </app-shared-chat-actions>
 
-  <ion-accordion-group *ngIf="(channelFolders$ | async) as folders; else skeletonList"
+  <ion-accordion-group *rxLet="channelFolders$; let folders; suspense: skeletonList"
                        [value]="['public', 'private']"
                        [multiple]="true">
     <ion-accordion *ngFor="let folder of folders; trackBy:trackByValue"
                    [value]="folder.value"
+                   mode="ios">
                    mode="ios">
       <ion-item slot="header" class="acc-header no-ion-hover" lines="none">
         <ion-icon [name]="folder.icon"></ion-icon>
