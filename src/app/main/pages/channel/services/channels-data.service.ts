@@ -21,7 +21,15 @@ export interface ChannelChatInfo {
   isTopMesLimitAchieved: boolean;
   isBottomMesLimitAchieved: boolean;
   lastReadMessageId: number;
+  messages: StoreChannelMessage[];
 }
+
+export const emptyChatInfo: ChannelChatInfo = {
+  isTopMesLimitAchieved: true,
+  isBottomMesLimitAchieved: true,
+  lastReadMessageId: null,
+  messages: null
+};
 
 @Injectable({
   providedIn: 'root'
@@ -49,23 +57,18 @@ export class ChannelsDataService {
   }
 
   public getChannelChatInfo(id: number): Observable<ChannelChatInfo> {
-    return this.getChannel(id).pipe(
-      map(channel => ({
-        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
-        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
-        lastReadMessageId: channel.lastReadMessageId
-      }))
-    );
-  }
-
-  public getChannelMessages(id: number): Observable<StoreChannelMessage[]> {
     return combineLatest([
       this.getChannel(id),
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
       tap(([channel]) => this.users.updateListOfUsers(channel.members)),
       filter(([channel]) => channel.messages !== null),
-      map(([channel, tempMes]) => tempMes.length ? [...tempMes, ...channel.messages] : channel.messages)
+      map(([channel, tempMes]) => ({
+        messages: tempMes.length ? [...tempMes, ...channel.messages] : channel.messages,
+        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
+        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
+        lastReadMessageId: channel.lastReadMessageId
+      }))
     );
   }
 

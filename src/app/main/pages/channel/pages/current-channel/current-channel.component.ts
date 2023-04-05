@@ -4,8 +4,8 @@ import { IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components';
 import { shareReplay, switchMap, tap, map } from 'rxjs/operators';
-import { ChannelsDataService } from '../../services';
-import { firstValueFrom } from 'rxjs';
+import { ChannelChatInfo, ChannelsDataService, emptyChatInfo } from '../../services';
+import { asyncScheduler, concat, firstValueFrom, Observable, of } from 'rxjs';
 import { InjectorService } from '../../../../../core';
 import { ChatInfiniteScrollEvent } from '../../../../../shared';
 
@@ -27,13 +27,13 @@ export class CurrentChannelComponent implements OnInit {
   );
 
   public readonly chatInfo$ = this.channelId$.pipe(
-    switchMap(id => this.channelsData.getChannelChatInfo(id)),
-    shareReplay(1)
-  );
-
-  public readonly messages$ = this.channelId$.pipe(
-    switchMap(id => this.channelsData.getChannelMessages(id)),
-    shareReplay(1)
+    switchMap(id => concat(
+      of(emptyChatInfo), // emit empty value before real one after id was changed
+      this.channelsData.getChannelChatInfo(id),
+      asyncScheduler
+    ) as Observable<ChannelChatInfo>),
+    shareReplay(1),
+    tap(res => console.log('Messages obs', res.messages))
   );
 
   constructor(

@@ -15,7 +15,7 @@
 <!--  </ion-header>-->
 
   <app-shared-chat *rxLet="chatInfo$; let info"
-                   [messages]="messages$ | push"
+                   [messages]="info.messages"
                    [isTopMesLimitAchieved]="info.isTopMesLimitAchieved"
                    [isBottomMesLimitAchieved]="info.isBottomMesLimitAchieved"
                    [lastReadMessageId]="info.lastReadMessageId"

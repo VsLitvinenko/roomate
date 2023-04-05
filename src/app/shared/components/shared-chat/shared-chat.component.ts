@@ -53,23 +53,23 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       return;
     }
 
-    if (!changes.messages.previousValue && changes.messages.currentValue) {
-      this.firstMessagesLoaded();
-    }
-
-    if (
-      changes.messages.currentValue.length &&
-      this.needToReadMessageCauseNoScroll(changes.messages)
-    ) {
-      this.updateLastReadMessage.emit(this.messages[0].id);
-    }
-    else if (
-      changes.messages.currentValue.length &&
-      changes.messages.previousValue &&
-      this.needToScrollDownOnNewMessage(changes.messages)
-    ) {
-      this.chatContent.scrollToBottom(200).then();
-    }
+    // if (!changes.messages.previousValue && changes.messages.currentValue) {
+    //   this.firstMessagesLoaded();
+    // }
+    //
+    // if (
+    //   changes.messages.currentValue.length &&
+    //   this.needToReadMessageCauseNoScroll(changes.messages)
+    // ) {
+    //   this.updateLastReadMessage.emit(this.messages[0].id);
+    // }
+    // else if (
+    //   changes.messages.currentValue.length &&
+    //   changes.messages.previousValue &&
+    //   this.needToScrollDownOnNewMessage(changes.messages)
+    // ) {
+    //   this.chatContent.scrollToBottom(200).then();
+    // }
   }
 
   ngAfterViewInit(): void {
