@@ -1,10 +1,10 @@
 <ion-content #currentChatContent
              appScrollbarTheme>
-  <app-shared-loader [loading]="loading$ | async"
+  <app-shared-loader [loading]="loading$ | push"
                      [background]="'var(--ion-background-color)'">
   </app-shared-loader>
 
-  <ion-button *ngIf="isNotNearToBottom$ | async"
+  <ion-button *rxIf="isNotNearToBottom$"
               (click)="currentChatContent.scrollToBottom(200)"
               class="no-ion-hover"
               shape="round" slot="fixed" mode="ios">
@@ -12,8 +12,8 @@
   </ion-button>
 
   <app-chat [messages]="messages"
-            [topScrollDisabled]="(loading$ | async) || isTopMesLimitAchieved"
-            [bottomScrollDisabled]="(loading$ | async) || isBottomMesLimitAchieved"
+            [topScrollDisabled]="(loading$ | push) || isTopMesLimitAchieved"
+            [bottomScrollDisabled]="(loading$ | push) || isBottomMesLimitAchieved"
             (infiniteScroll)="infiniteScroll.emit($event)">
   </app-chat>
 </ion-content>

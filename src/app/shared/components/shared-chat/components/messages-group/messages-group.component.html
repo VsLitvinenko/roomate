@@ -1,6 +1,6 @@
 <div *ngFor="let msg of messages; let first = first; let last = last"
      [class.self]="self"
-     [class.self-mobile]="self && (isMobile$ | async)"
+     [class.self-mobile]="self && (isMobile$ | push)"
      [id]="msg.id"
      class="message">
 

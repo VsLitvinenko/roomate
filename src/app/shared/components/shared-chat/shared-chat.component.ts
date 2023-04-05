@@ -53,7 +53,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       return;
     }
 
-    if (!changes.messages.previousValue) {
+    if (!changes.messages.previousValue && changes.messages.currentValue) {
       this.firstMessagesLoaded();
     }
 
@@ -110,7 +110,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   }
 
   private firstMessagesLoaded(): void {
-    promiseDelay(10)
+    promiseDelay(1000) // smooth animation time
       .then(() => {
         if (!this.lastReadMessageId) {
           // do nothing, should keep scroll on top

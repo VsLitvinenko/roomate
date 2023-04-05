@@ -20,7 +20,7 @@
          class="reverse">
       <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
                                  [messages]="group.messages"
-                                 [user]="group.user$ | async"
+                                 [user]="group.user$ | push"
                                  [self]="group.self">
       </app-messages-group>
       <div class="date">
