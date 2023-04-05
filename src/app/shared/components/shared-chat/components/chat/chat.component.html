@@ -19,9 +19,10 @@
     <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
          class="reverse">
       <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
-                                 [messages]="group.messages"
-                                 [user]="group.user$ | push"
-                                 [self]="group.self">
+                          [messages]="group.messages"
+                          [user]="group.user$ | push"
+                          [self]="group.self"
+                          @fade>
       </app-messages-group>
       <div class="date">
         <span> {{day.key | date: 'd MMMM'}} </span>

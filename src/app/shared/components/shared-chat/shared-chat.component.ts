@@ -13,7 +13,7 @@ import {
 import { BehaviorSubject, Observable, auditTime, debounceTime, map } from 'rxjs';
 import { ChatMessage } from '../../../core';
 import { IonContent } from '@ionic/angular';
-import { filterVisibleElements, isAppFullWidth$, openElementsChildren, promiseDelay } from '../../common';
+import { filterVisibleElements, isAppFullWidth$, openElementsChildren } from '../../common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ChatInfiniteScrollEvent } from './components/chat/chat.component';
 import { LocalizationService } from '../../localization';
@@ -110,27 +110,26 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   }
 
   private firstMessagesLoaded(): void {
-    promiseDelay(1000) // smooth animation time
-      .then(() => {
-        if (!this.lastReadMessageId) {
-          // do nothing, should keep scroll on top
-          return;
-        }
-        else if (this.lastReadMessageId === this.messages[0].id) {
-          // all messages were read
-          return this.chatContent.scrollToBottom(0);
-        }
-        else {
-          // scroll to last read message
-          const msgEl = document.getElementById(String(this.lastReadMessageId));
-          msgEl.before(this.newMessagesBar);
+    const scrollToPoint = async () => {
+      if (!this.lastReadMessageId) {
+        // do nothing, should keep scroll on top
+        return;
+      }
+      else if (this.lastReadMessageId === this.messages[0].id) {
+        // all messages were read
+        return this.chatContent.scrollToBottom(0);
+      }
+      else {
+        // scroll to last read message
+        const msgEl = document.getElementById(String(this.lastReadMessageId));
+        msgEl.before(this.newMessagesBar);
 
-          const msgPos = msgEl.getBoundingClientRect().bottom;
-          const parentHeight = this.ionContentScrollElement.clientHeight;
-          return this.chatContent.scrollToPoint(null, msgPos - parentHeight/2, 0);
-        }
-      })
-      .then(() => this.loading$.next(false));
+        const msgPos = msgEl.getBoundingClientRect().bottom;
+        const parentHeight = (await this.chatContent.getScrollElement()).clientHeight;
+        return this.chatContent.scrollToPoint(null, msgPos - parentHeight/2, 0);
+      }
+    };
+    scrollToPoint().then(() => this.loading$.next(false));
   }
 
   private needToScrollDownOnNewMessage(mesChanges: SimpleChange): boolean {

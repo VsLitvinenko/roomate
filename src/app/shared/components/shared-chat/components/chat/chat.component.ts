@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { differenceInHours, isSameDay, startOfDay } from 'date-fns';
-import groupBy from 'lodash-es/groupBy';
 import { ChatMessage, UserInfo, UsersService } from 'src/app/core';
+import { fadeAnimation } from '../../../../common';
+import groupBy from 'lodash-es/groupBy';
 
 interface MesGroup {
   messages: ChatMessage[];
@@ -28,6 +29,7 @@ export interface ChatInfiniteScrollEvent {
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
+  animations: [ fadeAnimation(150) ]
 })
 export class ChatComponent implements OnChanges {
   @Input() public topScrollDisabled: boolean;
