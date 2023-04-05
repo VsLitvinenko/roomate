@@ -17,8 +17,7 @@ import {
 } from 'rxjs';
 import { ChannelsSirgalrService, LastReadMesEvent, TempMes } from './channels-sirgalr.service';
 
-export interface ChannelMessagesInfo {
-  messages: StoreChannelMessage[];
+export interface ChannelChatInfo {
   isTopMesLimitAchieved: boolean;
   isBottomMesLimitAchieved: boolean;
   lastReadMessageId: number;
@@ -49,19 +48,24 @@ export class ChannelsDataService {
     );
   }
 
-  public getChannelMessagesInfo(id: number): Observable<ChannelMessagesInfo> {
+  public getChannelChatInfo(id: number): Observable<ChannelChatInfo> {
+    return this.getChannel(id).pipe(
+      map(channel => ({
+        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
+        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
+        lastReadMessageId: channel.lastReadMessageId
+      }))
+    );
+  }
+
+  public getChannelMessages(id: number): Observable<StoreChannelMessage[]> {
     return combineLatest([
       this.getChannel(id),
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
       tap(([channel]) => this.users.updateListOfUsers(channel.members)),
       filter(([channel]) => channel.messages !== null),
-      map(([channel, tempMes]) => ({
-        messages: tempMes.length ? [...tempMes, ...channel.messages] : channel.messages,
-        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
-        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
-        lastReadMessageId: channel.lastReadMessageId
-      }))
+      map(([channel, tempMes]) => tempMes.length ? [...tempMes, ...channel.messages] : channel.messages)
     );
   }
 

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
 import { ChannelEndSideComponent } from '../../components';
-import { shareReplay, switchMap, tap, map, startWith } from 'rxjs/operators';
+import { shareReplay, switchMap, tap, map } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services';
 import { firstValueFrom } from 'rxjs';
 import { InjectorService } from '../../../../../core';
@@ -26,9 +26,13 @@ export class CurrentChannelComponent implements OnInit {
     switchMap(id => this.channelsData.getChannelTitle(id))
   );
 
-  public readonly messagesInfo$ = this.channelId$.pipe(
-    switchMap(id => this.channelsData.getChannelMessagesInfo(id)),
-    startWith({}),
+  public readonly chatInfo$ = this.channelId$.pipe(
+    switchMap(id => this.channelsData.getChannelChatInfo(id)),
+    shareReplay(1)
+  );
+
+  public readonly messages$ = this.channelId$.pipe(
+    switchMap(id => this.channelsData.getChannelMessages(id)),
     shareReplay(1)
   );
 
