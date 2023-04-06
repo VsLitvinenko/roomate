@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { API_BASE_URL, AuthInterceptor, UsersService } from './core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouteReuseStrategy } from '@angular/router';
+import { AppRouteReuseStrategy } from './app-route-reuse.strategy';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +19,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserAnimationsModule
   ],
   providers: [
+    {
+      provide: RouteReuseStrategy,
+      useClass: AppRouteReuseStrategy
+    },
     {
       provide: API_BASE_URL,
       useValue: '/api'

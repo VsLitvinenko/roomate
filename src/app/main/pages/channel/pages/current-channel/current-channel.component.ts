@@ -41,9 +41,15 @@ export class CurrentChannelComponent implements OnInit {
     private readonly menuController: MenuControllerService,
     private readonly inj: InjectorService,
     private readonly channelsData: ChannelsDataService
-  ) { }
+  ) {
+    console.log('CURRENT-CHANNEL-WAS-CREATED');
+  }
 
   ngOnInit(): void {
+  }
+
+  public onReuseView(): void {
+    console.log('CURRENT-CHANNEL-WAS-REUSED');
   }
 
   public infiniteScroll(scrollEvent: ChatInfiniteScrollEvent): void {
