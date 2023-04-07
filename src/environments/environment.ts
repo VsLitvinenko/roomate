@@ -4,10 +4,8 @@
 
 export const environment = {
   production: false,
-  signalR: 'https://dev.roomate.ru/api',
-  janus: 'https://dev.roomate.ru/janus-gateway',
-  // signalR: 'http://localhost:8100',
-  // janus: 'http://localhost:8088'
+  signalR: '/api',
+  janus: '/janus-gateway',
 };
 
 /*
