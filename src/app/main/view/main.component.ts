@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { isAppFullWidth$, splitPaneBreakPoint } from '../../shared';
-import { MenuControllerService } from '../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../services/reactive-view-controller.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -12,9 +12,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MainComponent {
 
-  public readonly startSideMenuComponent$ = this.menuController.startSideMenuComponent;
-  public readonly endSideMenuTemplate$ = this.menuController.endSideMenuTemplate;
-  public readonly headerTemplate$ = this.menuController.headerTemplate;
+  public readonly startSideMenuComponent$ = this.viewController.startSideMenuComponent;
+  public readonly endSideMenuTemplate$ = this.viewController.endSideMenuTemplate;
+  public readonly headerTemplate$ = this.viewController.headerTemplate;
 
   // const
   public readonly splitPaneSize = splitPaneBreakPoint.size;
@@ -26,6 +26,6 @@ export class MainComponent {
 
   public readonly isTabsShowing$ = new BehaviorSubject(false);
 
-  constructor(private readonly menuController: MenuControllerService) { }
+  constructor(private readonly viewController: ReactiveViewControllerService) { }
 
 }

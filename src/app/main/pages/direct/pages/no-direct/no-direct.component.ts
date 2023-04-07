@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuControllerService } from '../../../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../../../services/reactive-view-controller.service';
 
 @Component({
   selector: 'app-no-direct',
@@ -8,10 +8,11 @@ import { MenuControllerService } from '../../../../services/menu-controller.serv
 })
 export class NoDirectComponent implements OnInit {
 
-  constructor(private readonly menuController: MenuControllerService) { }
+  constructor(private readonly viewController: ReactiveViewControllerService) { }
 
   ngOnInit(): void {
-    this.menuController.clearEndSideMenuTemplate();
+    this.viewController.clearHeaderTemplate();
+    this.viewController.clearEndSideMenuTemplate();
   }
 
 }

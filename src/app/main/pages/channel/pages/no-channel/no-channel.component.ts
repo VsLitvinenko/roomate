@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MenuControllerService } from '../../../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../../../services/reactive-view-controller.service';
 import { CreateChannelModalService } from '../../components';
 
 @Component({
@@ -10,12 +10,12 @@ import { CreateChannelModalService } from '../../components';
 })
 export class NoChannelComponent implements OnInit {
 
-  constructor(private readonly menuController: MenuControllerService,
+  constructor(private readonly viewController: ReactiveViewControllerService,
               private readonly createModalService: CreateChannelModalService) { }
 
   ngOnInit(): void {
-    this.menuController.clearHeaderTemplate();
-    this.menuController.clearEndSideMenuTemplate();
+    this.viewController.clearHeaderTemplate();
+    this.viewController.clearEndSideMenuTemplate();
   }
 
   public async openCreateChannelModal(): Promise<void> {

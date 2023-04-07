@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
-import { MenuControllerService } from '../../../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../../../services/reactive-view-controller.service';
 import { ChannelEndSideComponent } from '../../components';
 import { ChannelsDataService } from '../../services';
 import { firstValueFrom, shareReplay, switchMap, tap, map } from 'rxjs';
@@ -22,7 +22,7 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
 
   public readonly channelId$ = this.activatedRoute.params.pipe(
     map(params => parseInt(params.id, 10)),
-    tap(id => this.updateOutsideContent(id)),
+    tap(id => this.updateReactiveView(id)),
     shareReplay(1)
   );
 
@@ -44,7 +44,7 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly menuController: MenuControllerService,
+    private readonly viewController: ReactiveViewControllerService,
     private readonly inj: InjectorService,
     private readonly channelsData: ChannelsDataService
   ) {
@@ -88,17 +88,17 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     // console.log('CURRENT-CHANNEL-WAS-REUSED');
     this.chatComponent.ignoreNgOnChanges = false;
     firstValueFrom(this.channelId$)
-      .then(id => this.updateOutsideContent(id))
+      .then(id => this.updateReactiveView(id))
       .then(() => this.chatComponent.recheckView(this.bufferStoredScrollPoint));
   }
 
-  private updateOutsideContent(id: number): void {
-    this.menuController.setHeaderTemplate({
+  private updateReactiveView(id: number): void {
+    this.viewController.setHeaderTemplate({
       template: this.headerTemplate,
       endSideButtonIcon: 'globe-sharp'
     });
 
-    this.menuController.setEndSideMenuTemplate({
+    this.viewController.setEndSideMenuTemplate({
       component: ChannelEndSideComponent,
       injector: this.inj.createInjector<number>(id)
     });

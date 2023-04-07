@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuControllerService } from '../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../services/reactive-view-controller.service';
 import { DirectStartSideComponent } from './components';
 
 @Component({
@@ -10,10 +10,10 @@ import { DirectStartSideComponent } from './components';
 })
 export class DirectPage implements OnInit {
 
-  constructor(private readonly menuController: MenuControllerService) { }
+  constructor(private readonly viewController: ReactiveViewControllerService) { }
 
   ngOnInit(): void {
-    this.menuController.setStartSideMenuComponent(DirectStartSideComponent);
+    this.viewController.setStartSideMenuComponent(DirectStartSideComponent);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuControllerService } from '../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../services/reactive-view-controller.service';
 import { ChannelStartSideComponent } from './components';
 
 @Component({
@@ -9,11 +9,11 @@ import { ChannelStartSideComponent } from './components';
   `,
 })
 export class ChannelPage implements OnInit {
-  constructor(private readonly menuController: MenuControllerService) {
+  constructor(private readonly viewController: ReactiveViewControllerService) {
   }
 
   ngOnInit(): void {
-    this.menuController.setStartSideMenuComponent(ChannelStartSideComponent);
+    this.viewController.setStartSideMenuComponent(ChannelStartSideComponent);
   }
 
 }

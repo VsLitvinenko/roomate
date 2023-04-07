@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { testMessages, userData } from './data-source';
 import { IonContent } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MenuControllerService } from '../../../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../../../services/reactive-view-controller.service';
 import { InjectorService } from '../../../../../core';
 import { DirectEndSideComponent } from '../../components';
 import { isAppFullWidth$ } from 'src/app/shared/common/constants';
@@ -28,7 +28,7 @@ export class CurrentDirectComponent implements OnInit {
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly menuController: MenuControllerService,
+    private readonly viewController: ReactiveViewControllerService,
     protected readonly inj: InjectorService,
   ) { }
 
@@ -70,7 +70,7 @@ export class CurrentDirectComponent implements OnInit {
   }
 
   private updateEndSideMenu(id: string): void {
-    this.menuController.setEndSideMenuTemplate({
+    this.viewController.setEndSideMenuTemplate({
       component: DirectEndSideComponent,
       injector: this.inj.createInjector<string>(id)
     });

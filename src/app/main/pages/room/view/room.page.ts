@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { JanusMainService } from '../janus';
 import { map } from 'rxjs/operators';
-import { MenuControllerService } from '../../../services/menu-controller.service';
+import { ReactiveViewControllerService } from '../../../services/reactive-view-controller.service';
 import { RoomStartSideComponent, RoomEndSideComponent } from '../components';
 import { isAppFullWidth$ } from '../../../../shared';
 
@@ -23,12 +23,12 @@ export class RoomPage implements OnInit {
 
   constructor(
     private readonly janusService: JanusMainService,
-    private readonly menuController: MenuControllerService,
+    private readonly viewController: ReactiveViewControllerService,
   ) {}
 
   ngOnInit(): void {
-    this.menuController.setStartSideMenuComponent(RoomStartSideComponent);
-    this.menuController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
+    this.viewController.setStartSideMenuComponent(RoomStartSideComponent);
+    this.viewController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
     // const res = confirm('use initial tracks?');
     this.janusService.joinRoom(this.roomId, true, false);
   }

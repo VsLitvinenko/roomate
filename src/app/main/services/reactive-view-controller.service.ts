@@ -12,7 +12,7 @@ export interface HeaderTemplate {
 }
 
 @Injectable()
-export class MenuControllerService {
+export class ReactiveViewControllerService {
 
   private headerTemplate$ = new BehaviorSubject<HeaderTemplate>(null);
   private startSideMenuComponent$ = new BehaviorSubject<any>(null);
