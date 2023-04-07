@@ -14,6 +14,7 @@ export class NoChannelComponent implements OnInit {
               private readonly createModalService: CreateChannelModalService) { }
 
   ngOnInit(): void {
+    this.menuController.clearHeaderTemplate();
     this.menuController.clearEndSideMenuTemplate();
   }
 

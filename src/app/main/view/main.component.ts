@@ -12,8 +12,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MainComponent {
 
-  public readonly startSideMenuComponent$ = this.menuController.startSideMenuComponent$;
-  public readonly endSideMenuTemplate$ = this.menuController.endSideMenuTemplate$;
+  public readonly startSideMenuComponent$ = this.menuController.startSideMenuComponent;
+  public readonly endSideMenuTemplate$ = this.menuController.endSideMenuTemplate;
+  public readonly headerTemplate$ = this.menuController.headerTemplate;
 
   // const
   public readonly splitPaneSize = splitPaneBreakPoint.size;

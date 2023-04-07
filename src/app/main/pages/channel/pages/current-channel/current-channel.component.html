@@ -1,19 +1,17 @@
-<div class="ion-page roomate-page">
-<!--  <ion-header mode="md">-->
-<!--    <app-shared-header endSideButtonIcon="globe-sharp">-->
-<!--      <span *ngIf="(title$ | async) as title; else skeletonTitle"-->
-<!--            (click)="openInfoModal(channelInfo.modal)"-->
-<!--            class="roomate-header-title">-->
-<!--        {{ title }}-->
-<!--      </span>-->
-<!--      <ng-template #skeletonTitle>-->
-<!--        <ion-skeleton-text class="roomate-header-title-skeleton"-->
-<!--                           animated="true">-->
-<!--        </ion-skeleton-text>-->
-<!--      </ng-template>-->
-<!--    </app-shared-header>-->
-<!--  </ion-header>-->
+<ng-template #header>
+  <span *rxLet="title$; let title; suspense: skeletonTitle"
+        (click)="openInfoModal(channelInfo.modal)"
+        class="roomate-header-title">
+    {{ title }}
+  </span>
+  <ng-template #skeletonTitle>
+    <ion-skeleton-text class="roomate-header-title-skeleton"
+                       animated="true">
+    </ion-skeleton-text>
+  </ng-template>
+</ng-template>
 
+<div class="ion-page roomate-page">
   <app-shared-chat *rxLet="chatInfo$; let info"
                    [messages]="messages$ | push"
                    [isTopMesLimitAchieved]="info.isTopMesLimitAchieved"

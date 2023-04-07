@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { MenuControllerService } from '../../../../services/menu-controller.service';
@@ -17,11 +17,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrentChannelComponent extends ReusableComponent implements OnInit {
-  @ViewChild(SharedChatComponent) chatComponent: SharedChatComponent;
+  @ViewChild(SharedChatComponent) private readonly chatComponent: SharedChatComponent;
+  @ViewChild('header', { static: true }) private readonly headerTemplate: TemplateRef<any>;
 
   public readonly channelId$ = this.activatedRoute.params.pipe(
     map(params => parseInt(params.id, 10)),
-    tap(id => this.updateEndSideMenu(id)),
+    tap(id => this.updateOutsideContent(id)),
     shareReplay(1)
   );
 
@@ -87,11 +88,16 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     // console.log('CURRENT-CHANNEL-WAS-REUSED');
     this.chatComponent.ignoreNgOnChanges = false;
     firstValueFrom(this.channelId$)
-      .then(id => this.updateEndSideMenu(id))
+      .then(id => this.updateOutsideContent(id))
       .then(() => this.chatComponent.recheckView(this.bufferStoredScrollPoint));
   }
 
-  private updateEndSideMenu(id: number): void {
+  private updateOutsideContent(id: number): void {
+    this.menuController.setHeaderTemplate({
+      template: this.headerTemplate,
+      endSideButtonIcon: 'globe-sharp'
+    });
+
     this.menuController.setEndSideMenuTemplate({
       component: ChannelEndSideComponent,
       injector: this.inj.createInjector<number>(id)

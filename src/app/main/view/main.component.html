@@ -30,7 +30,10 @@
   <!--    content-routing-->
   <div id="menu-content" class="ion-page">
     <ion-header mode="md">
-      <app-page-header></app-page-header>
+      <app-page-header *rxLet="headerTemplate$; let template"
+                       [endSideButtonIcon]="template.endSideButtonIcon">
+        <ng-container *ngTemplateOutlet="template.template"></ng-container>
+      </app-page-header>
     </ion-header>
     <router-outlet></router-outlet>
   </div>
