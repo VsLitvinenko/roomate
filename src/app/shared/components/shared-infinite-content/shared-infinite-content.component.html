@@ -6,8 +6,9 @@
              [infiniteScrollDistance]="1"
              [infiniteScrollUpDistance]="1"
              (scrolled)="onBottomScroll()"
-             (scrolledUp)="onTopScroll($event)"
+             (scrolledUp)="onTopScroll()"
              appScrollbarTheme
+             [scrollAlwaysVisible]="true"
              [scrollEvents]="scrollEvents"
              (ionScroll)="ionScroll.emit($event)">
   <app-shared-loader [loading]="loading"

@@ -47,11 +47,11 @@ export class ScrollbarThemeDirective implements OnInit {
     this.toggleStyle(this.scrollAlwaysVisible);
 
     if (!this.scrollAlwaysVisible) {
-      this.mouseEvents().then();
+      this.showHideScrollEvents().then();
     }
   }
 
-  private async mouseEvents(): Promise<void> {
+  private async showHideScrollEvents(): Promise<void> {
     let show$: Observable<unknown>;
     let hide$: Observable<unknown>;
     if (isTouchDevice) {

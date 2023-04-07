@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { BehaviorSubject, filter, firstValueFrom, lastValueFrom, Subject, take } from 'rxjs';
-import { IInfiniteScrollEvent } from 'ngx-infinite-scroll/models';
 
 export type InfiniteScrollSide = 'top' | 'bottom';
 export interface InfiniteScrollEvent {
@@ -103,22 +102,21 @@ export class SharedInfiniteContentComponent implements AfterViewInit, OnChanges,
       .then(() => this.bottomScrollLoading$.next(false));
   }
 
-  public onTopScroll(event: IInfiniteScrollEvent): void {
+  public onTopScroll(): void {
     if (!this.topInfinite || this.topScrollLoading$.value) {
       return;
     }
 
-    const handle = (bottomPosition: number) => lastValueFrom(
+    const handle = (prevHeight: number, prevTopPosition: number) => lastValueFrom(
       this.mutations$.pipe(take(1))
     ).then(() => {
-      // 44px is spinner container height
-      const newTopPosition = this.scrollElement.scrollHeight - bottomPosition - 44;
+      const newTopPosition = (this.scrollElement.scrollHeight - prevHeight) + prevTopPosition;
       return this.scrollToPoint(newTopPosition, 0);
     });
 
     this.topScrollLoading$.next(true);
     this.onInfiniteScroll('top')
-      .then(() => handle(this.scrollElement.scrollHeight - event.currentScrollPosition))
+      .then(() => handle(this.scrollElement.scrollHeight, this.scrollElement.scrollTop))
       .then(() => this.topScrollLoading$.next(false));
   }
 
