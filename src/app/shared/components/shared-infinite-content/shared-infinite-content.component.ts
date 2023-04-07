@@ -31,9 +31,11 @@ export class SharedInfiniteContentComponent implements AfterViewInit, OnChanges,
   @Input() public topInfinite = false;
   @Input() public bottomInfinite = false;
   @Input() public loading = false;
+  @Input() public scrollEvents = false;
   @Input() public mutationContainer: HTMLElement | any;
 
   @Output() public readonly infiniteScroll = new EventEmitter<InfiniteScrollEvent>();
+  @Output() public readonly ionScroll = new EventEmitter<CustomEvent>();
 
   @ViewChild(IonContent) public readonly content: IonContent;
   public readonly topScrollLoading$ = new BehaviorSubject<boolean>(false);

@@ -1,37 +1,25 @@
-<ion-infinite-scroll position="top" threshold="800px"
-                     [disabled]="topScrollDisabled"
-                     (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'top' })">
-  <ion-infinite-scroll-content loading-spinner="crescent"
-                               class="current-chat-infinite-loading">
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>
-
-<ion-infinite-scroll position="bottom" threshold="800px"
-                     [disabled]="bottomScrollDisabled"
-                     (ionInfinite)="infiniteScroll.emit({ event: $event, side: 'bottom' })">
-  <ion-infinite-scroll-content loading-spinner="crescent"
-                               class="current-chat-infinite-loading">
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>
-
 <div class="msgs-container">
-  <ng-container *ngIf="messages && messages.length; else noMessages">
-    <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
-         class="reverse">
-      <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
-                          [messages]="group.messages"
-                          [user]="group.user$ | push"
-                          [self]="group.self"
-                          @fade>
-      </app-messages-group>
-      <div class="date">
-        <span> {{day.key | date: 'd MMMM'}} </span>
-      </div>
-    </div>
-  </ng-container>
+  <ng-container *ngIf="messages">
 
-  <ng-template #noMessages>
-    <span class="no-messages"> {{ ['no', 'nMessages'] | localization }} </span>
-  </ng-template>
+    <ng-container #loadedMessagesContainer
+                  *ngIf="messages.length; else noMessages">
+      <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
+           class="reverse">
+        <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
+                            [messages]="group.messages"
+                            [user]="group.user$ | push"
+                            [self]="group.self">
+        </app-messages-group>
+        <div class="date">
+          <span> {{day.key | date: 'd MMMM'}} </span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noMessages>
+      <span class="no-messages"> {{ ['no', 'nMessages'] | localization }} </span>
+    </ng-template>
+
+  </ng-container>
 </div>
 

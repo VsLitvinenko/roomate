@@ -1,19 +1,18 @@
-<ion-content #currentChatContent
-             appScrollbarTheme>
-  <app-shared-loader [loading]="loading$ | push"
-                     [background]="'var(--ion-background-color)'">
-  </app-shared-loader>
-
+<app-shared-infinite-content [scrollEvents]="true"
+                             [topInfinite]="!isTopMesLimitAchieved"
+                             [bottomInfinite]="!isBottomMesLimitAchieved"
+                             [loading]="loading$ | push"
+                             [mutationContainer]="mutableContainer$ | push"
+                             (infiniteScroll)="infiniteScroll.emit($event)">
   <ion-button *rxIf="isNotNearToBottom$"
-              (click)="currentChatContent.scrollToBottom(200)"
-              class="no-ion-hover"
-              shape="round" slot="fixed" mode="ios">
+                class="no-ion-hover"
+                shape="round" slot="fixed" mode="ios">
     <ion-icon slot="icon-only" name="chevron-down-outline"></ion-icon>
   </ion-button>
 
   <app-chat [messages]="messages"
             [topScrollDisabled]="(loading$ | push) || isTopMesLimitAchieved"
             [bottomScrollDisabled]="(loading$ | push) || isBottomMesLimitAchieved"
-            (infiniteScroll)="infiniteScroll.emit($event)">
+            (firstMessagesLoaded)="firstMessagesLoaded($event)">
   </app-chat>
-</ion-content>
+</app-shared-infinite-content>

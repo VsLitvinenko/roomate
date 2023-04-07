@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { differenceInHours, isSameDay, startOfDay } from 'date-fns';
@@ -17,11 +19,6 @@ interface MesGroup {
   messages: ChatMessage[];
   user$: Observable<UserInfo>;
   self: boolean;
-}
-
-export interface ChatInfiniteScrollEvent {
-  side: 'top' | 'bottom';
-  event: any;
 }
 
 @Component({
@@ -36,11 +33,20 @@ export class ChatComponent implements OnChanges {
   @Input() public bottomScrollDisabled: boolean;
   @Input() public messages: ChatMessage[];
 
-  @Output() public infiniteScroll = new EventEmitter<ChatInfiniteScrollEvent>();
-  // type fix for understanding by IDE
+  @Output() public readonly firstMessagesLoaded = new EventEmitter<HTMLElement>();
+
   public messageDays: Record<number, MesGroup[]>;
 
   constructor(private readonly users: UsersService) {
+  }
+
+  // ngContainer checks when this.messages was firstly rendered
+  @ViewChild('loadedMessagesContainer')
+  private set loadedMessagesContainer(element: ElementRef) {
+    if (element) {
+      this.firstMessagesLoaded.emit(element.nativeElement.parentNode);
+      this.firstMessagesLoaded.complete();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

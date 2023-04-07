@@ -1,5 +1,4 @@
-<ion-content [scrollEvents]="true"
-             infinite-scroll
+<ion-content infinite-scroll
              [scrollWindow]="true"
              [alwaysCallback]="true"
              [infiniteScrollContainer]="scrollElementReady | push"
@@ -8,7 +7,9 @@
              [infiniteScrollUpDistance]="1"
              (scrolled)="onBottomScroll()"
              (scrolledUp)="onTopScroll($event)"
-             appScrollbarTheme>
+             appScrollbarTheme
+             [scrollEvents]="scrollEvents"
+             (ionScroll)="ionScroll.emit($event)">
   <app-shared-loader [loading]="loading"
                      [background]="'var(--ion-background-color)'">
   </app-shared-loader>

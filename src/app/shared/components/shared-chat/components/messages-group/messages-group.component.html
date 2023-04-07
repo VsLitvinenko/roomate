@@ -1,7 +1,7 @@
 <div *ngFor="let msg of messages; let first = first; let last = last"
      [class.self]="self"
      [class.self-mobile]="self && (isMobile$ | push)"
-     [id]="msg.id"
+     [id]="'message-' + msg.id"
      class="message">
 
   <div class="img-container">

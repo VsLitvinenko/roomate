@@ -1,11 +1,3 @@
-.current-chat-infinite-loading {
-  min-height: 40px !important;
-  ::ng-deep .infinite-loading {
-    --color: var(--roomate-color-green);
-    margin: 4px 0;
-  }
-}
-
 .msgs-container {
   padding: 2px 12px;
   min-height: 100%;

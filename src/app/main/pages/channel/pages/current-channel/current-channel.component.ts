@@ -7,7 +7,7 @@ import { shareReplay, switchMap, tap, map } from 'rxjs/operators';
 import { ChannelsDataService } from '../../services';
 import { firstValueFrom } from 'rxjs';
 import { InjectorService } from '../../../../../core';
-import { ChatInfiniteScrollEvent } from '../../../../../shared';
+import { InfiniteScrollEvent } from '../../../../../shared';
 
 @Component({
   selector: 'app-current-chat',
@@ -52,10 +52,10 @@ export class CurrentChannelComponent implements OnInit {
     console.log('CURRENT-CHANNEL-WAS-REUSED');
   }
 
-  public infiniteScroll(scrollEvent: ChatInfiniteScrollEvent): void {
+  public infiniteScroll(scrollEvent: InfiniteScrollEvent): void {
     firstValueFrom(this.channelId$)
       .then(id => this.channelsData.loadChannelMessages(id, scrollEvent.side))
-      .then(() => scrollEvent.event.target.complete());
+      .then(() => scrollEvent.resolve());
   }
 
   public updateLastReadMessage(mesId: number): void {
