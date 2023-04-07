@@ -35,6 +35,9 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(SharedInfiniteContentComponent) infiniteContent: SharedInfiniteContentComponent;
 
+  // can be changed outside this component
+  public ignoreNgOnChanges = false;
+
   public isNotNearToBottom$: Observable<boolean>;
   public mutableContainer$ = new BehaviorSubject<HTMLElement>(undefined);
   public readonly loading$ = new BehaviorSubject<boolean>(true);
@@ -44,10 +47,11 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   constructor(private readonly localizationService: LocalizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!(
-      changes.messages &&
-      changes.messages.currentValue
-    )) {
+    if (
+      this.ignoreNgOnChanges ||
+      !changes.messages ||
+      !changes.messages.currentValue
+    ) {
       // no changes or still don't have any messages
       return;
     }
@@ -82,22 +86,30 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
     ).subscribe(event => this.ionScroll(event));
   }
 
+  public getCurrentScrollPoint(): number {
+    return this.infiniteContent.scrollElement.scrollTop;
+  }
+
   public firstMessagesLoaded(parentContainer: HTMLElement): void {
     this.mutableContainer$.next(parentContainer);
-    this.checkView(parentContainer);
+    this.checkView(parentContainer, true);
     this.loading$.next(false);
   }
 
-  public recheckView(): void {
-    this.checkView(this.mutableContainer$.value);
+  public recheckView(scrollToPoint: number): void {
+    this.newMessagesBar.remove();
+    this.infiniteContent.scrollToPoint(scrollToPoint, 0)
+      .then(() => this.checkView(this.mutableContainer$.value, false));
   }
 
-  private checkView(parentContainer: HTMLElement): void {
+  private checkView(parentContainer: HTMLElement, doScroll: boolean): void {
     if (!this.lastReadMessageId) {
       // do nothing
     }
     else if (this.lastReadMessageId === this.messages[0].id) {
-      this.infiniteContent.scrollToBottom(0).then();
+      if (doScroll) {
+        this.infiniteContent.scrollToBottom(0).then();
+      }
     }
     else {
       // scroll to last read message
@@ -106,7 +118,9 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
         return;
       }
       msgEl.before(this.newMessagesBar);
-      this.newMessagesBar.scrollIntoView({ block: 'center' });
+      if (doScroll) {
+        this.newMessagesBar.scrollIntoView({ block: 'center' });
+      }
     }
   }
 
@@ -123,7 +137,8 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       openElementsChildren(visibleGroups, { reverseLeaf: true }),
       event.target
     );
-    const lastId = Number(visibleMessages.at(-1).id);
+    // message element id format is 'message-{id}'
+    const lastId = Number(visibleMessages.at(-1).id.slice(8));
     // todo check later messages by timestamp
     if (lastId > this.lastReadMessageId) {
       this.updateLastReadMessage.emit(lastId);
@@ -145,7 +160,7 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
   }
 
   private needToReadMessageCauseNoScroll(mesChanges: SimpleChange): boolean {
-    const el = this.infiniteContent.scrollElement;
+    const el = this.infiniteContent?.scrollElement;
     const isScrollExist = el && el.scrollHeight > el.clientHeight;
     return !isScrollExist &&
       mesChanges.currentValue[0].id !== null && // skip temp messages

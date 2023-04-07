@@ -6,7 +6,7 @@ import {
   UsersService,
   ChannelsApiClient,
   ChannelApiClient,
-  StoreChannelMessage,
+  StoreChannelMessage
 } from '../../../../core';
 import {
   combineLatest,
@@ -96,7 +96,12 @@ export class ChannelsDataService {
       before = side === 'top' ? 40 : 0;
       after = side === 'bottom' ? 40: 0;
     }
-    await this.loadChannelMessagesStore(channelId, requestMessageId, before, after);
+    const mes = await this.loadChannelMessagesStore(channelId, requestMessageId, before, after);
+    if (side === 'initial') {
+      // init unread messages count
+      const unreadMessages = requestMessageId === 0 ? mes.length : mes.findIndex(item => item.id === requestMessageId);
+      this.channelsStore.increaseUnreadMessages(channelId, unreadMessages);
+    }
   }
 
   public getChannel(id: number): Observable<StoreChannel> {
@@ -106,9 +111,11 @@ export class ChannelsDataService {
     const getChannelRequest$: Observable<StoreChannel> = this.currentChannelApi.getChannelInfo(id).pipe(
       map(channel => ({
         ...channel,
-        messages: [],
+        messages: null,
+        unreadMessages: 0,
         isTopMesLimitAchieved: true,
-        isBottomMesLimitAchieved: true
+        isBottomMesLimitAchieved: true,
+        isFullyLoaded: true
       }))
     );
     return from(
@@ -130,8 +137,10 @@ export class ChannelsDataService {
     await this.channelsStore.setChat(newChannel.id, {
       ...newChannel,
       messages: [],
+      unreadMessages: 0,
       isTopMesLimitAchieved: true,
       isBottomMesLimitAchieved: true,
+      isFullyLoaded: true
     });
     await this.channelsStore.updateChatMessages(newChannel.id, [], { position: 'start' });
   }
@@ -147,7 +156,7 @@ export class ChannelsDataService {
     mesId: number,
     before: number,
     after: number
-  ): Promise<void> {
+  ): Promise<StoreChannelMessage[]> {
     // todo result messages count to compare with before / after
     const newMessages = (await firstValueFrom(
       this.currentChannelApi.getChannelMessages(channelId, mesId, before, after)
@@ -177,13 +186,16 @@ export class ChannelsDataService {
       isTopMesLimitAchieved,
       position
     };
-    await this.channelsStore.updateChatMessages(channelId, newMessages, options);
+    return await this.channelsStore.updateChatMessages(channelId, newMessages, options) as StoreChannelMessage[];
   }
 
   private receiveChannelsMessages(): void {
-    const handler = (temp: TempMes) => this.channelsStore.updateChatMessages(
-      temp.channelId, [temp.message], { position: 'start' }
-    );
+    const handler = (temp: TempMes) => {
+      this.channelsStore.increaseUnreadMessages(temp.channelId);
+      this.channelsStore.updateChatMessages(
+        temp.channelId, [temp.message], { position: 'start' }
+      ).then();
+    };
     this.channelsSignalr.receiveChannelsMessages(handler).then();
   }
 

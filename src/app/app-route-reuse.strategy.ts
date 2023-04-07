@@ -20,11 +20,15 @@ export class AppRouteReuseStrategy extends IonicRouteStrategy {
   }
 
   store(route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {
-    if (!route.data.reuse) {
+    if (!(route.data.reuse)) {
       super.store(route, detachedTree);
       return;
     }
     this.storedRoutes[route.data.module].set(route.params.id, detachedTree);
+    if (detachedTree) {
+      const componentRef: ComponentRef<ReusableComponent> = (detachedTree as any).componentRef;
+      componentRef.instance.triggerStore();
+    }
   }
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {

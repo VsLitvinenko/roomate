@@ -23,6 +23,7 @@ export class HotMap<K, V> extends Map<K, V> {
 
 export class ReusableComponent {
   private readonly reused$ = new Subject<void>();
+  private readonly stored$ = new Subject<void>();
 
   public get reused(): Observable<void> {
     return this.reused$.pipe(
@@ -30,7 +31,15 @@ export class ReusableComponent {
     );
   }
 
+  public get stored(): Observable<void> {
+    return this.stored$.asObservable();
+  }
+
   public triggerReuse(): void {
     this.reused$.next(void 0);
+  }
+
+  public triggerStore(): void {
+    this.stored$.next(void 0);
   }
 }

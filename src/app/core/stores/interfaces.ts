@@ -7,9 +7,9 @@ export interface ChatMessage {
 
 export interface FullChat {
   id: number;
-  isFullyLoaded?: boolean;
-  unreadMessages?: number;
-  messages?: ChatMessage[];
+  isFullyLoaded: boolean;
+  unreadMessages: number;
+  messages: ChatMessage[];
   isTopMesLimitAchieved: boolean;
   isBottomMesLimitAchieved: boolean;
   lastReadMessageId: number;

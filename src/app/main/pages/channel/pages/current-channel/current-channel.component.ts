@@ -39,6 +39,8 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     shareReplay(1)
   );
 
+  private bufferStoredScrollPoint: number;
+
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly menuController: MenuControllerService,
@@ -50,9 +52,8 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.reused.pipe(
-      untilDestroyed(this)
-    ).subscribe(() => this.onReuseView());
+    this.reused.pipe(untilDestroyed(this)).subscribe(() => this.onReuseView());
+    this.stored.pipe(untilDestroyed(this)).subscribe(() => this.onStoreView());
   }
 
   public infiniteScroll(scrollEvent: InfiniteScrollEvent): void {
@@ -62,6 +63,7 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
   }
 
   public updateLastReadMessage(mesId: number): void {
+    console.log('UPDATE LAST READ MESSAGE');
     firstValueFrom(this.channelId$)
       .then(id => this.channelsData.updateLastReadMessage(id, mesId));
   }
@@ -75,11 +77,18 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     await modal.present();
   }
 
+  private onStoreView(): void {
+    // console.log('CURRENT-CHANNEL-WAS-STORED');
+    this.chatComponent.ignoreNgOnChanges = true;
+    this.bufferStoredScrollPoint = this.chatComponent.getCurrentScrollPoint();
+  }
+
   private onReuseView(): void {
-    console.log('CURRENT-CHANNEL-WAS-REUSED');
-    this.chatComponent.recheckView();
+    // console.log('CURRENT-CHANNEL-WAS-REUSED');
+    this.chatComponent.ignoreNgOnChanges = false;
     firstValueFrom(this.channelId$)
-      .then(id => this.updateEndSideMenu(id));
+      .then(id => this.updateEndSideMenu(id))
+      .then(() => this.chatComponent.recheckView(this.bufferStoredScrollPoint));
   }
 
   private updateEndSideMenu(id: number): void {

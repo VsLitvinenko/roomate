@@ -92,16 +92,20 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       isTopMesLimitAchieved?: boolean;
       isBottomMesLimitAchieved?: boolean;
     }
-  ): Promise<void> {
+  ): Promise<ChatMessage[]> {
+    newMessages = await newMessages;
     const chat$ = this.store.get(id);
+    if (!chat$.value.isFullyLoaded) {
+      return;
+    }
     const existMessages = chat$.value.messages ?? [];
     let messages: ChatMessage[];
     switch (options.position) {
       case 'start':
-        messages = [...(await newMessages), ...existMessages];
+        messages = [...newMessages, ...existMessages];
         break;
       case 'end':
-        messages = [...existMessages, ...(await newMessages)];
+        messages = [...existMessages, ...newMessages];
         break;
     }
     chat$.next({
@@ -110,6 +114,7 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       isTopMesLimitAchieved: options.isTopMesLimitAchieved ?? chat$.value.isTopMesLimitAchieved,
       isBottomMesLimitAchieved: options.isBottomMesLimitAchieved ?? chat$.value.isBottomMesLimitAchieved
     });
+    return newMessages;
   }
 
   public updateLastReadMessage(chatId: number, lastReadMessageId: number, unreadMessages: number): void {
@@ -118,6 +123,17 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
       ...chat$.value,
       lastReadMessageId,
       unreadMessages
+    });
+  }
+
+  public increaseUnreadMessages(id: number, count: number = 1): void {
+    const chat$ = this.store.get(id);
+    if (count === 0 && chat$.value.unreadMessages !== undefined) {
+      return;
+    }
+    chat$.next({
+      ...chat$.value,
+      unreadMessages: (chat$.value.unreadMessages ?? 0) + count
     });
   }
 }
