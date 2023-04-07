@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot, DetachedRouteHandle } from '@angular/router';
 import { IonicRouteStrategy } from '@ionic/angular';
 import { ComponentRef } from '@angular/core';
+import { ReusableComponent } from './shared';
 
 export interface ReuseRouteData {
   reuse: boolean;
@@ -34,12 +35,14 @@ export class AppRouteReuseStrategy extends IonicRouteStrategy {
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
     if (route.data.reuse) {
-      const componentRef: ComponentRef<any> = (this.storedRoutes[route.data.module].get(route.params.id) as any).componentRef;
-      componentRef.instance.onReuseView();
+      const stored = this.storedRoutes[route.data.module].get(route.params.id);
+      const componentRef: ComponentRef<ReusableComponent> = (stored as any).componentRef;
+      componentRef.instance.triggerReuse();
+      return stored;
     }
-    return route.data.reuse ?
-      this.storedRoutes[route.data.module].get(route.params.id) :
-      super.retrieve(route);
+    else {
+      return super.retrieve(route);
+    }
   }
 
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {

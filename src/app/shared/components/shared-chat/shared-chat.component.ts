@@ -84,6 +84,15 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
 
   public firstMessagesLoaded(parentContainer: HTMLElement): void {
     this.mutableContainer$.next(parentContainer);
+    this.checkView(parentContainer);
+    this.loading$.next(false);
+  }
+
+  public recheckView(): void {
+    this.checkView(this.mutableContainer$.value);
+  }
+
+  private checkView(parentContainer: HTMLElement): void {
     if (!this.lastReadMessageId) {
       // do nothing
     }
@@ -99,7 +108,6 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       msgEl.before(this.newMessagesBar);
       this.newMessagesBar.scrollIntoView({ block: 'center' });
     }
-    this.loading$.next(false);
   }
 
   private ionScroll(event: any): void {

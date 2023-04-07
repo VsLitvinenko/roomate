@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, throttleTime } from 'rxjs';
 
 export class HotMap<K, V> extends Map<K, V> {
 
@@ -18,5 +18,19 @@ export class HotMap<K, V> extends Map<K, V> {
     entries.forEach(([key, value]) => super.set(key, value));
     this.valuesUpdated$.next(super.values());
     return this;
+  }
+}
+
+export class ReusableComponent {
+  private readonly reused$ = new Subject<void>();
+
+  public get reused(): Observable<void> {
+    return this.reused$.pipe(
+      throttleTime(100)
+    );
+  }
+
+  public triggerReuse(): void {
+    this.reused$.next(void 0);
   }
 }
