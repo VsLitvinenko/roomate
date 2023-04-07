@@ -1,0 +1,23 @@
+<ion-content [scrollEvents]="true"
+             infinite-scroll
+             [scrollWindow]="true"
+             [alwaysCallback]="true"
+             [infiniteScrollContainer]="scrollElementReady | push"
+             [infiniteScrollDisabled]="loading || (!topInfinite && !bottomInfinite)"
+             [infiniteScrollDistance]="1"
+             [infiniteScrollUpDistance]="1"
+             (scrolled)="onBottomScroll()"
+             (scrolledUp)="onTopScroll($event)"
+             appScrollbarTheme>
+  <app-shared-loader [loading]="loading"
+                     [background]="'var(--ion-background-color)'">
+  </app-shared-loader>
+  <div *rxIf="topScrollLoading$" class="spinner-container">
+    <ion-spinner name="crescent" color="roomate-green"></ion-spinner>
+  </div>
+  <ng-content></ng-content>
+  <div *rxIf="bottomScrollLoading$"
+       class="spinner-container margin-bottom">
+    <ion-spinner name="crescent" color="roomate-green"></ion-spinner>
+  </div>
+</ion-content>

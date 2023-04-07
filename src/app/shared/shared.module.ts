@@ -10,13 +10,15 @@ import {
   SharedTextareaFooterComponent,
   SharedLoaderComponent,
   SharedUsersListComponent,
-  SharedChatActionsComponent
+  SharedChatActionsComponent,
+  SharedInfiniteContentComponent
 } from './components';
 import { LocalizationPipe } from './localization';
 import { PushModule } from '@rx-angular/template/push';
 import { IfModule } from '@rx-angular/template/if';
 import { LetModule } from '@rx-angular/template/let';
 import { ForModule } from '@rx-angular/template/for';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const directives = [
   ScrollbarThemeDirective,
@@ -31,7 +33,8 @@ const componentsExport = [
   SharedTextareaFooterComponent,
   SharedChatComponent,
   SharedUsersListComponent,
-  SharedChatActionsComponent
+  SharedChatActionsComponent,
+  SharedInfiniteContentComponent
 ];
 
 const components = [
@@ -51,6 +54,7 @@ const rxAngularModules = [
     IonicModule,
     CommonModule,
     RouterModule,
+    InfiniteScrollModule,
     ...rxAngularModules,
   ],
   declarations: [
