@@ -4,7 +4,7 @@
     <ng-container #loadedMessagesContainer
                   *ngIf="messages.length; else noMessages">
       <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
-           class="reverse">
+           messageDay class="message-day">
         <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
                             [messages]="group.messages"
                             [user]="group.user$ | push"
