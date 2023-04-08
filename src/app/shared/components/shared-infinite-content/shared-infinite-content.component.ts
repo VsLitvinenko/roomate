@@ -70,10 +70,6 @@ export class SharedInfiniteContentComponent implements AfterViewInit, OnChanges,
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.mutationContainer && this.mutationContainer) {
-      // const callback = (mutationsList: MutationRecord[]) => {
-      //   console.log(mutationsList, 'MUTATIONS LIST');
-      //   this.mutations$.next(void 0);
-      // };
       this.mutationsObserver = new MutationObserver(() => this.mutations$.next(void 0));
       this.mutationsObserver.observe(this.mutationContainer, {
         childList: true,

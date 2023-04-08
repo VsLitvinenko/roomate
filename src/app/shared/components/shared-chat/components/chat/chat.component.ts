@@ -44,7 +44,7 @@ export class ChatComponent implements OnChanges {
   @ViewChild('loadedMessagesContainer')
   private set loadedMessagesContainer(element: ElementRef) {
     if (element) {
-      this.firstMessagesLoaded.emit(element.nativeElement.parentNode);
+      this.firstMessagesLoaded.emit(element.nativeElement.parentElement);
       this.firstMessagesLoaded.complete();
     }
   }

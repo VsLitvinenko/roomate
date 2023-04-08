@@ -1,21 +1,35 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnChanges,
   Output,
-  SimpleChange,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { BehaviorSubject, Observable, debounceTime } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  Subject,
+  take,
+  switchMap,
+  map,
+  lastValueFrom,
+  filter,
+} from 'rxjs';
 import { ChatMessage } from '../../../core';
-import { filterVisibleElements, isAppFullWidth$, openElementsChildren } from '../../common';
+import { isAppFullWidth$ } from '../../common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalizationService } from '../../localization';
 import { InfiniteScrollEvent, SharedInfiniteContentComponent } from '../shared-infinite-content';
+
+interface BotMesLoadedEvent {
+  prevLastBottomMessageId: number;
+  newLastBottomMessageId: number;
+  prevLength: number;
+  newLength: number;
+}
 
 @UntilDestroy()
 @Component({
@@ -24,66 +38,71 @@ import { InfiniteScrollEvent, SharedInfiniteContentComponent } from '../shared-i
   templateUrl: './shared-chat.component.html',
   styleUrls: ['./shared-chat.component.scss'],
 })
-export class SharedChatComponent implements OnChanges, AfterViewInit {
+export class SharedChatComponent implements OnChanges {
   @Input() public messages: ChatMessage[];
   @Input() public isTopMesLimitAchieved: boolean;
   @Input() public isBottomMesLimitAchieved: boolean;
   @Input() public lastReadMessageId: number;
 
   @Output() public infiniteScroll = new EventEmitter<InfiniteScrollEvent>();
-  @Output() public updateLastReadMessage = new EventEmitter<number>();
 
   @ViewChild(SharedInfiniteContentComponent) infiniteContent: SharedInfiniteContentComponent;
 
   // can be changed outside this component
   public ignoreNgOnChanges = false;
 
-  public isNotNearToBottom$: Observable<boolean>;
   public mutableContainer$ = new BehaviorSubject<HTMLElement>(undefined);
   public readonly loading$ = new BehaviorSubject<boolean>(true);
 
+  private readonly newBottomMessagesLoaded$ = new Subject<BotMesLoadedEvent>();
+
   private readonly newMessagesBar = this.createNewMessagesBarElement();
+  private readonly readMessagesObserver = this.createReadMessagesObserver();
+
+  private readonly readMessageEvent$ = new Subject<number>();
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  @Output() public readonly updateLastReadMessage = this.readMessageEvent$.pipe(
+    debounceTime(100)
+  );
 
   constructor(private readonly localizationService: LocalizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      this.ignoreNgOnChanges ||
-      !changes.messages ||
-      !changes.messages.currentValue
-    ) {
-      // no changes or still don't have any messages
+    if (this.ignoreNgOnChanges) {
+      // ignore all changes
       return;
     }
-
     if (
-      changes.messages.currentValue.length &&
-      this.needToReadMessageCauseNoScroll(changes.messages)
-    ) {
-      this.updateLastReadMessage.emit(this.messages[0].id);
-    }
-    else if (
-      changes.messages.currentValue.length &&
+      changes.messages &&
       changes.messages.previousValue &&
-      this.needToScrollDownOnNewMessage(changes.messages)
-    ) {
-      this.infiniteContent.scrollToBottom(200).then();
+      changes.messages.currentValue?.length &&
+      changes.messages.previousValue.at(0)?.id !== changes.messages.currentValue.at(0).id
+    )
+    {
+      if (changes.messages.currentValue.at(0).id === null) {
+        this.infiniteContent.scrollToBottom(200).then();
+      }
+      else {
+        const reallyPrevValue = changes.messages.previousValue.at(0)?.id === null ?
+          changes.messages.previousValue.slice(1) // delete temp message
+          : changes.messages.previousValue;
+        this.newBottomMessagesLoaded$.next({
+          prevLastBottomMessageId: reallyPrevValue.at(0)?.id ?? null,
+          newLastBottomMessageId: changes.messages.currentValue.at(0).id,
+          prevLength: reallyPrevValue.length,
+          newLength: changes.messages.currentValue.length
+        });
+      }
     }
   }
 
-  ngAfterViewInit(): void {
-    // this.chatContent.getScrollElement().then(el => {
-    //   this.ionContentScrollElement = el;
-    //   this.isNotNearToBottom$ = this.chatContent.ionScroll.pipe(
-    //     auditTime(500),
-    //     map(() => el.scrollHeight - (el.scrollTop + el.clientHeight) > 200)
-    //   );
-    // });
-    //
-    this.infiniteContent.ionScroll.pipe(
-      debounceTime(500),
+  public onIonContentScrollReady(el: HTMLElement): void {
+    // scroll bottom on new message
+    this.newBottomMessagesLoaded$.pipe(
+      filter(event => (event.newLength - event.prevLength) === 1),
+      filter(() => el.scrollHeight - (el.scrollTop + el.clientHeight) < 10),
       untilDestroyed(this)
-    ).subscribe(event => this.ionScroll(event));
+    ).subscribe(() => this.infiniteContent.scrollToBottom(200));
   }
 
   public getCurrentScrollPoint(): number {
@@ -102,14 +121,28 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       .then(() => this.checkView(this.mutableContainer$.value, false));
   }
 
-  private checkView(parentContainer: HTMLElement, doScroll: boolean): void {
-    if (!this.lastReadMessageId) {
-      // do nothing
-    }
-    else if (this.lastReadMessageId === this.messages[0].id) {
-      if (doScroll) {
-        this.infiniteContent.scrollToBottom(0).then();
+  private checkView(parentContainer: HTMLElement, initial: boolean): void {
+    if (
+      this.messages.length === 0 ||
+      this.lastReadMessageId === this.messages[0].id
+    ) {
+      // all messages are already read
+      if (initial) {
+        this.infiniteContent.scrollToBottom(0)
+          .then(() => this.waitNewRenderedBottomMessages())
+          .then(event => {
+            const newMessage = parentContainer.querySelector(`#message-${event.newLastBottomMessageId}`);
+            this.readMessagesObserver.observe(newMessage);
+          });
       }
+    }
+    else if (!this.lastReadMessageId) {
+      // no read any messages at all
+      const firstMessage = parentContainer.firstElementChild // first day
+        .lastElementChild.previousElementSibling // first group
+        .lastElementChild; // first message
+      this.getNextNonVisibleMessage(firstMessage)
+        .then(el => this.readMessagesObserver.observe(el));
     }
     else {
       // scroll to last read message
@@ -118,53 +151,11 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
         return;
       }
       msgEl.before(this.newMessagesBar);
-      if (doScroll) {
+      if (initial) {
+        this.readMessagesObserver.observe(msgEl);
         this.newMessagesBar.scrollIntoView({ block: 'center' });
       }
     }
-  }
-
-  private ionScroll(event: any): void {
-    const visibleDays = filterVisibleElements(
-      Array.from(this.mutableContainer$.value.children) as HTMLElement[],
-      event.target
-    );
-    const visibleGroups = filterVisibleElements(
-      openElementsChildren(visibleDays, { filterHandler: item => item.tagName === 'APP-MESSAGES-GROUP', reverseLeaf: true }),
-      event.target
-    );
-    const visibleMessages = filterVisibleElements(
-      openElementsChildren(visibleGroups, { reverseLeaf: true }),
-      event.target
-    );
-    // message element id format is 'message-{id}'
-    const lastId = Number(visibleMessages.at(-1).id.slice(8));
-    // todo check later messages by timestamp
-    if (lastId > this.lastReadMessageId) {
-      this.updateLastReadMessage.emit(lastId);
-    }
-  }
-
-  private needToScrollDownOnNewMessage(mesChanges: SimpleChange): boolean {
-    const el = this.infiniteContent.scrollElement;
-    if (el && el.scrollHeight > el.clientHeight) {
-      const oneNewMessage = mesChanges.currentValue.length - mesChanges.previousValue.length === 1;
-      const lastMessageUpdated = mesChanges.currentValue[0].id !== mesChanges.previousValue[0].id;
-      const selfMessage =  mesChanges.currentValue[0].id === null; // self temp-message
-      const nearToBottom = el.scrollHeight - (el.scrollTop + el.clientHeight) < 10;
-      return oneNewMessage && lastMessageUpdated && (selfMessage || nearToBottom);
-    }
-    else {
-      return false;
-    }
-  }
-
-  private needToReadMessageCauseNoScroll(mesChanges: SimpleChange): boolean {
-    const el = this.infiniteContent?.scrollElement;
-    const isScrollExist = el && el.scrollHeight > el.clientHeight;
-    return !isScrollExist &&
-      mesChanges.currentValue[0].id !== null && // skip temp messages
-      mesChanges.currentValue[0].id > this.lastReadMessageId; // todo check later messages by timestamp
   }
 
   private createNewMessagesBarElement(): HTMLElement {
@@ -182,6 +173,71 @@ export class SharedChatComponent implements OnChanges, AfterViewInit {
       }
     });
     return newMessagesEl;
+  }
+
+  private createReadMessagesObserver(): IntersectionObserver {
+    const handler = (entries, observer) => {
+      entries = entries.filter(item => item.isIntersecting);
+      if (entries.length === 0) {
+        return;
+      }
+      const el = entries[0].target;
+      observer.unobserve(el);
+      this.getNextNonVisibleMessage(el).then(newMesEl => observer.observe(newMesEl));
+    };
+
+    return new IntersectionObserver(handler, {
+      threshold: 1,
+      rootMargin: '-150px 0px 0px 0px'
+    });
+  }
+
+  private async getNextNonVisibleMessage(prevMes: Element | any): Promise<Element> {
+    // read message
+    this.readMessageEvent$.next(Number(prevMes.id.slice(8)));
+    let nextMessage: Element;
+    if (prevMes.previousElementSibling?.hasAttribute('message')) {
+      // message in same group
+      nextMessage = prevMes.previousElementSibling;
+    }
+    else if (prevMes.parentElement.previousElementSibling?.tagName === 'APP-MESSAGES-GROUP') {
+      // message in next group if exist
+      nextMessage = prevMes.parentElement.previousElementSibling.lastElementChild;
+    }
+    else if (prevMes.parentElement.parentElement.nextElementSibling?.hasAttribute('messageDay')) {
+      // message in first group of next day if exist
+      nextMessage = prevMes.parentElement.parentElement.nextSibling // next day
+        .lastElementChild.previousElementSibling // first message group
+        .lastElementChild; // first message
+    }
+    else {
+      // wait new rendered messages
+      const event = await this.waitNewRenderedBottomMessages();
+      const prevMessage = this.messages.find(item => item.id === event.prevLastBottomMessageId);
+      const prevMessageElement = this.mutableContainer$.value.querySelector(`#message-${prevMessage.id}`);
+      return this.getNextNonVisibleMessage(prevMessageElement);
+    }
+    const bottomPos = nextMessage.getBoundingClientRect().bottom;
+    const parent = await this.infiniteContent.scrollElementAsync;
+    if (parent.clientHeight < bottomPos) {
+      // not visible
+      return nextMessage;
+    }
+    else {
+      // this message is already visible, get next one
+      return this.getNextNonVisibleMessage(nextMessage);
+    }
+  }
+
+  private waitNewRenderedBottomMessages(): Promise<BotMesLoadedEvent> {
+    const newBottomMessagesRendered$ = this.newBottomMessagesLoaded$.pipe(
+      take(1),
+      switchMap(mesLoadedEvent => this.mutableContainer$.pipe(
+        take(1),
+        map(() => mesLoadedEvent)
+      ))
+    );
+    return lastValueFrom(newBottomMessagesRendered$);
   }
 
 }

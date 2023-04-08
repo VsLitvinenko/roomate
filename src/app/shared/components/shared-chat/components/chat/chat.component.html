@@ -1,8 +1,8 @@
 <div class="msgs-container">
-  <ng-container *ngIf="messages">
+  <ng-container #loadedMessagesContainer
+                *ngIf="messages">
 
-    <ng-container #loadedMessagesContainer
-                  *ngIf="messages.length; else noMessages">
+    <ng-container *ngIf="messages.length; else noMessages">
       <div *ngFor="let day of messageDays | keyvalue; trackBy:trackByDay"
            messageDay class="message-day">
         <app-messages-group *ngFor="let group of day.value; trackBy:trackByGroup"
