@@ -19,6 +19,19 @@ export class HotMap<K, V> extends Map<K, V> {
     this.valuesUpdated$.next(super.values());
     return this;
   }
+
+  public clear(): void {
+    super.clear();
+    this.valuesUpdated$.next(super.values());
+  }
+
+  public delete(key: K): boolean {
+    const res = super.delete(key);
+    if (res) {
+      this.valuesUpdated$.next(super.values());
+    }
+    return res;
+  }
 }
 
 export class ReusableComponent {

@@ -138,7 +138,7 @@ export class SharedChatComponent implements OnChanges {
         .then(el => this.readMessagesObserver.observe(el));
     }
     else {
-      // find to last read message
+      // find last read message
       const msgEl: HTMLElement = parentContainer.querySelector(`#message-${this.lastReadMessageId}`);
       if (!msgEl) {
         return;
