@@ -124,7 +124,7 @@ export class SharedChatComponent implements OnChanges {
       if (initial) {
         await this.infiniteContent.scrollToBottom(0);
         this.waitNewRenderedBottomMessages().then(event => {
-          const newMessage = parentContainer.querySelector(`#message-${event.newLastBottomMessageId}`);
+          const newMessage = this.getMessageElById(event.newLastBottomMessageId);
           this.readMessagesObserver.observe(newMessage);
         });
       }
@@ -139,7 +139,7 @@ export class SharedChatComponent implements OnChanges {
     }
     else {
       // find last read message
-      const msgEl: HTMLElement = parentContainer.querySelector(`#message-${this.lastReadMessageId}`);
+      const msgEl = this.getMessageElById(this.lastReadMessageId);
       if (!msgEl) {
         console.error('chat error: cant find lastReadMessage element');
         return;
@@ -210,8 +210,7 @@ export class SharedChatComponent implements OnChanges {
     else {
       // wait new rendered messages
       const event = await this.waitNewRenderedBottomMessages();
-      const prevMessage = this.messages.find(item => item.id === event.prevLastBottomMessageId);
-      const prevMessageElement = this.mutableContainer$.value.querySelector(`#message-${prevMessage.id}`);
+      const prevMessageElement = this.getMessageElById(event.prevLastBottomMessageId);
       return this.getNextNonVisibleMessage(prevMessageElement);
     }
     const bottomPos = nextMessage.getBoundingClientRect().bottom;
@@ -236,6 +235,10 @@ export class SharedChatComponent implements OnChanges {
       ))
     );
     return lastValueFrom(newBottomMessagesRendered$);
+  }
+
+  private getMessageElById(messageId: number): Element | null {
+    return this.mutableContainer$.value.querySelector(`#message-${messageId}`);
   }
 
 }
