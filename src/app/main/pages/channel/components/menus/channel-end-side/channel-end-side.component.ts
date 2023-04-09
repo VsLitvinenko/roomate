@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InjectableDataClass } from 'src/app/core/services/injector.service';
 import { rooms } from './data-source';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-end-side-menu',
@@ -10,10 +11,10 @@ import { rooms } from './data-source';
 export class ChannelEndSideComponent implements OnInit {
 
   public readonly rooms = rooms;
-  public channelId: number;
+  public readonly channelId$: BehaviorSubject<number>;
 
-  constructor(private item: InjectableDataClass<number>) {
-    this.channelId = item.injectedItem;
+  constructor(private item: InjectableDataClass<BehaviorSubject<number>>) {
+    this.channelId$ = item.injectedItem;
   }
 
   ngOnInit(): void {

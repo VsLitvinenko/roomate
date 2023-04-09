@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { userData } from './data-source';
 import { InjectableDataClass } from '../../../../../../core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-end-side-menu',
@@ -8,11 +9,13 @@ import { InjectableDataClass } from '../../../../../../core';
   styleUrls: ['./direct-end-side.component.scss'],
 })
 export class DirectEndSideComponent implements OnInit {
-  public user: any;
+  public readonly user$: Observable<any>;
   public isNotify = true;
 
-  constructor(private item: InjectableDataClass<string>) {
-    this.user = userData(item.injectedItem);
+  constructor(private item: InjectableDataClass<BehaviorSubject<string>>) {
+    this.user$ = item.injectedItem.pipe(
+      map(id => userData(id))
+    );
   }
 
   ngOnInit(): void {}

@@ -5,7 +5,6 @@ import { ReactiveViewControllerService } from '../../../../services/reactive-vie
 import { ChannelEndSideComponent } from '../../components';
 import { ChannelsDataService } from '../../services';
 import { firstValueFrom, shareReplay, switchMap, tap, map } from 'rxjs';
-import { InjectorService } from '../../../../../core';
 import { InfiniteScrollEvent, ReusableComponent, SharedChatComponent } from '../../../../../shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -39,7 +38,6 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
 
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly viewController: ReactiveViewControllerService,
-              private readonly inj: InjectorService,
               private readonly channelsData: ChannelsDataService) {
     super();
   }
@@ -85,10 +83,6 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
       template: this.headerTemplate,
       endSideButtonIcon: 'globe-sharp'
     });
-
-    this.viewController.setEndSideMenuTemplate({
-      component: ChannelEndSideComponent,
-      injector: this.inj.createInjector<number>(id)
-    });
+    this.viewController.setEndSideMenuTemplate(ChannelEndSideComponent, id);
   }
 }

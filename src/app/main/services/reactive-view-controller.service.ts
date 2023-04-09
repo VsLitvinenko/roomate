@@ -1,9 +1,9 @@
-import { Injectable, Injector, TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface EndSideMenuTemplate {
   component: any;
-  injector?: Injector;
+  withValue?: BehaviorSubject<any>;
 }
 
 export interface HeaderTemplate {
@@ -36,7 +36,15 @@ export class ReactiveViewControllerService {
   public setStartSideMenuComponent(newComponent: any): void {
     this.startSideMenuComponent$.next(newComponent);
   }
-  public setEndSideMenuTemplate(newTemplate: EndSideMenuTemplate): void {
+  public setEndSideMenuTemplate(newComponent: any, withValue?: any): void {
+    if (this.endSideMenuTemplate$.value?.component === newComponent) {
+      this.endSideMenuTemplate$.value.withValue.next(withValue);
+      return;
+    }
+    const newTemplate = newComponent ? {
+      component: newComponent,
+      withValue: new BehaviorSubject<any>(withValue)
+    } : null;
     this.endSideMenuTemplate$.next(newTemplate);
   }
 
