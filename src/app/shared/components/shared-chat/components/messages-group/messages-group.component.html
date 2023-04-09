@@ -2,12 +2,12 @@
      [class.self]="self"
      [class.self-mobile]="self && (isMobile$ | push)"
      [id]="'message-' + msg.id"
-     class="message">
+     message class="message">
 
   <div class="img-container">
     <ion-thumbnail *ngIf="first">
       <img *ngIf="user; else skeletonAvatar"
-           [src]="user.imageUrl" alt=""
+           [src]="user.imageUrl" loading="lazy" alt=""
            (click)="openUser()">
       <ng-template #skeletonAvatar>
         <ion-skeleton-text animated="true">

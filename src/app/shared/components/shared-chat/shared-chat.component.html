@@ -1,18 +1,15 @@
-<app-shared-infinite-content [scrollEvents]="true"
+<app-shared-infinite-content [loading]="loading$ | push"
                              [topInfinite]="!isTopMesLimitAchieved"
                              [bottomInfinite]="!isBottomMesLimitAchieved"
-                             [loading]="loading$ | push"
                              [mutationContainer]="mutableContainer$ | push"
-                             (infiniteScroll)="infiniteScroll.emit($event)">
-  <ion-button *rxIf="isNotNearToBottom$"
-                class="no-ion-hover"
-                shape="round" slot="fixed" mode="ios">
-    <ion-icon slot="icon-only" name="chevron-down-outline"></ion-icon>
-  </ion-button>
-
+                             (infiniteScroll)="infiniteScroll.emit($event)"
+                             (scrollElementReady)="onIonContentScrollReady($event)">
+<!--  <ion-button *rxIf="isNotNearToBottom$"-->
+<!--                class="no-ion-hover"-->
+<!--                shape="round" slot="fixed" mode="ios">-->
+<!--    <ion-icon slot="icon-only" name="chevron-down-outline"></ion-icon>-->
+<!--  </ion-button>-->
   <app-chat [messages]="messages"
-            [topScrollDisabled]="(loading$ | push) || isTopMesLimitAchieved"
-            [bottomScrollDisabled]="(loading$ | push) || isBottomMesLimitAchieved"
             (firstMessagesLoaded)="firstMessagesLoaded($event)">
   </app-chat>
 </app-shared-infinite-content>

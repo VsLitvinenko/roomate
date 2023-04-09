@@ -9,7 +9,7 @@
               class="no-ion-hover current-user">
       <ion-row class="ion-align-items-center">
         <ion-thumbnail>
-          <img [src]="user.imageUrl" alt="">
+          <img [src]="user.imageUrl" loading="lazy" alt="">
         </ion-thumbnail>
 
         <div *ngIf="user.online" class="online"></div>

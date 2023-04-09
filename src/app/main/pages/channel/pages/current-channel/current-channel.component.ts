@@ -35,20 +35,12 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     shareReplay(1)
   );
 
-  public readonly messages$ = this.channelId$.pipe(
-    switchMap(id => this.channelsData.getChannelMessages(id)),
-    shareReplay(1)
-  );
-
   private bufferStoredScrollPoint: number;
 
-  constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly viewController: ReactiveViewControllerService,
-    private readonly inj: InjectorService,
-    private readonly channelsData: ChannelsDataService
-  ) {
-    console.log('CURRENT-CHANNEL-WAS-CREATED');
+  constructor(private readonly activatedRoute: ActivatedRoute,
+              private readonly viewController: ReactiveViewControllerService,
+              private readonly inj: InjectorService,
+              private readonly channelsData: ChannelsDataService) {
     super();
   }
 
@@ -79,14 +71,10 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
   }
 
   private onStoreView(): void {
-    // console.log('CURRENT-CHANNEL-WAS-STORED');
-    this.chatComponent.ignoreNgOnChanges = true;
     this.bufferStoredScrollPoint = this.chatComponent.getCurrentScrollPoint();
   }
 
   private onReuseView(): void {
-    // console.log('CURRENT-CHANNEL-WAS-REUSED');
-    this.chatComponent.ignoreNgOnChanges = false;
     firstValueFrom(this.channelId$)
       .then(id => this.updateReactiveView(id))
       .then(() => this.chatComponent.recheckView(this.bufferStoredScrollPoint));
