@@ -101,7 +101,7 @@ export class ChannelsDataService {
     if (side === 'initial') {
       // init unread messages count
       const unreadMessages = requestMessageId === 0 ? mes.length : mes.findIndex(item => item.id === requestMessageId);
-      this.channelsStore.increaseUnreadMessages(channelId, unreadMessages);
+      this.channelsStore.updateUnreadMessagesCont(channelId, unreadMessages);
     }
   }
 
@@ -193,7 +193,7 @@ export class ChannelsDataService {
 
   private receiveChannelsMessages(): void {
     const handler = (temp: TempMes) => {
-      this.channelsStore.increaseUnreadMessages(temp.channelId);
+      this.channelsStore.increaseUnreadMessagesCount(temp.channelId);
       this.channelsStore.updateChatMessages(
         temp.channelId, [temp.message], { position: 'start' }
       ).then();

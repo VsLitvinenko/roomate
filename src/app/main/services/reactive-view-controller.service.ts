@@ -1,5 +1,5 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export interface EndSideMenuTemplate {
   component: any;
@@ -14,8 +14,8 @@ export interface HeaderTemplate {
 @Injectable()
 export class ReactiveViewControllerService {
 
-  private headerTemplate$ = new BehaviorSubject<HeaderTemplate>(null);
-  private startSideMenuComponent$ = new BehaviorSubject<any>(null);
+  private headerTemplate$ = new Subject<HeaderTemplate>();
+  private startSideMenuComponent$ = new Subject<any>();
   private endSideMenuTemplate$ = new BehaviorSubject<EndSideMenuTemplate>(null);
 
   constructor() { }

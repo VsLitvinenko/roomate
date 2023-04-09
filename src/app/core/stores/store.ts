@@ -126,11 +126,16 @@ export abstract class Store<Full extends FullChat, Short extends ShortChat> {
     });
   }
 
-  public increaseUnreadMessages(id: number, count: number = 1): void {
+  public updateUnreadMessagesCont(id: number, unreadMessages: number): void {
     const chat$ = this.store.get(id);
-    if (count === 0 && chat$.value.unreadMessages !== undefined) {
-      return;
-    }
+    chat$.next({
+      ...chat$.value,
+      unreadMessages
+    });
+  }
+
+  public increaseUnreadMessagesCount(id: number, count: number = 1): void {
+    const chat$ = this.store.get(id);
     chat$.next({
       ...chat$.value,
       unreadMessages: (chat$.value.unreadMessages ?? 0) + count
