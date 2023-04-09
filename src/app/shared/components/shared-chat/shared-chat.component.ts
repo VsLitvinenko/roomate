@@ -17,6 +17,7 @@ import {
   map,
   lastValueFrom,
   filter,
+  first,
 } from 'rxjs';
 import { ChatMessage } from '../../../core';
 import { isAppFullWidth$ } from '../../common';
@@ -228,8 +229,9 @@ export class SharedChatComponent implements OnChanges {
   private waitNewRenderedBottomMessages(): Promise<BotMesLoadedEvent> {
     const newBottomMessagesRendered$ = this.newBottomMessagesLoaded$.pipe(
       take(1),
-      switchMap(mesLoadedEvent => this.mutableContainer$.pipe(
-        take(1),
+      switchMap(mesLoadedEvent => this.infiniteContent.mutations$.pipe(
+        // skip if chat is hidden
+        first(() => this.mutableContainer$.value.clientHeight > 0),
         map(() => mesLoadedEvent)
       ))
     );
