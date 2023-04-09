@@ -48,9 +48,6 @@ export class SharedChatComponent implements OnChanges {
 
   @ViewChild(SharedInfiniteContentComponent) infiniteContent: SharedInfiniteContentComponent;
 
-  // can be changed outside this component
-  public ignoreNgOnChanges = false;
-
   public mutableContainer$ = new BehaviorSubject<HTMLElement>(undefined);
   public readonly loading$ = new BehaviorSubject<boolean>(true);
 
@@ -68,10 +65,6 @@ export class SharedChatComponent implements OnChanges {
   constructor(private readonly localizationService: LocalizationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.ignoreNgOnChanges) {
-      // ignore all changes
-      return;
-    }
     if (
       changes.messages &&
       changes.messages.previousValue &&
@@ -145,7 +138,7 @@ export class SharedChatComponent implements OnChanges {
         .then(el => this.readMessagesObserver.observe(el));
     }
     else {
-      // scroll to last read message
+      // find to last read message
       const msgEl: HTMLElement = parentContainer.querySelector(`#message-${this.lastReadMessageId}`);
       if (!msgEl) {
         return;
