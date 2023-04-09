@@ -104,8 +104,8 @@ export class SharedChatComponent implements OnChanges {
 
   public firstMessagesLoaded(parentContainer: HTMLElement): void {
     this.mutableContainer$.next(parentContainer);
-    this.checkView(parentContainer, true);
-    this.loading$.next(false);
+    this.checkView(parentContainer, true)
+      .then(() => this.loading$.next(false));
   }
 
   public recheckView(scrollToPoint: number): void {
@@ -114,19 +114,18 @@ export class SharedChatComponent implements OnChanges {
       .then(() => this.checkView(this.mutableContainer$.value, false));
   }
 
-  private checkView(parentContainer: HTMLElement, initial: boolean): void {
+  private async checkView(parentContainer: HTMLElement, initial: boolean): Promise<void> {
     if (
       this.messages.length === 0 ||
       this.lastReadMessageId === this.messages[0].id
     ) {
       // all messages are already read
       if (initial) {
-        this.infiniteContent.scrollToBottom(0)
-          .then(() => this.waitNewRenderedBottomMessages())
-          .then(event => {
-            const newMessage = parentContainer.querySelector(`#message-${event.newLastBottomMessageId}`);
-            this.readMessagesObserver.observe(newMessage);
-          });
+        await this.infiniteContent.scrollToBottom(0);
+        this.waitNewRenderedBottomMessages().then(event => {
+          const newMessage = parentContainer.querySelector(`#message-${event.newLastBottomMessageId}`);
+          this.readMessagesObserver.observe(newMessage);
+        });
       }
     }
     else if (!this.lastReadMessageId) {
@@ -134,18 +133,22 @@ export class SharedChatComponent implements OnChanges {
       const firstMessage = parentContainer.firstElementChild // first day
         .lastElementChild.previousElementSibling // first group
         .lastElementChild; // first message
-      this.getNextNonVisibleMessage(firstMessage)
-        .then(el => this.readMessagesObserver.observe(el));
+      const mesEl = await this.getNextNonVisibleMessage(firstMessage);
+      this.readMessagesObserver.observe(mesEl);
     }
     else {
       // find last read message
       const msgEl: HTMLElement = parentContainer.querySelector(`#message-${this.lastReadMessageId}`);
       if (!msgEl) {
+        console.error('chat error: cant find lastReadMessage element');
         return;
+      }
+      if (initial) {
+        const newMessage = await this.getNextNonVisibleMessage(msgEl);
+        this.readMessagesObserver.observe(newMessage);
       }
       msgEl.before(this.newMessagesBar);
       if (initial) {
-        this.readMessagesObserver.observe(msgEl);
         this.newMessagesBar.scrollIntoView({ block: 'center' });
       }
     }
