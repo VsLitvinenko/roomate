@@ -35,11 +35,6 @@ export class CurrentChannelComponent extends ReusableComponent implements OnInit
     shareReplay(1)
   );
 
-  public readonly messages$ = this.channelId$.pipe(
-    switchMap(id => this.channelsData.getChannelMessages(id)),
-    shareReplay(1)
-  );
-
   private bufferStoredScrollPoint: number;
 
   constructor(

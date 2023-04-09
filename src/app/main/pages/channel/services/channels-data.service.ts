@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { filter, map, shareReplay, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, tap } from 'rxjs/operators';
 import {
   ChannelsStore,
   StoreChannel,
@@ -21,6 +21,7 @@ export interface ChannelChatInfo {
   isTopMesLimitAchieved: boolean;
   isBottomMesLimitAchieved: boolean;
   lastReadMessageId: number;
+  messages: StoreChannelMessage[];
 }
 
 @Injectable({
@@ -49,23 +50,23 @@ export class ChannelsDataService {
   }
 
   public getChannelChatInfo(id: number): Observable<ChannelChatInfo> {
-    return this.getChannel(id).pipe(
-      map(channel => ({
-        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
-        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
-        lastReadMessageId: channel.lastReadMessageId
-      }))
-    );
-  }
-
-  public getChannelMessages(id: number): Observable<StoreChannelMessage[]> {
     return combineLatest([
       this.getChannel(id),
       this.channelsSignalr.getTemporaryMessages(id)
     ]).pipe(
-      tap(([channel]) => this.users.updateListOfUsers(channel.members)),
       filter(([channel]) => channel.messages !== null),
-      map(([channel, tempMes]) => tempMes.length ? [...tempMes, ...channel.messages] : channel.messages)
+      map(([channel, tempMes]) => ({
+        messages: tempMes.length ? [...tempMes, ...channel.messages] : channel.messages,
+        isTopMesLimitAchieved: channel.isTopMesLimitAchieved,
+        isBottomMesLimitAchieved: channel.isBottomMesLimitAchieved,
+        lastReadMessageId: channel.lastReadMessageId
+      })),
+      startWith({
+        messages: null,
+        isTopMesLimitAchieved: true,
+        isBottomMesLimitAchieved: true,
+        lastReadMessageId: null
+      })
     );
   }
 
@@ -122,6 +123,7 @@ export class ChannelsDataService {
       this.channelsStore.setChat(id, firstValueFrom(getChannelRequest$))
     ).pipe(
       tap(channel => this.loadChannelMessages(id, 'initial', channel.lastReadMessageId)),
+      tap(channel => this.users.updateListOfUsers(channel.members)),
       switchMap(() => this.channelsStore.getChat(id))
     );
   }

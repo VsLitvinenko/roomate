@@ -25,13 +25,13 @@ export class ReusableComponent {
   private readonly reused$ = new Subject<void>();
   private readonly stored$ = new Subject<void>();
 
-  public get reused(): Observable<void> {
+  protected get reused(): Observable<void> {
     return this.reused$.pipe(
       throttleTime(100)
     );
   }
 
-  public get stored(): Observable<void> {
+  protected get stored(): Observable<void> {
     return this.stored$.asObservable();
   }
 

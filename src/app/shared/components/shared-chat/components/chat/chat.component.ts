@@ -29,10 +29,7 @@ interface MesGroup {
   animations: [ fadeAnimation(150) ]
 })
 export class ChatComponent implements OnChanges {
-  @Input() public topScrollDisabled: boolean;
-  @Input() public bottomScrollDisabled: boolean;
   @Input() public messages: ChatMessage[];
-
   @Output() public readonly firstMessagesLoaded = new EventEmitter<HTMLElement>();
 
   public messageDays: Record<number, MesGroup[]>;
