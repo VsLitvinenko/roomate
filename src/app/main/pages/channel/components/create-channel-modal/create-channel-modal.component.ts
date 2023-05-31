@@ -45,7 +45,7 @@ export class CreateChannelModalComponent implements OnInit {
 
   private get userListBeforeSearch$(): Observable<UserInfo[]> {
     return combineLatest([
-      of([1, 2, 3, 4, 5, 6]),
+      of([1, 2, 3, 4, 5]),
       this.membersIds$
     ]).pipe(
       switchMap(([searchIds, membersIds]) => {

@@ -22,6 +22,20 @@ export class JanusShareScreenService {
 
   constructor() { }
 
+  public detachPlugin(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.screenPlugin && !this.screenPlugin.detached) {
+        this.screenPlugin.detach({
+          success: () => resolve(),
+          error: err => reject(err)
+        });
+      }
+      else {
+        resolve();
+      }
+    });
+  }
+
   public async attachPlugin(
     sessionAttach: (options: JanusJS.PluginOptions) => void,
     roomId: number

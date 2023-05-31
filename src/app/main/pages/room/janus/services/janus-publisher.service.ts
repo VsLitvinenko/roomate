@@ -70,18 +70,28 @@ export class JanusPublisherService {
     this.mainPlugin.replaceTracks({ tracks });
   }
 
+  public detachPlugin(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.mainPlugin.detach({
+        success: () => resolve(),
+        error: err => reject(err)
+      });
+    });
+  }
+
   public attachPlugin(
     sessionAttach: (options: JanusJS.PluginOptions) => void,
     roomId: number,
     useAudio: boolean,
-    useVideo: boolean
+    useVideo: boolean,
+    selfId: number
   ): Promise<number> {
     this.roomId = roomId;
     this.initialUseAudio = useAudio;
     this.initialUseVideo = useVideo;
     sessionAttach({
       plugin: 'janus.plugin.videoroom',
-      success: pluginHandle => this.mainPluginHandling(pluginHandle),
+      success: pluginHandle => this.mainPluginHandling(pluginHandle, selfId),
       error: error => Janus.error('pluginAttaching error:', error),
       onmessage: (message, jsep) => this.onMainMessage(message, jsep),
       onlocaltrack: (track, on) => this.onLocalTrack(track, on),
@@ -90,13 +100,13 @@ export class JanusPublisherService {
     return firstValueFrom(this.myPrivateId$);
   }
 
-  private mainPluginHandling(plugin: JanusJS.PluginHandle): void {
+  private mainPluginHandling(plugin: JanusJS.PluginHandle, selfId: number): void {
     this.mainPlugin = plugin;
     const request = {
       request: 'join',
       room: this.roomId,
       ptype: 'publisher',
-      display: `tohaloh${Math.random() * 100}`
+      id: selfId
     };
     this.mainPlugin.send({ message: request });
   }

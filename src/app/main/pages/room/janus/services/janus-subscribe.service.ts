@@ -31,6 +31,15 @@ export class JanusSubscribeService {
     );
   }
 
+  public detachPlugin(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.plugin.detach({
+        success: () => resolve(),
+        error: err => reject(err)
+      });
+    });
+  }
+
   public attachPlugin(
     sessionAttach: (options: JanusJS.PluginOptions) => void,
     privateId: number,

@@ -6,6 +6,7 @@ import { JanusJS } from './janus.types';
 import { JanusSubscribeService, JanusShareScreenService, JanusPublisherService } from './services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { environment } from '../../../../../environments/environment';
+import { UsersService } from '../../../../core';
 
 const token = '1652177176,janus,janus.plugin.videoroom:f/oyakOF0lBzParWZNwKhz6CCig=';
 const server = `${environment.janus}/janus`;
@@ -25,7 +26,8 @@ export class JanusMainService {
   constructor(
     private readonly publisherService: JanusPublisherService,
     private readonly subscribeService: JanusSubscribeService,
-    private readonly screenService: JanusShareScreenService
+    private readonly screenService: JanusShareScreenService,
+    private readonly users: UsersService
   ) {
     Janus.init({
       debug: true,
@@ -51,6 +53,23 @@ export class JanusMainService {
     ]).pipe(
       map(tracks => tracks.filter(item => item !== null))
     );
+  }
+
+  public async leaveRoom(): Promise<void> {
+    if (!this.janus.isConnected()) {
+      return;
+    }
+    await this.subscribeService.detachPlugin();
+    await this.publisherService.detachPlugin();
+    await this.screenService.detachPlugin();
+    return new Promise((resolve, reject) => {
+      this.janus.destroy({
+        cleanupHandles: true,
+        notifyDestroyed: true,
+        success: () => resolve(),
+        error: err => reject(err)
+      });
+    });
   }
 
   public toggleAudio(muted: boolean): void {
@@ -104,7 +123,8 @@ export class JanusMainService {
       this.janus.attach,
       this.roomId,
       this.initialUseAudio,
-      this.initialUseVideo
+      this.initialUseVideo,
+      this.users.selfId
     );
     this.subscribeService.attachPlugin(this.janus.attach, privateId, this.roomId);
   }

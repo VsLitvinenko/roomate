@@ -12,7 +12,7 @@
     <div class="streams-container ion-padding"
          [class.mobile-container]="isMobile$ | async">
 
-      <app-stream *ngFor="let item of (localTracks$ | async); let i = index; trackBy:streamsTrackBy"
+      <app-stream *rxFor="let item of localTracks$; let i = index; trackBy:streamsTrackBy"
                   [localStream]="true"
                   [display]="item.display"
                   [audioTrack]="item.audio"
@@ -21,7 +21,7 @@
                   [id]="i">
       </app-stream>
 
-      <app-stream *ngFor="let item of ((remoteTracks$ | async) | keyvalue); trackBy:streamsTrackBy"
+      <app-stream *ngFor="let item of (remoteTracks$ | push | keyvalue); trackBy:streamsTrackBy"
                   [localStream]="false"
                   [display]="item.value.display"
                   [audioTrack]="item.value.audio"

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Location } from '@angular/common';
 import { map, take } from 'rxjs/operators';
 import { JanusMainService } from '../../janus';
 import { isAppFullWidth$, isTouchDevice } from '../../../../../shared';
@@ -36,6 +37,7 @@ export class MediaFooterComponent implements OnInit {
   constructor(
     private readonly janusService: JanusMainService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly location: Location
   ) { }
 
   ngOnInit(): void {
@@ -76,6 +78,11 @@ export class MediaFooterComponent implements OnInit {
       this.janusService.shareScreen()
         .then(() => this.isScreenSharing = false);
     }
+  }
+
+  public leaveRoom(): void {
+    this.janusService.leaveRoom()
+      .then(() => this.location.back());
   }
 
   private async setMediaDevices(): Promise<void> {

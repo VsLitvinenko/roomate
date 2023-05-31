@@ -17,6 +17,7 @@
       </ion-button>
 
       <ion-button fill="clear" color="medium" mode="md"
+                  [disabled]="devices.videoinput.length === 0"
                   (click)="toggleVideo()">
         <ion-icon [name]="'videocam' + (isVideoMuted ? '-off' : '')"></ion-icon>
       </ion-button>
@@ -27,7 +28,8 @@
         <ion-icon [name]="'mic' + (isAudioMuted ? '-off' : '')"></ion-icon>
       </ion-button>
 
-      <ion-button fill="clear" color="danger" mode="md">
+      <ion-button fill="clear" color="danger" mode="md"
+                  (click)="leaveRoom()">
         <ion-icon name="call-sharp"></ion-icon>
       </ion-button>
 

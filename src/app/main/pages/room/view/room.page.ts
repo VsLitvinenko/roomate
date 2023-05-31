@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { JanusMainService } from '../janus';
 import { map } from 'rxjs/operators';
 import { ReactiveViewControllerService } from '../../../services/reactive-view-controller.service';
-import { RoomStartSideComponent, RoomEndSideComponent } from '../components';
+import { RoomStartSideComponent } from '../components';
 import { isAppFullWidth$ } from '../../../../shared';
 
 @Component({
@@ -11,7 +11,7 @@ import { isAppFullWidth$ } from '../../../../shared';
   templateUrl: './room.page.html',
   styleUrls: ['./room.page.scss'],
 })
-export class RoomPage implements OnInit {
+export class RoomPage implements OnInit, OnDestroy {
   public readonly isMobile$ = isAppFullWidth$.pipe(
     map(value => !value)
   );
@@ -26,9 +26,14 @@ export class RoomPage implements OnInit {
     private readonly viewController: ReactiveViewControllerService,
   ) {}
 
+  @HostListener('window:beforeunload')
+  ngOnDestroy(): void {
+    this.janusService.leaveRoom().then();
+  }
+
   ngOnInit(): void {
     this.viewController.setStartSideMenuComponent(RoomStartSideComponent);
-    this.viewController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
+    // this.viewController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
     // const res = confirm('use initial tracks?');
     this.janusService.joinRoom(this.roomId, true, false);
   }
