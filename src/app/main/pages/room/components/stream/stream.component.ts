@@ -22,6 +22,7 @@ const SIN_FUNC = x => 0.5 * ((Math.sin((x - 0.5) * Math.PI)) + 1);
 })
 export class StreamComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() public display: string;
+  @Input() public imageUrl: string;
   @Input() public videoTrack: MediaStreamTrack;
   @Input() public audioTrack: MediaStreamTrack;
   @Input() public id: string | number;

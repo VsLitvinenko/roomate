@@ -33,6 +33,7 @@ export class RoomPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.viewController.setStartSideMenuComponent(RoomStartSideComponent);
+    this.viewController.clearHeaderTemplate();
     // this.viewController.setEndSideMenuTemplate({ component: RoomEndSideComponent });
     // const res = confirm('use initial tracks?');
     this.janusService.joinRoom(this.roomId, true, false);

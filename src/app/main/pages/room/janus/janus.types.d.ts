@@ -69,6 +69,7 @@ declare namespace JanusJS {
   }
 
   interface PublisherTracks {
+    img?: string;
     display: string;
     video: MediaStreamTrack;
     audio: MediaStreamTrack;

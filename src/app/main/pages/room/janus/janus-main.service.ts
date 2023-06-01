@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { Janus } from './janus.constants';
 import { JanusJS } from './janus.types';
@@ -40,15 +40,32 @@ export class JanusMainService {
     return this.publisherService.roomConfigured;
   }
 
-  public get remoteTracks$(): Observable<ReadonlyMap<string, JanusJS.PublisherTracks>> {
+  public get remoteTracks$(): Observable<{[p: number]: JanusJS.PublisherTracks}> {
     return this.subscribeService.remoteTracks$$.pipe(
-      map(res => new Map(Object.entries(res)))
+      switchMap(res => this.users.getUsersList(Object.keys(res).map(id => Number(id))).pipe(
+        map(users => {
+          users.forEach(user => {
+            res[user.id].display = user.fullName;
+            res[user.id].img = user.imageUrl;
+          });
+          return res;
+        })
+      ))
     );
   }
 
   public get localTracks$(): Observable<JanusJS.PublisherTracks[]> {
-    return combineLatest([
+    const localMain$: Observable<JanusJS.PublisherTracks> = combineLatest([
       this.publisherService.localPublisher$$,
+      this.users.selfUser$
+    ]).pipe(
+      map(([publisher, selfUser]) => ({
+        ...publisher,
+        img: selfUser.imageUrl
+      }))
+    );
+    return combineLatest([
+      localMain$,
       this.screenService.localScreenPublisher$$
     ]).pipe(
       map(tracks => tracks.filter(item => item !== null))

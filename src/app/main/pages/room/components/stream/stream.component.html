@@ -9,7 +9,12 @@
   <div #speakerBorder class="audio-border"></div>
 
   <div *ngIf="!videoTrack" class="no-video">
-    <ion-icon name="videocam-off-outline"></ion-icon>
+    <ion-thumbnail *ngIf="imageUrl; else noImage">
+      <img [src]="imageUrl" alt="">
+    </ion-thumbnail>
+    <ng-template #noImage>
+      <ion-icon name="videocam-off-outline"></ion-icon>
+    </ng-template>
   </div>
 
   <div class="display">

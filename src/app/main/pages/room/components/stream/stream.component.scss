@@ -50,6 +50,10 @@
     ion-icon {
       font-size: 80px;
     }
+    ion-thumbnail {
+      --size: 125px;
+      --border-radius: 100%;
+    }
   }
 
   .popover-button {
